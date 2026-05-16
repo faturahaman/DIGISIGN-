@@ -155,7 +155,7 @@ export async function POST(req: Request) {
       geminiMessages = geminiMessages.slice(1);
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyC3PyOcWooYmoX3UieTCGM-6P6QsyZ-_ek";
+    const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
       return NextResponse.json({ error: 'API key is missing' }, { status: 500 });
