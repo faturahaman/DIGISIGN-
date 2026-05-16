@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { ADVANTAGES } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function WhyDigiSignSection() {
+  const { t } = useLanguage();
   return (
     <section className="relative bg-[#050816] py-16 sm:py-20 lg:py-28">
       {/* Background glow */}
@@ -13,10 +15,10 @@ export function WhyDigiSignSection() {
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Why DiGiSign"
-          title="Why Choose"
-          titleHighlight="DiGiSign?"
-          description="Kami bukan sekadar agency biasa. Kami adalah mitra strategis yang berkomitmen pada hasil nyata untuk bisnis Anda."
+          badge={t.why.badge}
+          title={t.why.title}
+          titleHighlight={t.why.titleHighlight}
+          description={t.why.description}
         />
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">

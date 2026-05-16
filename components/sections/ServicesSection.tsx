@@ -8,21 +8,23 @@ import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
 import { ServiceModal } from "@/components/shared/ServiceModal";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type ServiceItem = (typeof SERVICES)[number];
 
 export function ServicesSection() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
+  const { t } = useLanguage();
 
   return (
     <>
       <section id="services" className="relative bg-[#050816] py-16 sm:py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <SectionHeader
-            badge="Our Services"
-            title="Everything You Need to"
-            titleHighlight="Stand Out"
-            description="Dari desain grafis yang memukau hingga website yang powerful — kami menghadirkan solusi digital lengkap untuk bisnis Anda."
+            badge={t.services.badge}
+            title={t.services.title}
+            titleHighlight={t.services.titleHighlight}
+            description={t.services.description}
           />
 
           {/* Bento Grid */}

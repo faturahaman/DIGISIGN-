@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { ChatProvider } from "@/lib/ChatContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -165,7 +167,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <LanguageProvider>
+          <ChatProvider>{children}</ChatProvider>
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

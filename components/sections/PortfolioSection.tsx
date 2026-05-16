@@ -7,14 +7,9 @@ import { PORTFOLIO_ITEMS } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type FilterCategory = "all" | "design" | "website";
-
-const FILTERS: { label: string; value: FilterCategory }[] = [
-  { label: "All", value: "all" },
-  { label: "Design", value: "design" },
-  { label: "Website", value: "website" },
-];
 
 const GRADIENTS = [
   "from-blue-600/30 to-violet-600/30",
@@ -28,6 +23,13 @@ const GRADIENTS = [
 export function PortfolioSection() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("all");
   const [selectedItem, setSelectedItem] = useState<(typeof PORTFOLIO_ITEMS)[0] | null>(null);
+  const { t } = useLanguage();
+
+  const FILTERS: { label: string; value: FilterCategory }[] = [
+    { label: t.portfolio.filters.all, value: "all" },
+    { label: t.portfolio.filters.design, value: "design" },
+    { label: t.portfolio.filters.website, value: "website" },
+  ];
 
   const filtered =
     activeFilter === "all"
@@ -38,10 +40,10 @@ export function PortfolioSection() {
     <section id="portfolio" className="relative bg-[#050816] py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Portfolio"
-          title="Our"
-          titleHighlight="Work"
-          description="Setiap proyek adalah cerita tentang transformasi digital. Lihat bagaimana kami membantu klien kami berkembang."
+          badge={t.portfolio.badge}
+          title={t.portfolio.title}
+          titleHighlight={t.portfolio.titleHighlight}
+          description={t.portfolio.description}
         />
 
         {/* Filter buttons */}
@@ -101,7 +103,7 @@ export function PortfolioSection() {
                     <div className="translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
                       <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs text-white backdrop-blur-sm">
                         <ExternalLink className="h-3 w-3" />
-                        View Project
+                        {t.portfolio.viewProject}
                       </span>
                     </div>
                   </div>

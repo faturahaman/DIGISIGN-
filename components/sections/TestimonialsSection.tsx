@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import { TESTIMONIALS } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function TiltCard({
   children,
@@ -44,6 +45,7 @@ function TiltCard({
 
 export function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { t } = useLanguage();
 
   const prev = () => setActiveIndex((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
   const next = () => setActiveIndex((i) => (i + 1) % TESTIMONIALS.length);
@@ -56,10 +58,10 @@ export function TestimonialsSection() {
 
       <div className="relative mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Testimonials"
-          title="What Our"
-          titleHighlight="Clients Say"
-          description="Kepercayaan klien adalah aset terbesar kami. Inilah yang mereka katakan tentang pengalaman bekerja bersama DiGiSign."
+          badge={t.testimonials.badge}
+          title={t.testimonials.title}
+          titleHighlight={t.testimonials.titleHighlight}
+          description={t.testimonials.description}
         />
 
         <div className="relative">
@@ -113,7 +115,7 @@ export function TestimonialsSection() {
           <div className="mt-6 flex items-center justify-center gap-3 sm:mt-8 sm:gap-4">
             <button
               onClick={prev}
-              aria-label="Previous testimonial"
+              aria-label={t.testimonials.prev}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all hover:bg-white/10 hover:border-white/20 sm:h-10 sm:w-10"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -125,7 +127,7 @@ export function TestimonialsSection() {
                 <button
                   key={i}
                   onClick={() => setActiveIndex(i)}
-                  aria-label={`Go to testimonial ${i + 1}`}
+                  aria-label={`${t.testimonials.goTo} ${i + 1}`}
                   className={cn(
                     "h-2 rounded-full transition-all duration-300",
                     i === activeIndex
@@ -138,7 +140,7 @@ export function TestimonialsSection() {
 
             <button
               onClick={next}
-              aria-label="Next testimonial"
+              aria-label={t.testimonials.next}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all hover:bg-white/10 hover:border-white/20 sm:h-10 sm:w-10"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />

@@ -21,6 +21,9 @@ const PortfolioSection = dynamic(() =>
 const TestimonialsSection = dynamic(() =>
   import("@/components/sections/TestimonialsSection").then((m) => m.TestimonialsSection)
 );
+const FAQSection = dynamic(() =>
+  import("@/components/sections/FAQSection").then((m) => m.FAQSection)
+);
 const CTASection = dynamic(() =>
   import("@/components/sections/CTASection").then((m) => m.CTASection)
 );
@@ -48,6 +51,7 @@ export default function Home() {
       <ProcessSection />
       <PortfolioSection />
       <TestimonialsSection />
+      <FAQSection />
       <CTASection />
       <Footer />
 

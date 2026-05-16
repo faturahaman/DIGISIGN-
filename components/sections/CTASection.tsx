@@ -7,12 +7,14 @@ import { Spotlight } from "@/components/effects/Spotlight";
 import { GridPattern } from "@/components/effects/GridPattern";
 import { BlurFade } from "@/components/effects/BlurFade";
 import { WHATSAPP_NUMBER, WHATSAPP_MESSAGE } from "@/lib/constants";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function buildWhatsAppUrl(phone: string, message: string): string {
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
 
 export function CTASection() {
+  const { t } = useLanguage();
   const waUrl = buildWhatsAppUrl(WHATSAPP_NUMBER, WHATSAPP_MESSAGE);
 
   return (
@@ -33,22 +35,21 @@ export function CTASection() {
         <BlurFade delay={0}>
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400 sm:mb-6">
             <MessageCircle className="h-3.5 w-3.5" />
-            Let&apos;s Work Together
+            {t.cta.badge}
           </span>
         </BlurFade>
 
         <BlurFade delay={0.1}>
           <h2 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-            Ready To Build{" "}
-            <span className="gradient-text">Something</span>{" "}
-            Different?
+            {t.cta.title1}{" "}
+            <span className="gradient-text">{t.cta.titleHighlight}</span>{" "}
+            {t.cta.title2}
           </h2>
         </BlurFade>
 
         <BlurFade delay={0.2}>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#94A3B8] sm:mt-6 sm:text-lg">
-            Ceritakan visi Anda kepada kami. Kami siap mengubahnya menjadi pengalaman digital
-            yang premium dan berkesan.
+            {t.cta.description}
           </p>
         </BlurFade>
 
@@ -66,7 +67,7 @@ export function CTASection() {
               {/* Shine effect */}
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <MessageCircle className="h-5 w-5" />
-              Start Your Project
+              {t.cta.primaryBtn}
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </motion.a>
 
@@ -75,7 +76,7 @@ export function CTASection() {
               whileHover={{ scale: 1.02 }}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10 sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
             >
-              Send Email
+              {t.cta.secondaryBtn}
             </motion.a>
           </div>
         </BlurFade>
@@ -85,15 +86,15 @@ export function CTASection() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-sm text-[#94A3B8] sm:gap-6">
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-              Fast Response
+              {t.cta.trust.response}
             </span>
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              Free Consultation
+              {t.cta.trust.consultation}
             </span>
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-violet-400" />
-              Premium Quality
+              {t.cta.trust.quality}
             </span>
           </div>
         </BlurFade>

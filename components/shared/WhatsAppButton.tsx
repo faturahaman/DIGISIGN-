@@ -1,15 +1,16 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
 
 const PHONE = "6285924361892";
-const MESSAGE = "Halo DiGiSign, saya ingin konsultasi tentang layanan kalian 😊";
-const WA_URL = `https://wa.me/${PHONE}?text=${encodeURIComponent(MESSAGE)}`;
 
 export function WhatsAppButton() {
   const [hovered, setHovered] = useState(false);
+  const { t } = useLanguage();
+  const WA_URL = `https://wa.me/${PHONE}?text=${encodeURIComponent(t.whatsapp.message)}`;
 
   return (
     <div className="fixed bottom-6 left-6 z-20 flex items-center gap-3 md:bottom-8 md:left-8">
@@ -18,7 +19,7 @@ export function WhatsAppButton() {
         href={WA_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chat via WhatsApp"
+        aria-label={t.whatsapp.label}
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
         initial={{ scale: 0, opacity: 0 }}
@@ -53,8 +54,8 @@ export function WhatsAppButton() {
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             className="pointer-events-none rounded-xl border border-white/10 bg-[#0B1120]/95 px-4 py-2 backdrop-blur-md shadow-lg"
           >
-            <p className="text-xs font-medium text-white">Chat via WhatsApp</p>
-            <p className="text-xs text-[#94A3B8]">Respon cepat!</p>
+            <p className="text-xs font-medium text-white">{t.whatsapp.label}</p>
+            <p className="text-xs text-[#94A3B8]">{t.whatsapp.tooltip}</p>
           </motion.div>
         )}
       </AnimatePresence>

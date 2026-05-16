@@ -6,17 +6,20 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+
+const NAV_KEYS = ["home", "services", "portfolio", "testimonials", "contact"] as const;
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const { lang, t, toggleLanguage } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // Track active section
       const sections = NAV_LINKS.map((l) => l.href.replace("#", ""));
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
@@ -30,7 +33,6 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -42,6 +44,14 @@ export function Navbar() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
+
+  const navLabels = [
+    t.nav.home,
+    t.nav.services,
+    t.nav.portfolio,
+    t.nav.testimonials,
+    t.nav.contact,
+  ];
 
   return (
     <>
@@ -58,7 +68,7 @@ export function Navbar() {
             ? "bg-[#050816]/90 shadow-[0_0_30px_rgba(37,99,235,0.12)]"
             : "bg-[#050816]/60"
         )}
-        style={{ width: "min(92vw, 720px)" }}
+        style={{ width: "min(92vw, 760px)" }}
       >
         {/* Logo */}
         <button
@@ -79,7 +89,7 @@ export function Navbar() {
 
         {/* Desktop nav */}
         <ul className="hidden items-center gap-0.5 md:flex">
-          {NAV_LINKS.map((link) => {
+          {NAV_LINKS.map((link, i) => {
             const id = link.href.replace("#", "");
             const isActive = activeSection === id;
             return (
@@ -100,20 +110,31 @@ export function Navbar() {
                       transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                     />
                   )}
-                  <span className="relative">{link.label}</span>
+                  <span className="relative">{navLabels[i]}</span>
                 </button>
               </li>
             );
           })}
         </ul>
 
-        {/* CTA + hamburger */}
-        <div className="flex shrink-0 items-center gap-3">
+        {/* CTA + language toggle + hamburger */}
+        <div className="flex shrink-0 items-center gap-2">
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            aria-label={lang === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}
+            className="hidden md:flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-[#94A3B8] transition-all hover:bg-white/10 hover:text-white"
+          >
+            <span className={cn("transition-opacity", lang === "id" ? "text-white" : "text-[#94A3B8]")}>ID</span>
+            <span className="text-white/20">/</span>
+            <span className={cn("transition-opacity", lang === "en" ? "text-white" : "text-[#94A3B8]")}>EN</span>
+          </button>
+
           <button
             onClick={() => handleNavClick("#contact")}
             className="hidden rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-all hover:opacity-90 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] md:block"
           >
-            Get Started
+            {t.nav.getStarted}
           </button>
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -187,18 +208,28 @@ export function Navbar() {
                           : "text-[#94A3B8] hover:bg-white/5 hover:text-white"
                       )}
                     >
-                      {link.label}
+                      {navLabels[i]}
                     </motion.button>
                   );
                 })}
               </nav>
 
-              <div className="mt-auto border-t border-white/5 p-4">
+              <div className="mt-auto border-t border-white/5 p-4 flex flex-col gap-3">
+                {/* Mobile language toggle */}
+                <button
+                  onClick={toggleLanguage}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10"
+                >
+                  <span className={cn(lang === "id" ? "text-blue-400" : "text-[#94A3B8]")}>🇮🇩 Indonesia</span>
+                  <span className="text-white/20">|</span>
+                  <span className={cn(lang === "en" ? "text-blue-400" : "text-[#94A3B8]")}>🇬🇧 English</span>
+                </button>
+
                 <button
                   onClick={() => handleNavClick("#contact")}
                   className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 py-3.5 text-center font-semibold text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-opacity hover:opacity-90"
                 >
-                  Get Started
+                  {t.nav.getStarted}
                 </button>
               </div>
             </motion.div>

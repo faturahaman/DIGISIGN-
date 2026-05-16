@@ -5,19 +5,21 @@ import { useRef } from "react";
 import { PROCESS_STEPS } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function ProcessSection() {
   const lineRef = useRef<HTMLDivElement>(null);
   const isLineInView = useInView(lineRef, { once: true, margin: "-100px" });
+  const { t } = useLanguage();
 
   return (
     <section className="relative bg-[#050816] py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-4xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Our Process"
-          title="How We"
-          titleHighlight="Work"
-          description="Proses kerja kami yang terstruktur memastikan setiap proyek berjalan lancar dari awal hingga peluncuran."
+          badge={t.process.badge}
+          title={t.process.title}
+          titleHighlight={t.process.titleHighlight}
+          description={t.process.description}
         />
 
         {/* Mobile: left-line timeline. Desktop: center alternating */}

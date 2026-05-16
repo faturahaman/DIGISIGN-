@@ -2,28 +2,7 @@
 
 import { ExternalLink, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
-
-// All links point to actual sections on the single page
-const FOOTER_NAV = [
-  {
-    title: "Services",
-    links: [
-      { label: "Branding & Design", href: "#services" },
-      { label: "Landing Page", href: "#services" },
-      { label: "E-Commerce", href: "#services" },
-      { label: "Dynamic Website", href: "#services" },
-    ],
-  },
-  {
-    title: "Navigate",
-    links: [
-      { label: "Home", href: "#home" },
-      { label: "Portfolio", href: "#portfolio" },
-      { label: "Process", href: "#services" },
-      { label: "Contact", href: "#contact" },
-    ],
-  },
-];
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
@@ -33,6 +12,28 @@ function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string)
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useLanguage();
+
+  const FOOTER_NAV = [
+    {
+      title: t.footer.nav.services,
+      links: [
+        { label: t.footer.nav.links.branding, href: "#services" },
+        { label: t.footer.nav.links.landing, href: "#services" },
+        { label: t.footer.nav.links.ecommerce, href: "#services" },
+        { label: t.footer.nav.links.dynamic, href: "#services" },
+      ],
+    },
+    {
+      title: t.footer.nav.navigate,
+      links: [
+        { label: t.footer.nav.links.home, href: "#home" },
+        { label: t.footer.nav.links.portfolio, href: "#portfolio" },
+        { label: t.footer.nav.links.process, href: "#services" },
+        { label: t.footer.nav.links.contact, href: "#contact" },
+      ],
+    },
+  ];
 
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#050816]">
@@ -69,8 +70,7 @@ export function Footer() {
               <span className="text-lg font-bold text-white">DiGiSign</span>
             </a>
             <p className="max-w-sm text-sm leading-relaxed text-[#94A3B8]">
-              Creative digital agency yang menghadirkan jasa desain grafis premium dan pembuatan
-              website berkualitas tinggi untuk bisnis Anda.
+              {t.footer.description}
             </p>
 
             {/* Contact */}
@@ -108,7 +108,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Nav groups — all anchor links to sections on this page */}
+          {/* Nav groups */}
           {FOOTER_NAV.map((group) => (
             <div key={group.title}>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
@@ -134,10 +134,10 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/5 pt-8 text-center sm:flex-row sm:text-left">
           <p className="text-sm text-[#94A3B8]">
-            © {year} DiGiSign. All rights reserved.
+            © {year} DiGiSign. {t.footer.rights}
           </p>
           <p className="text-sm text-[#94A3B8]">
-            Crafted with ❤️ by DiGiSign
+            {t.footer.crafted}
           </p>
         </div>
       </div>

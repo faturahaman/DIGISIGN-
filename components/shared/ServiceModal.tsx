@@ -6,6 +6,7 @@ import { X, Check, Clock, MessageCircle, ArrowRight, GraduationCap } from "lucid
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 interface ServiceItem {
   id: string;
@@ -48,6 +49,7 @@ function formatRupiah(amount: number) {
 
 export function ServiceModal({ service, onClose }: ServiceModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   // Close on Escape key
   useEffect(() => {
@@ -76,17 +78,13 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
 
   const handleWhatsApp = () => {
     if (!service) return;
-    const msg = encodeURIComponent(
-      `Halo DiGiSign! Saya tertarik dengan layanan *${service.title}* yang ditawarkan. Bisa berikan info lebih detail mengenai harga dan prosesnya?`
-    );
+    const msg = encodeURIComponent(t.modal.orderMessage(service.title));
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
   const handlePackageOrder = (pkgName: string, price: string) => {
     if (!service) return;
-    const msg = encodeURIComponent(
-      `Halo DiGiSign! Saya ingin memesan paket *${pkgName}* untuk layanan *${service.title}*.\n\nHarga: ${price}\n\nMohon info selanjutnya untuk proses pengerjaannya. Terima kasih!`
-    );
+    const msg = encodeURIComponent(t.modal.packageOrderMessage(pkgName, service.title, price));
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
@@ -105,7 +103,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#050816]/90"
             aria-modal="true"
             role="dialog"
-            aria-label={`Detail layanan ${service.title}`}
+            aria-label={`${service.title}`}
           >
             {/* Modal Panel */}
             <motion.div
@@ -116,7 +114,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[60vh] sm:max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#0B1120] shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header dengan Gradient & Background Image */}
+              {/* Header with Gradient & Background Image */}
               <div className="relative px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-5 shrink-0 overflow-hidden">
                 {/* Background Layer */}
                 <div className={cn("absolute inset-0 bg-gradient-to-br", service.gradient)} />
@@ -131,7 +129,6 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                       className="object-cover opacity-25"
                       sizes="(max-width: 768px) 100vw, 512px"
                     />
-                    {/* Extra gradient overlay agar teks tetap terbaca */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 to-transparent" />
                   </div>
                 )}
@@ -153,7 +150,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                     <button
                       onClick={onClose}
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/80 transition-all hover:bg-white/20 hover:text-white"
-                      aria-label="Tutup modal"
+                      aria-label={t.modal.closeModal}
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -188,8 +185,8 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                 {service.packages && (
                   <div className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-[#050816]/60 shadow-inner">
                     <div className="bg-white/5 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/10 flex justify-between">
-                      <span>Pilihan Paket</span>
-                      <span>Harga Pasar</span>
+                      <span>{t.modal.packages}</span>
+                      <span>{t.modal.marketPrice}</span>
                     </div>
                     <div className="divide-y divide-white/5">
                       {service.packages.map((pkg, i) => (
@@ -209,7 +206,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                             onClick={() => handlePackageOrder(pkg.name, pkg.price)}
                             className="shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)] active:scale-95"
                           >
-                            Pesan
+                            {t.modal.order}
                           </button>
                         </div>
                       ))}
@@ -228,19 +225,19 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-500 text-white">
                           <GraduationCap className="h-3 w-3" />
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">Harga Pelajar</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">{t.modal.studentPricing}</span>
                       </div>
                       <div className="flex justify-between items-end">
                         <div>
                           <h4 className="text-xl font-black text-white leading-none tracking-tight">{service.studentPricing.price}</h4>
-                          <p className="text-[10px] text-violet-300/70 mt-1.5 font-medium italic">*Wajib lampirkan KTM / Kartu Pelajar</p>
+                          <p className="text-[10px] text-violet-300/70 mt-1.5 font-medium italic">{t.modal.studentNote}</p>
                         </div>
                         <button 
                           onClick={() => handlePackageOrder("Pelajar (" + service.studentPricing!.name + ")", service.studentPricing!.price)}
                           className="flex items-center gap-2 bg-white text-violet-900 hover:bg-violet-50 text-xs px-4 py-2.5 rounded-lg font-black shadow-xl shadow-violet-900/40 transition-all active:scale-95"
                         >
                           <ArrowRight className="h-3.5 w-3.5" />
-                          Ambil Promo
+                          {t.modal.takePromo}
                         </button>
                       </div>
                     </div>
@@ -250,7 +247,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                 {/* Features */}
                 <div className="mb-6">
                   <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-[#475569]">
-                    Standard Features
+                    {t.modal.features}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
                     {service.features.map((feature, i) => (
@@ -271,7 +268,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                     className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E293B] border border-white/10 px-5 py-4 text-sm font-bold text-white transition-all duration-300 hover:bg-white/5 hover:border-white/20"
                   >
                     <MessageCircle className="h-4 w-4 text-blue-400" />
-                    <span>Hanya Konsultasi Dulu</span>
+                    <span>{t.modal.consultOnly}</span>
                   </button>
                 </div>
               </div>

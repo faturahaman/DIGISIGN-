@@ -7,20 +7,20 @@ import Image from "next/image";
 import { GridPattern } from "@/components/effects/GridPattern";
 import { Spotlight } from "@/components/effects/Spotlight";
 import { staggerContainer, fadeInUp, slideInRight } from "@/lib/animations";
-
-const stats = [
-  { title: "Projects Done", value: "150+", icon: TrendingUp, color: "text-blue-400" },
-  { title: "Happy Clients", value: "80+", icon: Users, color: "text-violet-400" },
-  { title: "Rating", value: "5.0 ★", icon: Star, color: "text-yellow-400" },
-];
-
-const services = ["Branding Design", "Landing Page", "E-Commerce", "UI/UX Design"];
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+  const { t } = useLanguage();
+
+  const stats = [
+    { title: t.hero.stats.projects, value: "150+", icon: TrendingUp, color: "text-blue-400" },
+    { title: t.hero.stats.clients, value: "80+", icon: Users, color: "text-violet-400" },
+    { title: t.hero.stats.rating, value: "5.0 ★", icon: Star, color: "text-yellow-400" },
+  ];
 
   const handleScroll = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -64,7 +64,7 @@ export function HeroSection() {
             <motion.div variants={fadeInUp} className="mb-5 flex justify-center lg:justify-start">
               <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400">
                 <Zap className="h-3.5 w-3.5" />
-                Creative Digital Agency
+                {t.hero.badge}
               </span>
             </motion.div>
 
@@ -73,9 +73,9 @@ export function HeroSection() {
               variants={fadeInUp}
               className="text-3xl font-bold leading-[1.15] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4.5rem]"
             >
-              We Design{" "}
-              <span className="gradient-text">Digital Experiences</span>{" "}
-              That Feel Premium
+              {t.hero.heading1}{" "}
+              <span className="gradient-text">{t.hero.headingHighlight}</span>{" "}
+              {t.hero.heading2}
             </motion.h1>
 
             {/* Subheading */}
@@ -83,8 +83,7 @@ export function HeroSection() {
               variants={fadeInUp}
               className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#94A3B8] sm:text-lg lg:mx-0"
             >
-              Dari branding yang berkesan hingga website yang memukau — kami menghadirkan
-              solusi digital premium yang mendorong pertumbuhan bisnis Anda.
+              {t.hero.subheading}
             </motion.p>
 
             {/* Service pills */}
@@ -92,7 +91,7 @@ export function HeroSection() {
               variants={fadeInUp}
               className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start"
             >
-              {services.map((s) => (
+              {t.hero.services.map((s) => (
                 <span
                   key={s}
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/5 px-3 py-1 text-xs text-[#94A3B8]"
@@ -112,14 +111,14 @@ export function HeroSection() {
                 onClick={() => handleScroll("contact")}
                 className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-7 py-3.5 font-semibold text-white shadow-[0_0_30px_rgba(37,99,235,0.35)] transition-all duration-300 hover:shadow-[0_0_45px_rgba(37,99,235,0.55)] hover:scale-[1.03] sm:w-auto"
               >
-                Start Project
+                {t.hero.ctaPrimary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
               <button
                 onClick={() => handleScroll("portfolio")}
                 className="flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/25 sm:w-auto"
               >
-                View Portfolio
+                {t.hero.ctaSecondary}
               </button>
             </motion.div>
 
@@ -222,7 +221,7 @@ export function HeroSection() {
             >
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]" />
-                <span className="text-xs font-medium text-white">Project Live</span>
+                <span className="text-xs font-medium text-white">{t.hero.floatingBadges.live}</span>
               </div>
             </motion.div>
 
@@ -234,7 +233,7 @@ export function HeroSection() {
             >
               <div className="flex items-center gap-2">
                 <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                <span className="text-xs font-medium text-white">5.0 Rating</span>
+                <span className="text-xs font-medium text-white">{t.hero.floatingBadges.rating}</span>
               </div>
             </motion.div>
 
@@ -246,7 +245,7 @@ export function HeroSection() {
             >
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
-                <span className="text-xs font-medium text-white">+40% Conversion</span>
+                <span className="text-xs font-medium text-white">{t.hero.floatingBadges.conversion}</span>
               </div>
             </motion.div>
 
@@ -265,7 +264,7 @@ export function HeroSection() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-[#94A3B8] transition-colors hover:text-white"
         aria-label="Scroll to services"
       >
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
+        <span className="text-xs tracking-widest uppercase">{t.hero.scroll}</span>
         <motion.div
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
