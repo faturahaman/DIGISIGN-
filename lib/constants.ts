@@ -43,6 +43,31 @@ export const SERVICES = [
       "2x revisi gratis",
     ],
     highlight: "Paket terlengkap untuk membangun identitas brand yang kuat dan berkesan.",
+    packages: [
+      {
+        name: "Basic",
+        price: "Rp 800 rb - 2 jt",
+        target: "Bisnis baru / UMKM",
+        features: ["Logo basic", "Color palette", "1x revisi"],
+      },
+      {
+        name: "Standar",
+        price: "Rp 2 jt - 5 jt",
+        target: "Bisnis berkembang",
+        features: ["Logo premium", "Brand guidelines", "Visual identity", "3x revisi"],
+      },
+      {
+        name: "Premium",
+        price: "Rp 5 jt+",
+        target: "Perusahaan / Brand besar",
+        features: ["Full branding system", "Marketing assets", "Unlimited revision"],
+      },
+    ],
+    studentPricing: {
+      name: "Paket Pelajar",
+      price: "Rp 249.000",
+      features: ["Logo untuk tugas/portfolio", "1x revisi", "File PNG/JPG"],
+    },
   },
   {
     id: "poster",
@@ -61,6 +86,25 @@ export const SERVICES = [
       "2x revisi gratis",
     ],
     highlight: "Poster promosi yang menarik perhatian dan siap pakai dalam waktu singkat.",
+    packages: [
+      {
+        name: "Standard",
+        price: "Rp 105.000",
+        target: "Kebutuhan umum",
+        features: ["1 Desain poster", "High-res output", "2x revisi"],
+      },
+      {
+        name: "Bundle",
+        price: "Rp 450.000",
+        target: "Campaign / Event",
+        features: ["5 Desain poster", "Theme konsisten", "3x revisi"],
+      },
+    ],
+    studentPricing: {
+      name: "Pelajar/Mahasiswa",
+      price: "Rp 35.000",
+      features: ["Khusus tugas sekolah/kuliah", "1x revisi"],
+    },
   },
   {
     id: "banner",
@@ -80,6 +124,19 @@ export const SERVICES = [
       "2x revisi gratis",
     ],
     highlight: "Banner yang efektif menyampaikan pesan promosi untuk media digital maupun cetak.",
+    packages: [
+      {
+        name: "Standard",
+        price: "Rp 210.000",
+        target: "Kebutuhan promosi",
+        features: ["1 Desain banner", "Format digital/cetak", "2x revisi"],
+      },
+    ],
+    studentPricing: {
+      name: "Pelajar/Organisasi",
+      price: "Rp 55.000",
+      features: ["Khusus proker organisasi", "1x revisi"],
+    },
   },
   {
     id: "landing",
@@ -100,6 +157,31 @@ export const SERVICES = [
       "3x revisi gratis",
     ],
     highlight: "Landing page yang dioptimalkan untuk meningkatkan konversi dan penjualan bisnis Anda.",
+    packages: [
+      {
+        name: "Freelancer",
+        price: "Rp 375 rb - 2 jt",
+        target: "1 halaman, template, responsif, tanpa CMS",
+        features: ["Single page", "No CMS", "Responsive"],
+      },
+      {
+        name: "Semi-custom",
+        price: "Rp 2 jt - 5 jt",
+        target: "Desain custom, form, integrasi WA, SEO, 3-7 hari",
+        features: ["Custom design", "Form integration", "SEO optimization"],
+      },
+      {
+        name: "Agensi",
+        price: "Rp 5 jt - 15 jt",
+        target: "Full custom UI/UX, copywriting, animasi, A/B testing",
+        features: ["Full custom", "Copywriting", "Advanced animation"],
+      },
+    ],
+    studentPricing: {
+      name: "Edisi Portfolio",
+      price: "Rp 175.000",
+      features: ["Khusus portfolio pelajar", "S&K berlaku"],
+    },
   },
   {
     id: "company",
@@ -121,6 +203,37 @@ export const SERVICES = [
       "3x revisi gratis",
     ],
     highlight: "Website company profile yang menonjolkan profesionalisme dan kepercayaan bisnis Anda.",
+    packages: [
+      {
+        name: "Basic",
+        price: "Rp 1,5 jt - 5 jt",
+        target: "UMKM/startup, template premium, 3-5 halaman, WordPress",
+        features: ["Template premium", "3-5 Pages", "WordPress"],
+      },
+      {
+        name: "Standar",
+        price: "Rp 5 jt - 15 jt",
+        target: "Desain semi-custom, 5-10 halaman, fitur interaktif dasar",
+        features: ["Semi-custom design", "5-10 Pages", "Interactive features"],
+      },
+      {
+        name: "Premium",
+        price: "Rp 15 jt - 30 jt",
+        target: "Desain full custom, UI/UX profesional, multi-bahasa, animasi",
+        features: ["Full custom", "Multi-language", "Professional UI/UX"],
+      },
+      {
+        name: "Enterprise",
+        price: "Rp 30 jt+",
+        target: "Perusahaan besar, integrasi sistem, branding kompleks",
+        features: ["System integration", "Complex branding", "Scalable"],
+      },
+    ],
+    studentPricing: {
+      name: "Pelajar Mandiri",
+      price: "Rp 249.000",
+      features: ["Khusus tugas/final project", "Hosting gratis 1 bln"],
+    },
   },
   {
     id: "ecommerce",
@@ -143,6 +256,37 @@ export const SERVICES = [
       "5x revisi gratis",
     ],
     highlight: "Toko online lengkap siap berjualan dengan fitur pembayaran dan manajemen produk profesional.",
+    packages: [
+      {
+        name: "Basic",
+        price: "Rp 2 jt - 6 jt",
+        target: "WooCommerce/template, katalog produk, checkout sederhana",
+        features: ["WooCommerce", "Simple checkout", "Product catalog"],
+      },
+      {
+        name: "Standar",
+        price: "Rp 6 jt - 20 jt",
+        target: "Payment gateway, manajemen stok, admin panel, integrasi ongkir",
+        features: ["Payment gateway", "Inventory system", "Shipping integration"],
+      },
+      {
+        name: "Custom",
+        price: "Rp 20 jt - 60 jt",
+        target: "Full custom dev (Next.js/Laravel), multi-vendor, fitur member",
+        features: ["Full stack dev", "Membership system", "Multi-vendor"],
+      },
+      {
+        name: "Enterprise",
+        price: "Rp 60 jt+",
+        target: "Marketplace skala besar, multi-seller, sistem logistik",
+        features: ["Large scale", "Logistics system", "Fraud detection"],
+      },
+    ],
+    studentPricing: {
+      name: "Toko Online Pelajar",
+      price: "Rp 499.000",
+      features: ["Katalog sederhana", "WhatsApp order", "Hosting 1 bln"],
+    },
   },
   {
     id: "portfolio",
@@ -163,6 +307,31 @@ export const SERVICES = [
       "3x revisi gratis",
     ],
     highlight: "Tampilkan karya terbaik Anda dengan website portfolio yang memukau dan berkesan.",
+    packages: [
+      {
+        name: "Template",
+        price: "Rp 300 rb - 1,5 jt",
+        target: "Template Webflow/WordPress, halaman statis",
+        features: ["Static pages", "WordPress/Webflow", "Quick launch"],
+      },
+      {
+        name: "Semi-custom",
+        price: "Rp 1,5 jt - 5 jt",
+        target: "Desain custom, galeri proyek, form kontak, animasi ringan",
+        features: ["Project gallery", "Light animation", "Contact form"],
+      },
+      {
+        name: "Full custom",
+        price: "Rp 5 jt - 15 jt",
+        target: "Branding kuat, animasi kompleks, CMS buat update proyek",
+        features: ["Strong branding", "Complex animation", "Custom CMS"],
+      },
+    ],
+    studentPricing: {
+      name: "Paket Tugas Akhir",
+      price: "Rp 199.000",
+      features: ["Single page portfolio", "2x revisi", "S&K Berlaku"],
+    },
   },
   {
     id: "dynamic",
@@ -184,6 +353,31 @@ export const SERVICES = [
       "5x revisi gratis",
     ],
     highlight: "Website dinamis yang bisa Anda kelola sendiri dengan fitur lengkap sesuai kebutuhan bisnis.",
+    packages: [
+      {
+        name: "Sedang",
+        price: "Rp 8 jt - 25 jt",
+        target: "Dashboard admin, sistem booking, portal berita/blog dengan CMS",
+        features: ["Admin dashboard", "Booking system", "CMS"],
+      },
+      {
+        name: "Kompleks",
+        price: "Rp 25 jt - 75 jt",
+        target: "SaaS sederhana, platform kursus online, sistem manajemen internal",
+        features: ["SaaS infrastructure", "E-learning platform", "Internal system"],
+      },
+      {
+        name: "Enterprise",
+        price: "Rp 75 jt - 500 jt+",
+        target: "ERP, marketplace fullstack, platform multi-tenant",
+        features: ["ERP system", "Multi-tenant", "Real-time system"],
+      },
+    ],
+    studentPricing: {
+      name: "Web App Academy",
+      price: "Rp 899.000",
+      features: ["Custom logic simple", "Database terintegrasi", "Mentoring 1 jam"],
+    },
   },
 ];
 

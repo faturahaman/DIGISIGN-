@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Clock, MessageCircle, ArrowRight } from "lucide-react";
+import { X, Check, Clock, MessageCircle, ArrowRight, GraduationCap } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -19,6 +19,17 @@ interface ServiceItem {
   deliveryTime: string;
   features: string[];
   highlight: string;
+  packages?: {
+    name: string;
+    price: string;
+    target: string;
+    features: string[];
+  }[];
+  studentPricing?: {
+    name: string;
+    price: string;
+    features: string[];
+  };
 }
 
 interface ServiceModalProps {
@@ -71,6 +82,14 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
+  const handlePackageOrder = (pkgName: string, price: string) => {
+    if (!service) return;
+    const msg = encodeURIComponent(
+      `Halo DiGiSign! Saya ingin memesan paket *${pkgName}* untuk layanan *${service.title}*.\n\nHarga: ${price}\n\nMohon info selanjutnya untuk proses pengerjaannya. Terima kasih!`
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+  };
+
   return (
     <AnimatePresence>
       {service && (
@@ -94,11 +113,11 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.96 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-lg max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#0B1120] shadow-2xl"
+              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[60vh] sm:max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#0B1120] shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header dengan Gradient & Background Image */}
-              <div className="relative px-6 pt-6 pb-5 shrink-0 overflow-hidden">
+              <div className="relative px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-5 shrink-0 overflow-hidden">
                 {/* Background Layer */}
                 <div className={cn("absolute inset-0 bg-gradient-to-br", service.gradient)} />
                 
@@ -126,8 +145,8 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h2 className="text-xl font-bold text-white leading-tight drop-shadow-md">{service.title}</h2>
-                      <p className="mt-1 text-sm text-white/80 leading-relaxed drop-shadow-md">{service.description}</p>
+                      <h2 className="text-lg sm:text-xl font-bold text-white leading-tight drop-shadow-md">{service.title}</h2>
+                      <p className="mt-1 text-xs sm:text-sm text-white/80 leading-tight drop-shadow-md">{service.description}</p>
                     </div>
 
                     {/* Close button */}
@@ -146,7 +165,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                       <p className="text-xs font-medium uppercase tracking-wider text-white/70 drop-shadow-md">
                         {service.priceLabel}
                       </p>
-                      <p className="mt-0.5 text-3xl font-extrabold text-white tracking-tight drop-shadow-lg">
+                      <p className="mt-0.5 text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-lg">
                         {formatRupiah(service.startingPrice)}
                       </p>
                     </div>
@@ -161,41 +180,100 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               {/* Body */}
               <div className="px-6 py-5">
                 {/* Highlight */}
-                <p className="mb-4 text-sm text-[#94A3B8] leading-relaxed border-l-2 border-blue-500/50 pl-3 italic">
+                <p className="mb-4 text-xs sm:text-sm text-[#94A3B8] leading-relaxed border-l-2 border-blue-500/50 pl-3 italic">
                   {service.highlight}
                 </p>
 
-                {/* Features */}
-                <div className="mb-5">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#64748B]">
-                    Yang Kamu Dapatkan
-                  </p>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-blue-500/15 ring-1 ring-blue-500/30">
-                          <Check className="h-2.5 w-2.5 text-blue-400" />
+                {/* Packages Table */}
+                {service.packages && (
+                  <div className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-[#050816]/60 shadow-inner">
+                    <div className="bg-white/5 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white/50 border-b border-white/10 flex justify-between">
+                      <span>Pilihan Paket</span>
+                      <span>Harga Pasar</span>
+                    </div>
+                    <div className="divide-y divide-white/5">
+                      {service.packages.map((pkg, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 hover:bg-white/5 transition-all group/pkg">
+                          <div className="flex-1 pr-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-black uppercase tracking-tighter ring-1 ring-blue-500/20">
+                                {pkg.name}
+                              </span>
+                              <span className="text-white font-bold text-sm">{pkg.price}</span>
+                            </div>
+                            <p className="text-[11px] text-[#64748B] leading-tight line-clamp-1 group-hover/pkg:line-clamp-none transition-all">
+                              {pkg.target}
+                            </p>
+                          </div>
+                          <button 
+                            onClick={() => handlePackageOrder(pkg.name, pkg.price)}
+                            className="shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)] active:scale-95"
+                          >
+                            Pesan
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Student Pricing Section */}
+                {service.studentPricing && (
+                  <div className="mb-6 p-4 rounded-xl border border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-blue-500/10 relative overflow-hidden group shadow-lg shadow-violet-900/20">
+                    <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-20 transition-all duration-500 rotate-12 group-hover:rotate-0">
+                      <GraduationCap className="w-16 h-16 text-violet-400" />
+                    </div>
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-500 text-white">
+                          <GraduationCap className="h-3 w-3" />
                         </span>
-                        <span className="text-sm text-[#CBD5E1]">{feature}</span>
-                      </li>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-violet-400">Harga Pelajar</span>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <h4 className="text-xl font-black text-white leading-none tracking-tight">{service.studentPricing.price}</h4>
+                          <p className="text-[10px] text-violet-300/70 mt-1.5 font-medium italic">*Wajib lampirkan KTM / Kartu Pelajar</p>
+                        </div>
+                        <button 
+                          onClick={() => handlePackageOrder("Pelajar (" + service.studentPricing!.name + ")", service.studentPricing!.price)}
+                          className="flex items-center gap-2 bg-white text-violet-900 hover:bg-violet-50 text-xs px-4 py-2.5 rounded-lg font-black shadow-xl shadow-violet-900/40 transition-all active:scale-95"
+                        >
+                          <ArrowRight className="h-3.5 w-3.5" />
+                          Ambil Promo
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Features */}
+                <div className="mb-6">
+                  <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-[#475569]">
+                    Standard Features
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                    {service.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500/10 ring-1 ring-blue-500/20">
+                          <Check className="h-2 w-2 text-blue-400" />
+                        </span>
+                        <span className="text-[12px] text-[#94A3B8] font-medium">{feature}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                {/* Note */}
-                <p className="mb-5 text-xs text-[#475569]">
-                  * Harga bisa bervariasi tergantung kebutuhan spesifik proyek Anda. Hubungi kami untuk konsultasi gratis.
-                </p>
-
                 {/* CTA Button */}
-                <button
-                  onClick={handleWhatsApp}
-                  className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-300 hover:from-blue-500 hover:to-violet-500 hover:shadow-blue-800/40 hover:scale-[1.02]"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  <span>Konsultasi via WhatsApp</span>
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={handleWhatsApp}
+                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E293B] border border-white/10 px-5 py-4 text-sm font-bold text-white transition-all duration-300 hover:bg-white/5 hover:border-white/20"
+                  >
+                    <MessageCircle className="h-4 w-4 text-blue-400" />
+                    <span>Hanya Konsultasi Dulu</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>

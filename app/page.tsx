@@ -30,6 +30,9 @@ const Footer = dynamic(() =>
 const WhatsAppButton = dynamic(() =>
   import("@/components/shared/WhatsAppButton").then((m) => m.WhatsAppButton)
 );
+const ChatWidget = dynamic(() =>
+  import("@/components/shared/ChatWidget").then((m) => m.ChatWidget)
+);
 
 export default function Home() {
   return (
@@ -50,6 +53,7 @@ export default function Home() {
 
       {/* Floating UI — deferred */}
       <WhatsAppButton />
+      <ChatWidget />
     </main>
   );
 }
