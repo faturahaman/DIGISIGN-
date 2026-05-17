@@ -10,6 +10,23 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     minimumCacheTTL: 31536000, // 1 year
+    remotePatterns: [
+      // Supabase Storage
+      {
+        protocol: "https",
+        hostname: "aqobnoweyxannqqhixob.supabase.co",
+      },
+      // Google Drive direct links
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+      },
+      // Imgur
+      {
+        protocol: "https",
+        hostname: "i.imgur.com",
+      },
+    ],
   },
 
   // Security & performance headers
