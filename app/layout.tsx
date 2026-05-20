@@ -19,6 +19,27 @@ const geistMono = Geist_Mono({
 });
 
 const BASE_URL = "https://digisign.vercel.app";
+const SITE_NAME = "DiGiSign";
+const BRAND_DESCRIPTION =
+  "DiGiSign adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
+const OG_IMAGE = "/og-image.png";
+const LOGO_IMAGE = "/logo.png";
+const CONTACT_EMAIL = "digitalidsign@gmail.com";
+const CONTACT_PHONE = "+6285924361892";
+const INSTAGRAM_URL = "https://www.instagram.com/digisign_id/";
+const WHATSAPP_URL = "https://wa.me/6285924361892";
+const SERVICE_TYPES = [
+  "Branding Design",
+  "Logo Design",
+  "Poster Design",
+  "Banner Design",
+  "Landing Page",
+  "Company Profile Website",
+  "E-Commerce Website",
+  "Portfolio Website",
+  "Dynamic Website",
+  "UI/UX Design",
+];
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -29,35 +50,47 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  applicationName: SITE_NAME,
   verification: {
     google: "gMKOqq5s2pMSRsfnK_WPIIhayEpTbHOXETG9MOum-FY",
   },
   title: {
-    default: "DiGiSign — Creative Digital Agency",
+    default: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
     template: "%s | DiGiSign",
   },
-  description:
-    "DiGiSign adalah creative digital agency yang menghadirkan jasa desain grafis premium dan pembuatan website berkualitas tinggi. Branding, poster, landing page, e-commerce, dan lebih banyak lagi.",
+  description: BRAND_DESCRIPTION,
   keywords: [
-    "digital agency",
-    "desain grafis",
-    "website",
-    "branding",
-    "landing page",
-    "e-commerce",
-    "UI/UX",
-    "company profile",
-    "jasa desain",
-    "jasa website",
     "DiGiSign",
+    "DiGiSign Indonesia",
+    "DigiSign ID",
+    "digitalidsign",
+    "creative digital agency Indonesia",
+    "jasa desain grafis",
+    "jasa pembuatan website",
+    "jasa website Indonesia",
+    "jasa branding",
+    "desain logo",
+    "desain poster",
+    "desain banner",
+    "landing page",
+    "company profile website",
+    "website company profile",
+    "website e-commerce",
+    "website portfolio",
+    "website dinamis",
+    "UI/UX design",
+    "desain grafis",
+    "branding",
   ],
   authors: [{ name: "DiGiSign", url: BASE_URL }],
   creator: "DiGiSign",
   publisher: "DiGiSign",
+  category: "Creative Digital Agency",
+  classification: "Digital Agency, Graphic Design, Web Design",
 
   // Canonical URL
   alternates: {
-    canonical: BASE_URL,
+    canonical: "/",
   },
 
   // Favicon
@@ -69,17 +102,16 @@ export const metadata: Metadata = {
 
   // Open Graph
   openGraph: {
-    title: "DiGiSign — Creative Digital Agency",
-    description:
-      "We Design Digital Experiences That Feel Premium. Jasa desain grafis dan pembuatan website berkualitas tinggi.",
-    url: BASE_URL,
-    siteName: "DiGiSign",
+    title: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
+    description: BRAND_DESCRIPTION,
+    url: "/",
+    siteName: SITE_NAME,
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "DiGiSign — Creative Digital Agency",
+        alt: "DiGiSign - Creative Digital Agency Indonesia",
         type: "image/png",
       },
     ],
@@ -90,10 +122,9 @@ export const metadata: Metadata = {
   // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: "DiGiSign — Creative Digital Agency",
-    description: "We Design Digital Experiences That Feel Premium.",
-    images: ["/og-image.png"],
-    creator: "@digisign",
+    title: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
+    description: BRAND_DESCRIPTION,
+    images: [OG_IMAGE],
   },
 
   // Robots
@@ -109,45 +140,78 @@ export const metadata: Metadata = {
     },
   },
 
-  // Verification (fill in after deploying)
-  // verification: {
-  //   google: "your-google-verification-code",
-  // },
+  other: {
+    "brand": SITE_NAME,
+    "contact:email": CONTACT_EMAIL,
+    "contact:phone_number": CONTACT_PHONE,
+  },
 };
 
 // JSON-LD Structured Data
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "DiGiSign",
-  description:
-    "Creative digital agency yang menghadirkan jasa desain grafis premium dan pembuatan website berkualitas tinggi.",
-  url: BASE_URL,
-  logo: `${BASE_URL}/logo.png`,
-  image: `${BASE_URL}/og-image.png`,
-  telephone: "+6285924361892",
-  email: "digitalidsign@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "ID",
-  },
-  sameAs: [
-    "https://instagram.com/digisign",
-    "https://linkedin.com/company/digisign",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      name: SITE_NAME,
+      alternateName: ["DigiSign ID", "digitalidsign"],
+      url: BASE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}${LOGO_IMAGE}`,
+      },
+      image: `${BASE_URL}${OG_IMAGE}`,
+      email: CONTACT_EMAIL,
+      telephone: CONTACT_PHONE,
+      sameAs: [INSTAGRAM_URL],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        telephone: CONTACT_PHONE,
+        email: CONTACT_EMAIL,
+        availableLanguage: ["id", "en"],
+        url: WHATSAPP_URL,
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      name: SITE_NAME,
+      alternateName: ["DigiSign ID", "digitalidsign"],
+      url: BASE_URL,
+      inLanguage: "id-ID",
+      publisher: {
+        "@id": `${BASE_URL}/#organization`,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${BASE_URL}/#professional-service`,
+      name: SITE_NAME,
+      description: BRAND_DESCRIPTION,
+      url: BASE_URL,
+      image: `${BASE_URL}${OG_IMAGE}`,
+      logo: `${BASE_URL}${LOGO_IMAGE}`,
+      telephone: CONTACT_PHONE,
+      email: CONTACT_EMAIL,
+      priceRange: "$$",
+      openingHours: "Mo-Fr 09:00-18:00",
+      areaServed: {
+        "@type": "Country",
+        name: "Indonesia",
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "ID",
+      },
+      serviceType: SERVICE_TYPES,
+      provider: {
+        "@id": `${BASE_URL}/#organization`,
+      },
+      sameAs: [INSTAGRAM_URL],
+    },
   ],
-  serviceType: [
-    "Branding Design",
-    "Poster Design",
-    "Banner Design",
-    "Landing Page",
-    "Company Profile Website",
-    "E-Commerce Website",
-    "Portfolio Website",
-    "Dynamic Website",
-  ],
-  priceRange: "$$",
-  openingHours: "Mo-Fr 09:00-18:00",
-  areaServed: "ID",
 };
 
 export default function RootLayout({
