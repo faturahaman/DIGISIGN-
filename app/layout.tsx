@@ -29,7 +29,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-
+  verification: {
+    google: "gMKOqq5s2pMSRsfnK_WPIIhayEpTbHOXETG9MOum-FY",
+  },
   title: {
     default: "DiGiSign — Creative Digital Agency",
     template: "%s | DiGiSign",
@@ -158,7 +160,11 @@ export default function RootLayout({
       <head>
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         {/* DNS prefetch for WhatsApp */}
         <link rel="dns-prefetch" href="https://wa.me" />
         {/* JSON-LD Structured Data */}
