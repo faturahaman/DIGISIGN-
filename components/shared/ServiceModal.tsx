@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, Clock, MessageCircle, ArrowRight, GraduationCap } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
@@ -50,6 +50,15 @@ function formatRupiah(amount: number) {
 export function ServiceModal({ service, onClose }: ServiceModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check screen width for mobile optimization
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -88,6 +97,32 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
   };
 
+  const modalVariants = {
+    initial: {
+      opacity: 0,
+      y: isMobile ? 16 : 32,
+      scale: isMobile ? 1 : 0.96,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: isMobile ? 0.22 : 0.3,
+        ease: isMobile ? ([0.16, 1, 0.3, 1] as const) : ([0.22, 1, 0.36, 1] as const),
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: isMobile ? 12 : 24,
+      scale: isMobile ? 1 : 0.96,
+      transition: {
+        duration: isMobile ? 0.15 : 0.25,
+        ease: isMobile ? ([0.16, 1, 0.3, 1] as const) : ([0.22, 1, 0.36, 1] as const),
+      },
+    },
+  };
+
   return (
     <AnimatePresence>
       {service && (
@@ -98,7 +133,8 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: isMobile ? 0.2 : 0.25 }}
+            style={{ willChange: "opacity" }}
             onClick={handleOverlayClick}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#050816]/90"
             aria-modal="true"
@@ -107,11 +143,12 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
           >
             {/* Modal Panel */}
             <motion.div
-              initial={{ opacity: 0, y: 32, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.96 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[60vh] sm:max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#0B1120] shadow-2xl"
+              variants={modalVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={{ willChange: "transform, opacity" }}
+              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[52vh] sm:max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-white/10 bg-[#0B1120] shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header with Gradient & Background Image */}
@@ -198,7 +235,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                               </span>
                               <span className="text-white font-bold text-sm">{pkg.price}</span>
                             </div>
-                            <p className="text-[11px] text-[#64748B] leading-tight line-clamp-1 group-hover/pkg:line-clamp-none transition-all">
+                            <p className="text-[11px] text-[#64748B] leading-tight">
                               {pkg.target}
                             </p>
                           </div>
