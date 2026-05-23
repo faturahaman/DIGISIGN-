@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink } from "lucide-react";
-import { PORTFOLIO_ITEMS } from "@/lib/constants";
+import Image from "next/image";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import {
+  mapPortfolioRows,
+  PORTFOLIO_API_URL,
+  type PortfolioCategory,
+  type PortfolioItem,
+} from "@/lib/portfolio";
 
-type FilterCategory = "all" | "design" | "website";
+type FilterCategory = "all" | PortfolioCategory;
 
 const GRADIENTS = [
   "from-blue-600/30 to-violet-600/30",
@@ -20,9 +26,40 @@ const GRADIENTS = [
   "from-orange-600/30 to-yellow-600/30",
 ];
 
+function PortfolioImage({ item, gradient }: { item: PortfolioItem; gradient: string }) {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  if (item.imageUrl && !hasImageError) {
+    return (
+      <Image
+        src={item.imageUrl}
+        alt={item.title}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        loader={({ src }) => src}
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        unoptimized
+        onError={() => setHasImageError(true)}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "h-full w-full bg-gradient-to-br transition-transform duration-500 group-hover:scale-105",
+        gradient
+      )}
+    />
+  );
+}
+
 export function PortfolioSection() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("all");
-  const [selectedItem, setSelectedItem] = useState<(typeof PORTFOLIO_ITEMS)[0] | null>(null);
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const { t } = useLanguage();
 
   const FILTERS: { label: string; value: FilterCategory }[] = [
@@ -33,8 +70,49 @@ export function PortfolioSection() {
 
   const filtered =
     activeFilter === "all"
-      ? PORTFOLIO_ITEMS
-      : PORTFOLIO_ITEMS.filter((item) => item.category === activeFilter);
+      ? portfolioItems
+      : portfolioItems.filter((item) => item.category === activeFilter);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPortfolioItems() {
+      try {
+        const res = await fetch(PORTFOLIO_API_URL, {
+          cache: "no-store",
+          headers: {
+            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`Supabase error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        const mapped = mapPortfolioRows(data as Record<string, unknown>[]);
+
+        if (!cancelled) {
+          setPortfolioItems(mapped);
+          setHasError(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setPortfolioItems([]);
+          setHasError(true);
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    loadPortfolioItems();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section id="portfolio" className="relative bg-[#050816] py-16 sm:py-20 lg:py-28">
@@ -69,7 +147,28 @@ export function PortfolioSection() {
         {/* Grid */}
         <motion.div layout className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
-            {filtered.map((item, i) => (
+            {isLoading &&
+              Array.from({ length: 6 }).map((_, i) => (
+                <motion.div
+                  key={`portfolio-skeleton-${i}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="overflow-hidden rounded-2xl border border-white/8 bg-[#0B1120]"
+                >
+                  <div className="h-44 animate-pulse bg-white/5 sm:h-48" />
+                  <div className="p-4">
+                    <div className="mb-3 h-4 w-20 animate-pulse rounded-full bg-white/10" />
+                    <div className="h-5 w-3/4 animate-pulse rounded-md bg-white/10" />
+                    <div className="mt-3 flex gap-1">
+                      <div className="h-5 w-16 animate-pulse rounded-full bg-white/5" />
+                      <div className="h-5 w-20 animate-pulse rounded-full bg-white/5" />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+
+            {!isLoading && filtered.map((item, i) => (
               <motion.div
                 key={item.id}
                 layout
@@ -92,12 +191,7 @@ export function PortfolioSection() {
                     item.size === "large" ? "h-52 sm:h-64" : "h-44 sm:h-48"
                   )}
                 >
-                  <div
-                    className={cn(
-                      "h-full w-full bg-gradient-to-br transition-transform duration-500 group-hover:scale-105",
-                      GRADIENTS[i % GRADIENTS.length]
-                    )}
-                  />
+                  <PortfolioImage item={item} gradient={GRADIENTS[i % GRADIENTS.length]} />
                   {/* Hover overlay */}
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-[#0B1120] via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
@@ -127,6 +221,16 @@ export function PortfolioSection() {
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {!isLoading && filtered.length === 0 && (
+          <div className="rounded-2xl border border-white/8 bg-white/5 px-5 py-10 text-center">
+            <p className="text-sm text-[#94A3B8]">
+              {hasError
+                ? "Portfolio belum bisa dimuat dari Supabase."
+                : "Belum ada portfolio untuk filter ini."}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -152,11 +256,16 @@ export function PortfolioSection() {
             >
               {/* Image */}
               <div className="relative h-48 overflow-hidden sm:h-64">
-                <div
-                  className={cn(
-                    "h-full w-full bg-gradient-to-br",
-                    GRADIENTS[PORTFOLIO_ITEMS.findIndex((p) => p.id === selectedItem.id) % GRADIENTS.length]
-                  )}
+                <PortfolioImage
+                  item={selectedItem}
+                  gradient={
+                    GRADIENTS[
+                      Math.max(
+                        0,
+                        portfolioItems.findIndex((p) => p.id === selectedItem.id)
+                      ) % GRADIENTS.length
+                    ]
+                  }
                 />
                 <button
                   onClick={() => setSelectedItem(null)}
