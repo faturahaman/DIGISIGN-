@@ -82,23 +82,23 @@ export function FAQSection() {
   const centerKey      = rows[ABOVE].key;
 
   return (
-    <section id="faq" className="relative bg-[#050816] py-14 sm:py-18 lg:py-24 overflow-hidden">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/6 blur-[100px]" />
+    <section id="faq" className="relative bg-slate-50 py-14 sm:py-18 lg:py-24 overflow-hidden">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-[100px]" />
 
       <div className="relative mx-auto max-w-2xl px-5 sm:px-6 lg:px-8">
 
         {/* ── Header ── */}
         <BlurFade delay={0}>
           <div className="mb-8 text-center sm:mb-10">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-orange-600 shadow-sm">
               <Sparkles className="h-3 w-3" />
               {t.faq.badge}
             </span>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
               {t.faq.title}{" "}
-              <span className="gradient-text">{t.faq.titleHighlight}</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-purple-500">{t.faq.titleHighlight}</span>
             </h2>
-            <p className="mx-auto mt-2.5 max-w-md text-sm leading-relaxed text-[#64748B]">
+            <p className="mx-auto mt-2.5 max-w-md text-sm font-medium leading-relaxed text-slate-600">
               {t.faq.description}
             </p>
           </div>
@@ -124,17 +124,17 @@ export function FAQSection() {
                     className="flex items-center justify-center"
                   >
                     {i === ABOVE ? (
-                      <div className="w-full flex items-center gap-3 rounded-full border border-violet-500/35 bg-[#0D1526] px-4 py-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-500/12 border border-violet-500/25">
-                          <Sparkles className="h-3 w-3 text-violet-400" />
+                      <div className="w-full flex items-center gap-3 rounded-full border border-orange-200 bg-white px-4 py-3 shadow-sm">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-50 border border-orange-200">
+                          <Sparkles className="h-3 w-3 text-orange-500" />
                         </span>
-                        <span className="flex-1 text-left text-[13px] font-medium text-violet-200 truncate">{q}</span>
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-blue-600">
+                        <span className="flex-1 text-left text-[13px] font-bold text-slate-900 truncate">{q}</span>
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-purple-500">
                           <MessageCircle className="h-3 w-3 text-white" />
                         </span>
                       </div>
                     ) : (
-                      <span className="text-[13px] text-[#94A3B8] truncate px-3">{q}</span>
+                      <span className="text-[13px] font-medium text-slate-500 truncate px-3">{q}</span>
                     )}
                   </div>
                 ))}
@@ -143,8 +143,8 @@ export function FAQSection() {
               /* Client-only animated carousel */
               <>
                 {/* Top + bottom fades */}
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-10 z-10 bg-gradient-to-b from-[#050816] to-transparent" />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 z-10 bg-gradient-to-t from-[#050816] to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-10 z-10 bg-gradient-to-b from-slate-50 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 z-10 bg-gradient-to-t from-slate-50 to-transparent" />
 
                 {/* Rows above pill */}
                 {rows.filter(r => r.isAbove).map(({ question, key, dist }) => (
@@ -157,7 +157,7 @@ export function FAQSection() {
                         exit={{    y: -ROW_H * 0.7, opacity: 0 }}
                         transition={{ duration: DURATION, ease: EASE }}
                         onClick={() => handleClick(question)}
-                        className="w-full h-full flex items-center justify-center text-[13px] text-[#94A3B8] hover:text-white/80 transition-colors duration-200 truncate px-3 rounded-full hover:bg-white/3"
+                        className="w-full h-full flex items-center justify-center text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors duration-200 truncate px-3 rounded-full hover:bg-slate-200/50"
                       >
                         {question}
                       </motion.button>
@@ -173,16 +173,16 @@ export function FAQSection() {
                   className={[
                     "group relative w-full flex items-center gap-3",
                     "rounded-full border px-4",
-                    "bg-[#0D1526] border-violet-500/35",
-                    "shadow-[0_0_24px_rgba(139,92,246,0.12)]",
-                    "hover:border-violet-400/60 hover:shadow-[0_0_36px_rgba(139,92,246,0.22)]",
+                    "bg-white border-orange-200",
+                    "shadow-sm",
+                    "hover:border-orange-300 hover:shadow-md",
                     "transition-colors transition-shadow duration-300 overflow-hidden",
-                    flashActive ? "border-violet-400 shadow-[0_0_40px_rgba(139,92,246,0.35)]" : "",
+                    flashActive ? "border-orange-400 shadow-lg" : "",
                   ].join(" ")}
                 >
                   {/* Left icon — never moves */}
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-500/12 border border-violet-500/25 group-hover:bg-violet-500/22 transition-colors duration-300 z-10">
-                    <Sparkles className="h-3 w-3 text-violet-400" />
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-50 border border-orange-200 group-hover:bg-orange-100 transition-colors duration-300 z-10">
+                    <Sparkles className="h-3 w-3 text-orange-500" />
                   </span>
 
                   {/* Text window — clips the sliding text */}
@@ -194,7 +194,7 @@ export function FAQSection() {
                         animate={{ y: "0%",   opacity: 1 }}
                         exit={{    y: "-110%", opacity: 0 }}
                         transition={{ duration: DURATION, ease: EASE }}
-                        className="absolute inset-0 flex items-center text-left text-[13px] font-medium text-violet-200 group-hover:text-white transition-colors duration-300 truncate"
+                        className="absolute inset-0 flex items-center text-left text-[13px] font-bold text-slate-700 group-hover:text-orange-600 transition-colors duration-300 truncate"
                       >
                         {centerQuestion}
                       </motion.span>
@@ -202,13 +202,13 @@ export function FAQSection() {
                   </span>
 
                   {/* Right badge — never moves */}
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-blue-600 shadow-[0_0_10px_rgba(139,92,246,0.45)] group-hover:shadow-[0_0_18px_rgba(139,92,246,0.65)] transition-shadow duration-300 z-10">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-purple-500 shadow-sm group-hover:shadow-md transition-shadow duration-300 z-10">
                     <MessageCircle className="h-3 w-3 text-white" />
                   </span>
 
                   {/* Shine sweep */}
                   <span className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
-                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/4 to-transparent group-hover:translate-x-full transition-transform duration-700" />
+                    <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-orange-100/30 to-transparent group-hover:translate-x-full transition-transform duration-700" />
                   </span>
                 </motion.button>
 
@@ -223,7 +223,7 @@ export function FAQSection() {
                         exit={{    y: -ROW_H * 0.7, opacity: 0 }}
                         transition={{ duration: DURATION, ease: EASE }}
                         onClick={() => handleClick(question)}
-                        className="w-full h-full flex items-center justify-center text-[13px] text-[#94A3B8] hover:text-white/80 transition-colors duration-200 truncate px-3 rounded-full hover:bg-white/3"
+                        className="w-full h-full flex items-center justify-center text-[13px] font-medium text-slate-500 hover:text-slate-900 transition-colors duration-200 truncate px-3 rounded-full hover:bg-slate-200/50"
                       >
                         {question}
                       </motion.button>
@@ -237,7 +237,7 @@ export function FAQSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-1.5 w-1.5 rounded-full bg-violet-400/60"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-1.5 w-1.5 rounded-full bg-orange-400"
                   />
                 )}
               </>
@@ -247,11 +247,11 @@ export function FAQSection() {
 
         {/* ── Bottom hint ── */}
         <BlurFade delay={0.28}>
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[#475569]">
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
             <MousePointerClick className="h-3.5 w-3.5 shrink-0" />
             <span>
               {t.faq.askBtn} →{" "}
-              <span className="text-violet-400/70">DigiMin AI</span>
+              <span className="font-bold text-orange-600">Arvion Assistant</span>
             </span>
           </div>
         </BlurFade>

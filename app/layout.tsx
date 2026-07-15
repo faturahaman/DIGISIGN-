@@ -19,14 +19,14 @@ const geistMono = Geist_Mono({
 });
 
 const BASE_URL = "https://digisign.vercel.app";
-const SITE_NAME = "DiGiSign";
+const SITE_NAME = "Arvion";
 const BRAND_DESCRIPTION =
-  "DiGiSign adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
+  "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
 const OG_IMAGE = "/og-image.png";
-const LOGO_IMAGE = "/logo.png";
+const LOGO_IMAGE = "/arvion.png";
 const CONTACT_EMAIL = "digitalidsign@gmail.com";
 const CONTACT_PHONE = "+6285924361892";
-const INSTAGRAM_URL = "https://www.instagram.com/digisign_id/";
+const INSTAGRAM_URL = "https://www.instagram.com/arvion_id/";
 const WHATSAPP_URL = "https://wa.me/6285924361892";
 const SERVICE_TYPES = [
   "Branding Design",
@@ -55,13 +55,13 @@ export const metadata: Metadata = {
     google: "gMKOqq5s2pMSRsfnK_WPIIhayEpTbHOXETG9MOum-FY",
   },
   title: {
-    default: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
-    template: "%s | DiGiSign",
+    default: "Arvion - Jasa Desain Grafis & Website Indonesia",
+    template: "%s | Arvion",
   },
   description: BRAND_DESCRIPTION,
   keywords: [
-    "DiGiSign",
-    "DiGiSign Indonesia",
+    "Arvion",
+    "Arvion Indonesia",
     "DigiSign ID",
     "digitalidsign",
     "creative digital agency Indonesia",
@@ -82,9 +82,9 @@ export const metadata: Metadata = {
     "desain grafis",
     "branding",
   ],
-  authors: [{ name: "DiGiSign", url: BASE_URL }],
-  creator: "DiGiSign",
-  publisher: "DiGiSign",
+  authors: [{ name: "Arvion", url: BASE_URL }],
+  creator: "Arvion",
+  publisher: "Arvion",
   category: "Creative Digital Agency",
   classification: "Digital Agency, Graphic Design, Web Design",
 
@@ -95,14 +95,14 @@ export const metadata: Metadata = {
 
   // Favicon
   icons: {
-    icon: [{ url: "/favicon.png", type: "image/png" }],
-    apple: [{ url: "/favicon.png", type: "image/png" }],
-    shortcut: "/favicon.png",
+    icon: [{ url: "/arvion.png", type: "image/png" }],
+    apple: [{ url: "/arvion.png", type: "image/png" }],
+    shortcut: "/arvion.png",
   },
 
   // Open Graph
   openGraph: {
-    title: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
+    title: "Arvion - Jasa Desain Grafis & Website Indonesia",
     description: BRAND_DESCRIPTION,
     url: "/",
     siteName: SITE_NAME,
@@ -111,7 +111,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "DiGiSign - Creative Digital Agency Indonesia",
+        alt: "Arvion - Creative Digital Agency Indonesia",
         type: "image/png",
       },
     ],
@@ -122,7 +122,7 @@ export const metadata: Metadata = {
   // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: "DiGiSign - Jasa Desain Grafis & Website Indonesia",
+    title: "Arvion - Jasa Desain Grafis & Website Indonesia",
     description: BRAND_DESCRIPTION,
     images: [OG_IMAGE],
   },

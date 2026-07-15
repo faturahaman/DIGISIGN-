@@ -73,7 +73,7 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
 
   if (avatarUrl && !imgError) {
     return (
-      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-blue-500/30">
+      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-orange-200 shadow-sm">
         <Image
           src={avatarUrl}
           alt={name}
@@ -87,7 +87,7 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   }
 
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-lg font-bold text-white ring-2 ring-blue-500/30">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-purple-500 text-lg font-bold text-white ring-2 ring-orange-200 shadow-sm">
       {initial}
     </div>
   );
@@ -97,26 +97,26 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
 
 function SkeletonCard() {
   return (
-    <div className="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+    <div className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm">
       {/* Quote icon placeholder */}
-      <div className="mb-4 h-8 w-8 animate-pulse rounded-md bg-white/10" />
+      <div className="mb-4 h-8 w-8 animate-pulse rounded-md bg-slate-100" />
       {/* Stars */}
       <div className="mb-5 flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-4 w-4 animate-pulse rounded-sm bg-white/10" />
+          <div key={i} className="h-4 w-4 animate-pulse rounded-sm bg-slate-100" />
         ))}
       </div>
       {/* Text lines */}
-      <div className="mb-2 h-4 w-full animate-pulse rounded-md bg-white/10" />
-      <div className="mb-2 h-4 w-5/6 animate-pulse rounded-md bg-white/10" />
-      <div className="mb-2 h-4 w-4/6 animate-pulse rounded-md bg-white/10" />
-      <div className="mb-6 h-4 w-3/6 animate-pulse rounded-md bg-white/10" />
+      <div className="mb-2 h-4 w-full animate-pulse rounded-md bg-slate-100" />
+      <div className="mb-2 h-4 w-5/6 animate-pulse rounded-md bg-slate-100" />
+      <div className="mb-2 h-4 w-4/6 animate-pulse rounded-md bg-slate-100" />
+      <div className="mb-6 h-4 w-3/6 animate-pulse rounded-md bg-slate-100" />
       {/* Author */}
       <div className="flex items-center gap-4">
-        <div className="h-12 w-12 animate-pulse rounded-full bg-white/10" />
+        <div className="h-12 w-12 animate-pulse rounded-full bg-slate-100" />
         <div className="flex flex-col gap-2">
-          <div className="h-4 w-32 animate-pulse rounded-md bg-white/10" />
-          <div className="h-3 w-24 animate-pulse rounded-md bg-white/10" />
+          <div className="h-4 w-32 animate-pulse rounded-md bg-slate-100" />
+          <div className="h-3 w-24 animate-pulse rounded-md bg-slate-100" />
         </div>
       </div>
     </div>
@@ -140,10 +140,10 @@ function NavButton({
       aria-label={label}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.94 }}
-      className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-sm transition-colors hover:border-blue-500/40 hover:bg-blue-500/10"
+      className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"
     >
       {/* Glow ring on hover */}
-      <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 shadow-[0_0_16px_2px_rgba(59,130,246,0.35)] transition-opacity duration-300 group-hover:opacity-100" />
+      <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 shadow-[0_0_16px_2px_rgba(245,158,11,0.2)] transition-opacity duration-300 group-hover:opacity-100" />
       {children}
     </motion.button>
   );
@@ -273,15 +273,15 @@ export function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-[#050816] py-20 sm:py-24 lg:py-32"
+      className="relative overflow-hidden bg-slate-50 py-20 sm:py-24 lg:py-32"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* ── Ambient background glows ── */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-600/6 blur-[120px]" />
-        <div className="absolute right-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/6 blur-[120px]" />
-        <div className="absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/5 blur-[120px]" />
+        <div className="absolute right-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/5 blur-[120px]" />
+        <div className="absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-orange-500/10 to-transparent" />
       </div>
 
       {/* ── Floating particles ── */}
@@ -312,15 +312,15 @@ export function TestimonialsSection() {
                   exit="exit"
                   transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <TiltCard className="group relative rounded-[28px] border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.03] p-8 backdrop-blur-xl sm:p-10">
+                  <TiltCard className="group relative rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
                     {/* Card inner glow on hover */}
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 shadow-[inset_0_0_60px_rgba(59,130,246,0.06)] transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 shadow-[inset_0_0_60px_rgba(245,158,11,0.03)] transition-opacity duration-500 group-hover:opacity-100" />
 
                     {/* Border glow */}
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 ring-1 ring-blue-500/30 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 ring-1 ring-orange-200 transition-opacity duration-500 group-hover:opacity-100" />
 
                     {/* Quote icon */}
-                    <Quote className="mb-5 h-9 w-9 text-blue-500/30" />
+                    <Quote className="mb-5 h-9 w-9 text-orange-200" />
 
                     {/* Stars */}
                     <div className="mb-5 flex gap-1">
@@ -331,14 +331,14 @@ export function TestimonialsSection() {
                             "h-4 w-4 transition-colors",
                             i < current.rating
                               ? "fill-yellow-400 text-yellow-400"
-                              : "fill-white/10 text-white/10"
+                              : "fill-slate-100 text-slate-100"
                           )}
                         />
                       ))}
                     </div>
 
                     {/* Testimonial text */}
-                    <p className="text-lg leading-relaxed text-[#E2E8F0] sm:text-xl">
+                    <p className="text-lg leading-relaxed text-slate-700 sm:text-xl font-medium">
                       &ldquo;{current.message}&rdquo;
                     </p>
 
@@ -346,13 +346,13 @@ export function TestimonialsSection() {
                     <div className="mt-8 flex items-center gap-4">
                       <Avatar name={current.name} avatarUrl={current.avatar} />
                       <div>
-                        <div className="text-sm font-semibold text-white sm:text-base">
+                        <div className="text-sm font-bold text-slate-900 sm:text-base">
                           {current.name}
                         </div>
-                        <div className="mt-0.5 text-xs text-[#94A3B8] sm:text-sm">
+                        <div className="mt-0.5 text-xs text-slate-500 sm:text-sm">
                           {current.role}
                           {current.role && current.company && (
-                            <span className="mx-1.5 text-white/20">—</span>
+                            <span className="mx-1.5 text-slate-300">—</span>
                           )}
                           {current.company}
                         </div>
@@ -381,8 +381,8 @@ export function TestimonialsSection() {
                     className={cn(
                       "h-2 rounded-full transition-all duration-400",
                       i === activeIndex
-                        ? "w-7 bg-gradient-to-r from-blue-500 to-violet-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]"
-                        : "w-2 bg-white/20 hover:bg-white/40"
+                        ? "w-7 bg-gradient-to-r from-orange-400 to-purple-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]"
+                        : "w-2 bg-slate-200 hover:bg-slate-300"
                     )}
                   />
                 ))}
@@ -396,7 +396,7 @@ export function TestimonialsSection() {
 
           {/* Error notice (non-blocking) */}
           {error && (
-            <p className="mt-4 text-center text-xs text-white/20">
+            <p className="mt-4 text-center text-xs text-slate-400">
               Showing cached testimonials
             </p>
           )}
@@ -423,7 +423,7 @@ function Particles() {
       {PARTICLE_CONFIG.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-blue-400/30"
+          className="absolute rounded-full bg-orange-400/20"
           style={{
             top: p.top,
             left: p.left,

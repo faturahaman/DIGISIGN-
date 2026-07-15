@@ -532,7 +532,7 @@ export const TESTIMONIALS = [
     avatarUrl: "/images/avatars/avatar-1.webp",
     avatarAlt: "Foto Ahmad Fauzi",
     review:
-      "DiGiSign mengubah brand kami secara total. Hasilnya jauh melampaui ekspektasi kami. Tim mereka sangat profesional dan responsif sepanjang proses.",
+      "Arvion mengubah brand kami secara total. Hasilnya jauh melampaui ekspektasi kami. Tim mereka sangat profesional dan responsif sepanjang proses.",
     rating: 5,
   },
   {
@@ -543,7 +543,7 @@ export const TESTIMONIALS = [
     avatarUrl: "/images/avatars/avatar-2.webp",
     avatarAlt: "Foto Sari Dewi",
     review:
-      "Website e-commerce yang dibuat DiGiSign meningkatkan konversi kami sebesar 40%. Desainnya premium dan pengalaman penggunanya sangat intuitif.",
+      "Website e-commerce yang dibuat Arvion meningkatkan konversi kami sebesar 40%. Desainnya premium dan pengalaman penggunanya sangat intuitif.",
     rating: 5,
   },
   {
@@ -554,17 +554,17 @@ export const TESTIMONIALS = [
     avatarUrl: "/images/avatars/avatar-3.webp",
     avatarAlt: "Foto Budi Santoso",
     review:
-      "Proses kerja DiGiSign sangat terstruktur dan transparan. Mereka benar-benar memahami kebutuhan bisnis kami dan menerjemahkannya menjadi desain yang tepat sasaran.",
+      "Proses kerja Arvion sangat terstruktur dan transparan. Mereka benar-benar memahami kebutuhan bisnis kami dan menerjemahkannya menjadi desain yang tepat sasaran.",
     rating: 5,
   },
 ];
 
 export const WHATSAPP_NUMBER = "6285924361892";
 export const WHATSAPP_MESSAGE =
-  "Halo DiGiSign, saya ingin memulai proyek bersama kalian. Bisa ceritakan lebih lanjut tentang layanan kalian?";
+  "Halo Arvion, saya ingin memulai proyek bersama kalian. Bisa ceritakan lebih lanjut tentang layanan kalian?";
 
 export const SOCIAL_LINKS = [
-  { platform: "Instagram", url: "https://instagram.com/digisign", handle: "@digisign" },
-  { platform: "LinkedIn", url: "https://linkedin.com/company/digisign", handle: "DiGiSign" },
-  { platform: "Behance", url: "https://behance.net/digisign", handle: "digisign" },
+  { platform: "Instagram", url: "https://instagram.com/arvion", handle: "@arvion" },
+  { platform: "LinkedIn", url: "https://linkedin.com/company/arvion", handle: "Arvion" },
+  { platform: "Behance", url: "https://behance.net/arvion", handle: "arvion" },
 ];

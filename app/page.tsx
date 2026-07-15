@@ -9,8 +9,8 @@ const MarqueeSection = dynamic(() =>
 const ServicesSection = dynamic(() =>
   import("@/components/sections/ServicesSection").then((m) => m.ServicesSection)
 );
-const WhyDigiSignSection = dynamic(() =>
-  import("@/components/sections/WhyDigiSignSection").then((m) => m.WhyDigiSignSection)
+const WhyArvionSection = dynamic(() =>
+  import("@/components/sections/WhyArvionSection").then((m) => m.WhyArvionSection)
 );
 const ProcessSection = dynamic(() =>
   import("@/components/sections/ProcessSection").then((m) => m.ProcessSection)
@@ -39,7 +39,7 @@ const ChatWidget = dynamic(() =>
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#050816]">
+    <main className="relative min-h-screen bg-slate-50">
       {/* Critical above-the-fold — loaded immediately */}
       <Navbar />
       <HeroSection />
@@ -47,7 +47,7 @@ export default function Home() {
       {/* Below-the-fold — lazy loaded */}
       <MarqueeSection />
       <ServicesSection />
-      <WhyDigiSignSection />
+      <WhyArvionSection />
       <ProcessSection />
       <PortfolioSection />
       <TestimonialsSection />

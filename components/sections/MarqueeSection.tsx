@@ -13,7 +13,7 @@ function MarqueeRow({ reverse = false }: { reverse?: boolean }) {
         className={`flex whitespace-nowrap ${reverse ? "animate-marquee-reverse" : "animate-marquee"}`}
         style={{ width: "max-content" }}
       >
-        <span className="text-2xl font-bold tracking-widest text-white/10 sm:text-3xl md:text-4xl lg:text-5xl">
+        <span className="text-2xl font-bold tracking-widest text-slate-900/10 sm:text-3xl md:text-4xl lg:text-5xl">
           {doubled}
         </span>
       </div>
@@ -23,10 +23,10 @@ function MarqueeRow({ reverse = false }: { reverse?: boolean }) {
 
 export function MarqueeSection() {
   return (
-    <section className="relative overflow-hidden border-y border-white/5 bg-[#050816] py-3">
-      {/* Gradient fades */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#050816] to-transparent sm:w-32" />
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#050816] to-transparent sm:w-32" />
+    <section className="relative overflow-hidden border-y border-border bg-background py-3">
+      {/* Gradient fades (light variant) */}
+      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-background to-transparent sm:w-32" />
+      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-background to-transparent sm:w-32" />
 
       <MarqueeRow />
       <MarqueeRow reverse />

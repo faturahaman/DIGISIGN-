@@ -46,11 +46,11 @@ export const translations = {
       startingFrom: "Mulai dari",
     },
 
-    // Why DiGiSign
+    // Why Arvion
     why: {
-      badge: "Mengapa DiGiSign",
+      badge: "Mengapa Arvion",
       title: "Mengapa Memilih",
-      titleHighlight: "DiGiSign?",
+      titleHighlight: "Arvion?",
       description:
         "Kami bukan sekadar agency biasa. Kami adalah mitra strategis yang berkomitmen pada hasil nyata untuk bisnis Anda.",
     },
@@ -85,7 +85,7 @@ export const translations = {
       title: "Apa Kata",
       titleHighlight: "Klien Kami",
       description:
-        "Kepercayaan klien adalah aset terbesar kami. Inilah yang mereka katakan tentang pengalaman bekerja bersama DiGiSign.",
+        "Kepercayaan klien adalah aset terbesar kami. Inilah yang mereka katakan tentang pengalaman bekerja bersama Arvion.",
       prev: "Testimoni sebelumnya",
       next: "Testimoni berikutnya",
       goTo: "Ke testimoni",
@@ -127,13 +127,13 @@ export const translations = {
         },
       },
       rights: "Hak cipta dilindungi.",
-      crafted: "Dibuat dengan ❤️ oleh DiGiSign",
+      crafted: "Dibuat dengan ❤️ oleh Arvion",
     },
 
     // Chat Widget
     chat: {
       initialMessage:
-        "Halo! Saya DigiMin - Ai, asisten AI dari DiGiSign. Ada yang bisa saya bantu terkait layanan web development, UI/UX, atau digital marketing?\nQUICK_REPLIES:[\"Lihat layanan\",\"Berapa estimasi biaya?\",\"Konsultasi gratis\"]",
+        "Halo! Saya DigiMin - Ai, asisten AI dari Arvion. Ada yang bisa saya bantu terkait layanan web development, UI/UX, atau digital marketing?\nQUICK_REPLIES:[\"Lihat layanan\",\"Berapa estimasi biaya?\",\"Konsultasi gratis\"]",
       placeholder: "Tanya DigiMin - Ai di sini...",
       status: "Online",
       label: "Chat Ai",
@@ -148,7 +148,7 @@ export const translations = {
     whatsapp: {
       label: "Chat via WhatsApp",
       tooltip: "Respon cepat!",
-      message: "Halo DiGiSign, saya ingin konsultasi tentang layanan kalian 😊",
+      message: "Halo Arvion, saya ingin konsultasi tentang layanan kalian 😊",
     },
 
     // Service Modal
@@ -163,9 +163,9 @@ export const translations = {
       consultOnly: "Hanya Konsultasi Dulu",
       closeModal: "Tutup modal",
       orderMessage: (title: string) =>
-        `Halo DiGiSign! Saya tertarik dengan layanan *${title}* yang ditawarkan. Bisa berikan info lebih detail mengenai harga dan prosesnya?`,
+        `Halo Arvion! Saya tertarik dengan layanan *${title}* yang ditawarkan. Bisa berikan info lebih detail mengenai harga dan prosesnya?`,
       packageOrderMessage: (pkgName: string, serviceName: string, price: string) =>
-        `Halo DiGiSign! Saya ingin memesan paket *${pkgName}* untuk layanan *${serviceName}*.\n\nHarga: ${price}\n\nMohon info selanjutnya untuk proses pengerjaannya. Terima kasih!`,
+        `Halo Arvion! Saya ingin memesan paket *${pkgName}* untuk layanan *${serviceName}*.\n\nHarga: ${price}\n\nMohon info selanjutnya untuk proses pengerjaannya. Terima kasih!`,
     },
 
     // FAQ Section
@@ -235,11 +235,11 @@ export const translations = {
       startingFrom: "Starting from",
     },
 
-    // Why DiGiSign
+    // Why Arvion
     why: {
-      badge: "Why DiGiSign",
+      badge: "Why Arvion",
       title: "Why Choose",
-      titleHighlight: "DiGiSign?",
+      titleHighlight: "Arvion?",
       description:
         "We're not just another agency. We're a strategic partner committed to delivering real results for your business.",
     },
@@ -274,7 +274,7 @@ export const translations = {
       title: "What Our",
       titleHighlight: "Clients Say",
       description:
-        "Client trust is our greatest asset. Here's what they say about working with DiGiSign.",
+        "Client trust is our greatest asset. Here's what they say about working with Arvion.",
       prev: "Previous testimonial",
       next: "Next testimonial",
       goTo: "Go to testimonial",
@@ -316,13 +316,13 @@ export const translations = {
         },
       },
       rights: "All rights reserved.",
-      crafted: "Crafted with ❤️ by DiGiSign",
+      crafted: "Crafted with ❤️ by Arvion",
     },
 
     // Chat Widget
     chat: {
       initialMessage:
-        'Hello! I\'m DigiMin - Ai, DiGiSign\'s AI assistant. How can I help you with web development, UI/UX, or digital marketing?\nQUICK_REPLIES:["View services","Pricing estimate?","Free consultation"]',
+        'Hello! I\'m DigiMin - Ai, Arvion\'s AI assistant. How can I help you with web development, UI/UX, or digital marketing?\nQUICK_REPLIES:["View services","Pricing estimate?","Free consultation"]',
       placeholder: "Ask DigiMin - Ai here...",
       status: "Online",
       label: "Chat AI",
@@ -337,7 +337,7 @@ export const translations = {
     whatsapp: {
       label: "Chat via WhatsApp",
       tooltip: "Fast response!",
-      message: "Hello DiGiSign, I'd like to consult about your services 😊",
+      message: "Hello Arvion, I'd like to consult about your services 😊",
     },
 
     // Service Modal
@@ -352,9 +352,9 @@ export const translations = {
       consultOnly: "Just Consult First",
       closeModal: "Close modal",
       orderMessage: (title: string) =>
-        `Hello DiGiSign! I'm interested in your *${title}* service. Could you provide more details about pricing and the process?`,
+        `Hello Arvion! I'm interested in your *${title}* service. Could you provide more details about pricing and the process?`,
       packageOrderMessage: (pkgName: string, serviceName: string, price: string) =>
-        `Hello DiGiSign! I'd like to order the *${pkgName}* package for the *${serviceName}* service.\n\nPrice: ${price}\n\nPlease let me know the next steps. Thank you!`,
+        `Hello Arvion! I'd like to order the *${pkgName}* package for the *${serviceName}* service.\n\nPrice: ${price}\n\nPlease let me know the next steps. Thank you!`,
     },
 
     // FAQ Section
