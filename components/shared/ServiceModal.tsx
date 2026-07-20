@@ -148,102 +148,96 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               animate="animate"
               exit="exit"
               style={{ willChange: "transform, opacity" }}
-              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[52vh] sm:max-h-[85vh] flex flex-col overflow-y-auto overflow-x-hidden rounded-2xl border border-border bg-white shadow-2xl transform-gpu"
+              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[85vh] flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xl transform-gpu"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header with Gradient & Background Image */}
-              <div className="relative px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-5 shrink-0 overflow-hidden text-slate-900">
-                {/* Background Layer */}
-                <div className={cn("absolute inset-0 bg-gradient-to-br opacity-40 mix-blend-multiply", service.gradient)} />
+              {/* Image Banner */}
+              <div className="relative w-full h-44 sm:h-52 shrink-0 bg-slate-100 overflow-hidden">
+                {/* Gradient Overlay behind image */}
+                <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50 z-0", service.gradient)} />
                 
                 {service.imageUrl && (
-                  <div className="absolute inset-0">
-                      <Image
-                        src={service.imageUrl}
-                        alt={service.title}
-                        fill
-                        priority
-                        className="object-cover opacity-70 brightness-105"
-                        sizes="(max-width: 768px) 100vw, 512px"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/30 to-transparent" />
-                      <div className="absolute inset-0 bg-white/10 pointer-events-none" />
-                    </div>
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.title}
+                    fill
+                    priority
+                    className="object-cover relative z-10"
+                    sizes="(max-width: 768px) 100vw, 512px"
+                  />
                 )}
+                
+                {/* Shadow gradient on bottom of image for contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-20" />
 
-                {/* Header Content */}
-                <div className="relative z-10">
-                  <div className="flex items-start gap-4">
-                    {/* Icon */}
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-white/60">
-                      <service.icon className="h-6 w-6 text-slate-700" />
-                    </div>
+                {/* Close button - absolute top right */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-3.5 right-3.5 z-30 flex h-8.5 w-8.5 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20 transition-all hover:bg-black/60 active:scale-95"
+                  aria-label={t.modal.closeModal}
+                >
+                  <X className="h-4 w-4" />
+                </button>
 
-                      <div className="flex-1 min-w-0">
-                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">{service.title}</h2>
-                    </div>
-
-                    {/* Close button */}
-                    <button
-                      onClick={onClose}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-white/60 text-slate-700 transition-all hover:bg-white/70"
-                      aria-label={t.modal.closeModal}
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  {/* Price Badge */}
-                  <div className="mt-5 flex items-end gap-3">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-wider text-slate-600">
-                        {service.priceLabel}
-                      </p>
-                      <p className="mt-0.5 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                        {formatRupiah(service.startingPrice)}
-                      </p>
-                    </div>
-                    <div className="mb-1 flex items-center gap-1.5 rounded-full border border-border bg-white/60 px-3 py-1">
-                      <Clock className="h-3.5 w-3.5 text-slate-700" />
-                      <span className="text-xs font-medium text-slate-700">{service.deliveryTime}</span>
-                    </div>
-                  </div>
+                {/* Floating Service Icon */}
+                <div className="absolute bottom-3 left-4 z-30 flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-lg border border-slate-100">
+                  <service.icon className="h-5.5 w-5.5 text-orange-500" />
                 </div>
               </div>
 
-              {/* Body */}
-              <div className="px-6 py-5">
+              {/* Scrollable Body */}
+              <div className="flex-1 overflow-y-auto p-5 sm:p-6 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+                {/* Title & Price */}
+                <div className="mb-5">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight tracking-tight">{service.title}</h2>
+                  
+                  <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                        {service.priceLabel}
+                      </span>
+                      <p className="mt-1 text-2xl font-black text-orange-600 tracking-tight leading-none">
+                        {formatRupiah(service.startingPrice)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-full border border-slate-100 bg-slate-50 px-3 py-1 shadow-2xs">
+                      <Clock className="h-3.5 w-3.5 text-orange-500" />
+                      <span className="text-xs font-semibold text-slate-600">{service.deliveryTime}</span>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Highlight */}
-                <p className="mb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-l-2 border-blue-500/30 pl-3 italic">
+                <p className="mb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-l-3 border-orange-500 bg-orange-50/20 p-3 rounded-r-lg italic">
                   {service.highlight}
                 </p>
 
-                {/* Packages Table */}
+                {/* Packages List */}
                 {service.packages && (
-                  <div className="mb-6 overflow-hidden rounded-xl border border-border bg-white/60">
-                    <div className="bg-slate-100 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500 border-b border-border flex justify-between">
-                      <span>{t.modal.packages}</span>
-                      <span>{t.modal.marketPrice}</span>
-                    </div>
-                    <div className="divide-y divide-slate-100">
+                  <div className="mb-6">
+                    <h3 className="mb-3 text-[10px] font-black uppercase tracking-wider text-slate-400">
+                      {t.modal.packages}
+                    </h3>
+                    <div className="flex flex-col gap-3">
                       {service.packages.map((pkg, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-all group/pkg">
-                          <div className="flex-1 pr-4">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-tighter ring-1 ring-blue-200">
+                        <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-orange-200 transition-all duration-300">
+                          <div className="flex-1 pr-2">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="px-2.5 py-0.5 rounded bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-wider border border-orange-100">
                                 {pkg.name}
                               </span>
-                              <span className="text-slate-900 font-bold text-sm">{pkg.price}</span>
+                              <span className="text-slate-900 font-extrabold text-sm sm:text-base">{pkg.price}</span>
                             </div>
-                            <p className="text-[11px] text-slate-600 leading-tight">
+                            <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
                               {pkg.target}
                             </p>
                           </div>
                           <button 
                             onClick={() => handlePackageOrder(pkg.name, pkg.price)}
-                            className="shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_15px_rgba(37,99,235,0.15)] active:scale-95"
+                            className="shrink-0 flex items-center justify-center gap-1 bg-linear-to-r from-orange-500 to-purple-500 hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
                           >
-                            {t.modal.order}
+                            <span>{t.modal.order}</span>
+                            <ArrowRight className="h-3 w-3" />
                           </button>
                         </div>
                       ))}
@@ -251,10 +245,10 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                   </div>
                 )}
 
-                {/* Student Pricing Section */}
+                {/* Student Pricing */}
                 {service.studentPricing && (
-                  <div className="mb-6 p-4 rounded-xl border border-violet-100 bg-gradient-to-br from-violet-50 to-blue-50 relative overflow-hidden group shadow-sm">
-                    <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-20 transition-all duration-500 rotate-12 group-hover:rotate-0">
+                  <div className="mb-6 p-4 rounded-xl border border-violet-100 bg-linear-to-br from-violet-50/50 to-purple-50/30 relative overflow-hidden group shadow-2xs">
+                    <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-15 transition-all duration-500 rotate-12 group-hover:rotate-0">
                       <GraduationCap className="w-16 h-16 text-violet-400" />
                     </div>
                     <div className="relative z-10">
@@ -262,18 +256,24 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-500 text-white">
                           <GraduationCap className="h-3 w-3" />
                         </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-violet-600">{t.modal.studentPricing}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-violet-600">
+                          {t.modal.studentPricing}
+                        </span>
                       </div>
-                      <div className="flex justify-between items-end">
+                      <div className="flex justify-between items-end gap-3 flex-wrap">
                         <div>
-                          <h4 className="text-xl font-black text-slate-900 leading-none tracking-tight">{service.studentPricing.price}</h4>
-                          <p className="text-[10px] text-violet-600/70 mt-1.5 font-medium italic">{t.modal.studentNote}</p>
+                          <h4 className="text-xl font-black text-slate-900 leading-none tracking-tight">
+                            {service.studentPricing.price}
+                          </h4>
+                          <p className="text-[10px] text-violet-600/70 mt-1.5 font-medium italic">
+                            {t.modal.studentNote}
+                          </p>
                         </div>
                         <button 
                           onClick={() => handlePackageOrder("Pelajar (" + service.studentPricing!.name + ")", service.studentPricing!.price)}
-                          className="flex items-center gap-2 bg-white text-violet-900 hover:bg-violet-50 text-xs px-4 py-2.5 rounded-lg font-black shadow transition-all active:scale-95"
+                          className="flex items-center gap-2 bg-white text-violet-900 hover:bg-violet-50 text-xs px-3.5 py-2.5 rounded-xl font-bold shadow-xs border border-violet-100 transition-all active:scale-95"
                         >
-                          <ArrowRight className="h-3.5 w-3.5" />
+                          <ArrowRight className="h-3.5 w-3.5 text-violet-600" />
                           {t.modal.takePromo}
                         </button>
                       </div>
@@ -283,28 +283,28 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
 
                 {/* Features */}
                 <div className="mb-6">
-                  <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-slate-600">
+                  <h3 className="mb-3 text-[10px] font-black uppercase tracking-wider text-slate-400">
                     {t.modal.features}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {service.features.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-2.5">
-                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-50 ring-1 ring-blue-200">
-                          <Check className="h-2 w-2 text-blue-500" />
+                      <div key={i} className="flex items-start gap-2 bg-slate-50/50 p-2.5 rounded-lg border border-slate-100">
+                        <span className="mt-0.5 flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-emerald-50 border border-emerald-100">
+                          <Check className="h-2.5 w-2.5 text-emerald-500" />
                         </span>
-                        <span className="text-[12px] text-slate-600 font-medium">{feature}</span>
+                        <span className="text-[12px] text-slate-700 font-semibold">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* CTA Button */}
-                <div className="flex flex-col gap-3">
+                {/* Footer CTA */}
+                <div className="mt-8 border-t border-slate-100 pt-5">
                   <button
                     onClick={handleWhatsApp}
-                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 border border-border px-5 py-4 text-sm font-bold text-white transition-all duration-200 hover:opacity-95 active:scale-95"
+                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 px-5 py-4 text-sm font-bold text-white transition-all duration-200 shadow-md active:scale-95"
                   >
-                    <MessageCircle className="h-4 w-4 text-white" />
+                    <MessageCircle className="h-4.5 w-4.5 text-white" />
                     <span>{t.modal.consultOnly}</span>
                   </button>
                 </div>
