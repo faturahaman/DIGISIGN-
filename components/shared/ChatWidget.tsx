@@ -124,27 +124,29 @@ export function ChatWidget() {
         );
       }
 
-      // Regular AI message: avatar + bubble with faint avatar wallpaper inside
+      // Regular AI message: avatar + bubble, quick replies below (not beside) the bubble
       return (
-        <div key={index} className="flex mb-4 items-start min-w-0">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
-            <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-6 h-6 object-contain" />
-          </div>
+        <div key={index} className="mb-4">
+          <div className="flex items-start min-w-0">
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
+              <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-6 h-6 object-contain" />
+            </div>
 
-          <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
-            <div className="relative">
-              <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
+            <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
+              <div className="relative">
+                <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
+              </div>
             </div>
           </div>
 
           {quickReplies.length > 0 && index === messages.length - 1 && (
-            <div className="flex flex-wrap gap-2 mt-3 w-full justify-start pl-11">
+            <div className="mt-3 ml-11 flex flex-col gap-2">
               {quickReplies.map((reply, i) => (
                 <button
                   key={i}
                   onClick={() => handleSend(reply)}
                   disabled={isLoading}
-                  className="text-[12px] px-3.5 py-2 bg-white border border-orange-200 text-orange-600 rounded-full font-medium hover:bg-orange-50 hover:border-orange-300 transition-all shadow-sm disabled:opacity-50"
+                  className="text-[13px] px-4 py-2 bg-white border border-orange-200 text-orange-600 rounded-full font-medium hover:bg-orange-50 hover:border-orange-300 transition-all shadow-sm disabled:opacity-50 text-left"
                 >
                   {reply}
                 </button>
