@@ -29,7 +29,7 @@ export function ServicesSection() {
           />
 
           {/* Bento Grid */}
-          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
             {SERVICES.map((service, i) => {
               const Icon = service.icon;
               const isLarge = service.size === "large";
@@ -41,9 +41,9 @@ export function ServicesSection() {
                     transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setActiveService(service)}
                     className={cn(
-                      "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3.5 sm:p-4.5 cursor-pointer shadow-xs",
+                      "group relative flex h-full flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-2.5 sm:p-4.5 lg:p-5 cursor-pointer shadow-xs",
                       "transition-all duration-300 hover:border-orange-200 hover:shadow-md hover:bg-white",
-                      isLarge && "col-span-2 sm:p-5"
+                      isLarge && "sm:col-span-2 lg:col-span-1"
                     )}
                     data-testid="service-card"
                   >
@@ -58,8 +58,8 @@ export function ServicesSection() {
                     <div className="flex flex-col h-full">
                       {/* Image section */}
                       <div className={cn(
-                        "relative w-full overflow-hidden rounded-xl bg-slate-100 shrink-0 border border-slate-100/50 mb-3.5",
-                        isLarge ? "h-44 sm:h-52" : "h-32 sm:h-40"
+                        "relative w-full overflow-hidden rounded-xl bg-slate-100 shrink-0 border border-slate-100/50 mb-3",
+                        isLarge ? "h-36 sm:h-44 lg:h-52" : "h-28 sm:h-36 lg:h-40"
                       )}>
                         {service.imageUrl ? (
                           <Image
@@ -89,22 +89,22 @@ export function ServicesSection() {
                       {/* Content Section */}
                       <div className="flex flex-col justify-between flex-1">
                         <div>
-                          <h3 className={cn("font-bold text-slate-900 leading-tight tracking-tight mt-1", isLarge ? "text-base sm:text-lg lg:text-xl" : "text-sm sm:text-base")}>
+                          <h3 className={cn("font-bold text-slate-900 leading-tight tracking-tight mt-2", isLarge ? "text-base sm:text-lg" : "text-sm sm:text-base")}>
                             {service.title}
                           </h3>
-                          <p className={cn("mt-1.5 leading-relaxed text-slate-500", isLarge ? "text-xs sm:text-sm line-clamp-3 lg:line-clamp-4" : "text-xs sm:text-sm line-clamp-2")}>
+                          <p className={cn("mt-1 leading-relaxed text-slate-500 text-xs sm:text-sm", isLarge ? "line-clamp-2 sm:line-clamp-3" : "line-clamp-2")}>
                             {service.description}
                           </p>
                         </div>
                         
-                        <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 pt-2.5">
-                          <div className="inline-flex items-center gap-1 rounded-full border border-orange-100 bg-orange-50/50 px-2.5 py-0.5 shadow-2xs">
-                            <span className="text-[10px] font-medium text-orange-600">Mulai</span>
-                            <span className="text-[11px] font-black text-orange-600">
+                        <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 pt-2 gap-2 flex-wrap">
+                          <div className="inline-flex items-center gap-1 rounded-full border border-orange-100 bg-orange-50/50 px-2 py-0.5 shadow-2xs text-[9px] sm:text-[10px]">
+                            <span className="font-medium text-orange-600">Mulai</span>
+                            <span className="font-black text-orange-600">
                               {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(service.startingPrice)}
                             </span>
                           </div>
-                          <span className="text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">
+                          <span className="text-[9px] sm:text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md whitespace-nowrap">
                             {service.deliveryTime}
                           </span>
                         </div>
