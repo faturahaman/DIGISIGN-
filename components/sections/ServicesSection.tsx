@@ -9,7 +9,8 @@ import { BlurFade } from "@/components/effects/BlurFade";
 import { ServiceModal } from "@/components/shared/ServiceModal";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { fetchServices, type ServiceItem } from "@/lib/services";
+
+type ServiceItem = (typeof SERVICES)[number];
 
 export function ServicesSection() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
@@ -50,65 +51,84 @@ export function ServicesSection() {
 
           {/* Bento Grid */}
           <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {isLoading && services.length === 0
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={`service-skeleton-${i}`}
-                    className="h-full min-h-[140px] animate-pulse rounded-xl border border-slate-200 bg-white"
-                  />
-                ))
-              : null}
-            {services.map((service, i) => {
-
+            {SERVICES.map((service, i) => {
               const Icon = service.icon;
               const isLarge = service.size === "large";
 
               return (
                 <BlurFade key={service.id} delay={i * 0.06}>
                   <motion.article
-                    whileHover={{ scale: 1.015, y: -2 }}
+                    whileHover={{ scale: 1.015, y: -3 }}
                     transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     onClick={() => setActiveService(service)}
                     className={cn(
-                      "group relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white p-4 sm:p-5 cursor-pointer shadow-sm",
-                      "transition-all duration-300",
-                      "hover:border-orange-200 hover:shadow-md hover:bg-white",
-                      isLarge && "col-span-1 sm:col-span-2 sm:p-6"
+                      "group relative flex h-full flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-2.5 sm:p-4.5 lg:p-5 cursor-pointer shadow-xs",
+                      "transition-all duration-300 hover:border-orange-200 hover:shadow-md hover:bg-white",
+                      isLarge && "sm:col-span-2 lg:col-span-1"
                     )}
                     data-testid="service-card"
                   >
-                    {/* Gradient background on hover */}
+                    {/* Gradient background overlay on hover */}
                     <div
                       className={cn(
-                        "pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10",
+                        "pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.02]",
                         `bg-gradient-to-br from-orange-500 to-purple-500`
                       )}
                     />
 
-                    {/* Top row: icon + arrow */}
-                    <div className="relative mb-4 flex items-start justify-between">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 shadow-sm transition-all duration-300 group-hover:border-orange-200 group-hover:bg-orange-50 sm:h-12 sm:w-12">
-                        <Icon className="h-5 w-5 text-orange-500 sm:h-6 sm:w-6" />
-                      </div>
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:border-orange-200 group-hover:text-orange-500 sm:h-8 sm:w-8 shadow-sm">
-                        <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative mt-auto">
-                      <h3 className={cn("font-bold text-slate-900 leading-tight", isLarge ? "text-base sm:text-lg lg:text-xl" : "text-sm sm:text-base")}>
-                        {service.title}
-                      </h3>
-                      <p className={cn("mt-2 leading-snug text-slate-600 line-clamp-2", isLarge ? "text-xs sm:text-sm lg:text-base" : "text-xs sm:text-sm")}>
-                        {service.description}
-                      </p>
-
-                      {/* Starting price badge - hidden on mobile default, show on hover or small enough */}
-                      <div className="mt-3 hidden sm:inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-2.5 py-0.5 opacity-0 transition-all duration-300 group-hover:opacity-100 shadow-sm">
-                        <span className="text-[11px] font-bold text-orange-600">
-                          {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(service.startingPrice)}
+                    <div className="flex flex-col h-full">
+                      {/* Image section */}
+                      <div className={cn(
+                        "relative w-full overflow-hidden rounded-xl bg-slate-100 shrink-0 border border-slate-100/50 mb-3",
+                        isLarge ? "h-36 sm:h-44 lg:h-52" : "h-28 sm:h-36 lg:h-40"
+                      )}>
+                        {service.imageUrl ? (
+                          <Image
+                            src={service.imageUrl}
+                            alt={service.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, 400px"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-purple-100 flex items-center justify-center">
+                            <Icon className="h-10 w-10 text-orange-400 opacity-60" />
+                          </div>
+                        )}
+                        
+                        {/* Floating Icon badge */}
+                        <div className="absolute top-2.5 left-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white/95 backdrop-blur-xs shadow-sm border border-slate-200/50">
+                          <Icon className="h-5 w-5 text-orange-500" />
+                        </div>
+                        
+                        {/* Floating Arrow */}
+                        <span className="absolute top-2.5 right-2.5 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-white/95 text-slate-500 transition-all duration-300 opacity-0 group-hover:opacity-100 shadow-sm border border-slate-100 hover:text-orange-500">
+                          <ArrowUpRight className="h-4 w-4" />
                         </span>
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="flex flex-col justify-between flex-1">
+                        <div>
+                          <h3 className={cn("font-bold text-slate-900 leading-tight tracking-tight mt-2", isLarge ? "text-base sm:text-lg" : "text-sm sm:text-base")}>
+                            {service.title}
+                          </h3>
+                          <p className={cn("mt-1 leading-relaxed text-slate-500 text-xs sm:text-sm", isLarge ? "line-clamp-2 sm:line-clamp-3" : "line-clamp-2")}>
+                            {service.description}
+                          </p>
+                        </div>
+                        
+                        <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 pt-2 gap-2 flex-wrap">
+                          <div className="inline-flex items-center gap-1 rounded-full border border-orange-100 bg-orange-50/50 px-2 py-0.5 shadow-2xs text-[9px] sm:text-[10px]">
+                            <span className="font-medium text-orange-600">Mulai</span>
+                            <span className="font-black text-orange-600">
+                              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(service.startingPrice)}
+                            </span>
+                          </div>
+                          <span className="text-[9px] sm:text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md whitespace-nowrap">
+                            {service.deliveryTime}
+                          </span>
+                        </div>
                       </div>
                     </div>
 

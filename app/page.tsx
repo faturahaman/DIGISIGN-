@@ -12,6 +12,9 @@ const ServicesSection = dynamic(() =>
 const WhyArvionSection = dynamic(() =>
   import("@/components/sections/WhyArvionSection").then((m) => m.WhyArvionSection)
 );
+const VisionMissionSection = dynamic(() =>
+  import("@/components/sections/VisionMissionSection").then((m) => m.VisionMissionSection)
+);
 const ProcessSection = dynamic(() =>
   import("@/components/sections/ProcessSection").then((m) => m.ProcessSection)
 );
@@ -48,6 +51,7 @@ export default function Home() {
       <MarqueeSection />
       <ServicesSection />
       <WhyArvionSection />
+      <VisionMissionSection />
       <ProcessSection />
       <PortfolioSection />
       <TestimonialsSection />

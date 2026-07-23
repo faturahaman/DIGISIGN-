@@ -96,7 +96,7 @@ export function Footer() {
             {/* Social links */}
             <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
               <a
-                href="https://www.instagram.com/arvion_id/"
+                href="https://www.instagram.com/arvioncreative_/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Arvion Instagram"

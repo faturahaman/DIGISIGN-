@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { ArrowUp, MessageCircle, X, Send } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useChat } from '@/lib/ChatContext';
@@ -13,6 +13,8 @@ type Message = {
 
 export function ChatWidget() {
   const [isHovered, setIsHovered] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const { t } = useLanguage();
   const { isOpen, openChat, closeChat, pendingMessage, clearPending } = useChat();
 
@@ -28,9 +30,27 @@ export function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleScroll = () => {
+    const scrollTop = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(1, scrollTop / maxScroll) : 0;
+    setScrollProgress(progress);
+    setShowScrollTop(scrollTop > 180);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Handle pending message from FAQ section
   useEffect(() => {
@@ -247,7 +267,7 @@ export function ChatWidget() {
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-6 right-6 md:right-8 md:bottom-8 z-60 flex flex-col items-end gap-2">
+      <div className="fixed bottom-6 right-6 md:right-8 md:bottom-8 z-60 flex flex-col gap-2 items-end">
         {/* Mobile Label */}
         {!isOpen && (
           <motion.div
@@ -274,14 +294,48 @@ export function ChatWidget() {
           )}
         </AnimatePresence>
 
-        <button
-          onClick={() => (isOpen ? closeChat() : openChat())}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className="bg-linear-to-r from-orange-500 to-purple-500 text-white border border-orange-200 rounded-full p-4 hover:scale-105 transition-all shadow-md group relative"
-        >
-          <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
-        </button>
+        <div className="flex items-center gap-2">
+          {showScrollTop && (
+            <button
+              onClick={scrollToTop}
+              aria-label="Scroll to top"
+              className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-slate-900 shadow-lg ring-1 ring-slate-200 transition-transform hover:scale-105"
+            >
+              <svg className="absolute inset-1 h-12 w-12" viewBox="0 0 32 32" aria-hidden="true">
+                <defs>
+                  <linearGradient id="scrollProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#F97316" />
+                    <stop offset="100%" stopColor="#7C3AED" />
+                  </linearGradient>
+                </defs>
+                <circle cx="16" cy="16" r="13" className="stroke-slate-200 fill-transparent" strokeWidth="2" />
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="13"
+                  stroke="url(#scrollProgressGradient)"
+                  fill="transparent"
+                  strokeWidth="2.5"
+                  strokeDasharray={81.681}
+                  strokeDashoffset={81.681 - scrollProgress * 81.681}
+                  strokeLinecap="round"
+                  style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                />
+              </svg>
+              <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm">
+                <ArrowUp className="h-5 w-5" />
+              </span>
+            </button>
+          )}
+          <button
+            onClick={() => (isOpen ? closeChat() : openChat())}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-purple-500 text-white border border-orange-200 hover:scale-105 transition-all shadow-md group"
+          >
+            <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
+          </button>
+        </div>
       </div>
     </>
   );
