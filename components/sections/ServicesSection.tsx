@@ -9,10 +9,11 @@ import { BlurFade } from "@/components/effects/BlurFade";
 import { ServiceModal } from "@/components/shared/ServiceModal";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import Image from "next/image";
 
-type ServiceItem = (typeof SERVICES)[number];
+import { fetchServices, type ServiceItem } from "@/lib/services";
 
-export function ServicesSection() {
+export function ServicesSection()   {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
   const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,8 +51,19 @@ export function ServicesSection() {
           />
 
           {/* Bento Grid */}
-          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
             {SERVICES.map((service, i) => {
+          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            {isLoading && services.length === 0
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={`service-skeleton-${i}`}
+                    className="h-full min-h-[140px] animate-pulse rounded-xl border border-slate-200 bg-white"
+                  />
+                ))
+              : null}
+            {services.map((service, i) => {
+
               const Icon = service.icon;
               const isLarge = service.size === "large";
 
