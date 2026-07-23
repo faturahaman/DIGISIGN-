@@ -6,6 +6,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Layanan",
+      vision: "Visi Misi",
       portfolio: "Portfolio",
       testimonials: "Testimoni",
       contact: "Kontak",
@@ -53,6 +54,40 @@ export const translations = {
       titleHighlight: "Arvion?",
       description:
         "Kami bukan sekadar agency biasa. Kami adalah mitra strategis yang berkomitmen pada hasil nyata untuk bisnis Anda.",
+    },
+
+    // Vision Mission
+    visionMission: {
+      badge: "Visi & Misi",
+      title: "Visi",
+      titleHighlight: "Misi",
+      description:
+        "Kami berkomitmen menghadirkan pengalaman digital yang kuat, fungsional, dan relevan bagi semua klien kami.",
+      vision: {
+        title: "Visi",
+        highlight: "Menjadi solusi digital terpercaya",
+        description:
+          "Mewujudkan website dan identitas digital yang modern, mudah digunakan, dan berdampak positif di era digital.",
+        items: [
+          "Memperkuat brand melalui desain yang menarik dan profesional.",
+          "Menyediakan website dengan performa tinggi dan pengalaman pengguna yang lancar.",
+          "Membangun solusi digital yang rapi, mudah dipelihara, dan relevan.",
+        ],
+      },
+      mission: {
+        title: "Misi",
+        highlight: "Fokus pada hasil dan kepuasan klien",
+        description:
+          "Kami bekerja dengan prinsip kualitas, inovasi, dan keandalan untuk membantu bisnis Anda berkembang secara digital.",
+        points: [
+          "Mengembangkan website yang simpel, modern, dan memiliki performa tinggi agar nyaman digunakan oleh setiap pengguna.",
+          "Mengutamakan optimasi website dari segi kecepatan, keamanan, dan pengalaman pengguna untuk hasil terbaik.",
+          "Menyediakan layanan desain kreatif seperti poster, branding, dan media promosi digital yang menarik serta profesional.",
+          "Membantu UMKM, personal brand, dan berbagai bisnis agar berkembang di era digital melalui solusi teknologi terjangkau.",
+          "Menjalin hubungan kerja yang baik dengan klien dengan mengutamakan pelayanan, kepercayaan, dan kepuasan pelanggan.",
+          "Terus mengikuti perkembangan teknologi dan tren desain agar layanan yang diberikan selalu relevan dan kompetitif.",
+        ],
+      },
     },
 
     // Process
@@ -195,6 +230,7 @@ export const translations = {
     nav: {
       home: "Home",
       services: "Services",
+      vision: "Vision Mission",
       portfolio: "Portfolio",
       testimonials: "Testimonials",
       contact: "Contact",
@@ -242,6 +278,40 @@ export const translations = {
       titleHighlight: "Arvion?",
       description:
         "We're not just another agency. We're a strategic partner committed to delivering real results for your business.",
+    },
+
+    // Vision Mission
+    visionMission: {
+      badge: "Vision & Mission",
+      title: "Vision",
+      titleHighlight: "Mission",
+      description:
+        "We are committed to delivering strong, functional, and relevant digital experiences for every client.",
+      vision: {
+        title: "Vision",
+        highlight: "Becoming a trusted digital solution",
+        description:
+          "Create modern, user-friendly websites and digital identities that positively impact businesses in the digital era.",
+        items: [
+          "Strengthen brands through attractive and professional design.",
+          "Deliver websites with high performance and smooth user experience.",
+          "Build digital solutions that are clean, easy to maintain, and relevant.",
+        ],
+      },
+      mission: {
+        title: "Mission",
+        highlight: "Delivering results and client satisfaction",
+        description:
+          "We work with quality, innovation, and reliability to help your business grow digitally.",
+        points: [
+          "Develop websites that are simple, modern, and high-performing for comfortable use by every visitor.",
+          "Prioritize website optimization in speed, security, and user experience for the best result.",
+          "Provide creative design services such as posters, branding, and digital promotion media that are attractive and professional.",
+          "Help SMEs, personal brands, and businesses grow in the digital era through affordable technology solutions.",
+          "Build strong client relationships by prioritizing service, trust, and customer satisfaction.",
+          "Continue following technology and design trends so our services stay relevant and competitive.",
+        ],
+      },
     },
 
     // Process

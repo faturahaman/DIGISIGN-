@@ -60,6 +60,7 @@ export function Navbar() {
   const navLabels = [
     t.nav.home,
     t.nav.services,
+    t.nav.vision,
     t.nav.portfolio,
     t.nav.testimonials,
     t.nav.contact,
@@ -93,7 +94,7 @@ export function Navbar() {
               className="h-8 w-auto object-contain"
               priority
             />
-            <span className="text-xl font-bold tracking-tight text-slate-900">Arvion</span>
+            <span className="text-xl font-bold tracking-tight text-slate-900">Arvion Creative</span>
           </button>
 
           {/* Desktop nav */}

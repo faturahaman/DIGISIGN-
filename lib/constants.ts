@@ -17,6 +17,7 @@ import {
 export const NAV_LINKS = [
   { label: "Home", href: "#home" },
   { label: "Services", href: "#services" },
+  { label: "Vision Mission", href: "#vision" },
   { label: "Portfolio", href: "#portfolio" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
