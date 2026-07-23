@@ -1,22 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { SERVICES } from "@/lib/constants";
+import { SERVICES as FALLBACK_SERVICES } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
 import { ServiceModal } from "@/components/shared/ServiceModal";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-
-type ServiceItem = (typeof SERVICES)[number];
+import { fetchServices, type ServiceItem } from "@/lib/services";
 
 export function ServicesSection() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
+  const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useLanguage();
 
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchServices()
+      .then((data) => {
+        if (!cancelled && data.length > 0) setServices(data);
+      })
+      .catch(() => {
+        // Keep fallback services on error
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
+
     <>
       <section id="services" className="relative bg-slate-50 py-16 sm:py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
@@ -29,7 +50,16 @@ export function ServicesSection() {
 
           {/* Bento Grid */}
           <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {SERVICES.map((service, i) => {
+            {isLoading && services.length === 0
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={`service-skeleton-${i}`}
+                    className="h-full min-h-[140px] animate-pulse rounded-xl border border-slate-200 bg-white"
+                  />
+                ))
+              : null}
+            {services.map((service, i) => {
+
               const Icon = service.icon;
               const isLarge = service.size === "large";
 

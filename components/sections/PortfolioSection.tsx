@@ -9,11 +9,11 @@ import { BlurFade } from "@/components/effects/BlurFade";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import {
-  mapPortfolioRows,
-  PORTFOLIO_API_URL,
+  fetchPortfolioItems,
   type PortfolioCategory,
   type PortfolioItem,
 } from "@/lib/portfolio";
+
 
 type FilterCategory = "all" | PortfolioCategory;
 
@@ -78,26 +78,14 @@ export function PortfolioSection() {
 
     async function loadPortfolioItems() {
       try {
-        const res = await fetch(PORTFOLIO_API_URL, {
-          cache: "no-store",
-          headers: {
-            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""}`,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`Supabase error: ${res.status}`);
-        }
-
-        const data = await res.json();
-        const mapped = mapPortfolioRows(data as Record<string, unknown>[]);
+        const mapped = await fetchPortfolioItems();
 
         if (!cancelled) {
           setPortfolioItems(mapped);
           setHasError(false);
         }
       } catch {
+
         if (!cancelled) {
           setPortfolioItems([]);
           setHasError(true);
@@ -226,8 +214,9 @@ export function PortfolioSection() {
           <div className="rounded-2xl border border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               {hasError
-                ? "Portfolio belum bisa dimuat dari Supabase."
+                ? "Portfolio belum bisa dimuat dari Google Sheets."
                 : "Belum ada portfolio untuk filter ini."}
+
             </p>
           </div>
         )}

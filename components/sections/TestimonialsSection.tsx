@@ -14,10 +14,10 @@ import { SectionHeader } from "@/components/shared/SectionHeader";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { TESTIMONIALS as FALLBACK_TESTIMONIALS } from "@/lib/constants";
-import type { Testimonial } from "@/lib/testimonials";
-import { TESTIMONIALS_API_URL } from "@/lib/testimonials";
+import { fetchTestimonials, type Testimonial } from "@/lib/testimonials";
 
-// Static fallback when Supabase is unreachable or empty
+
+// Static fallback when Google Sheets is unreachable or empty
 const FALLBACK: Testimonial[] = FALLBACK_TESTIMONIALS.map((t) => ({
   id: t.id,
   name: t.name,
@@ -165,38 +165,18 @@ export function TestimonialsSection() {
   const [isPaused, setIsPaused] = useState(false);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ── Fetch from Supabase ────────────────────────────────────────────────────
+  // ── Fetch from Google Sheets ────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
-        const res = await fetch(TESTIMONIALS_API_URL, {
-          cache: "no-store",
-          headers: {
-            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""}`,
-          },
-        });
-        if (!res.ok) throw new Error(`Supabase error: ${res.status}`);
-        const data = await res.json();
+        const mapped = await fetchTestimonials();
 
         if (cancelled) return;
 
-        // Validate and map
-        const mapped: Testimonial[] = (data as Record<string, string>[])
-          .filter((row) => row.name && row.message)
-          .map((row) => ({
-            id: String((row as Record<string, unknown>).id ?? Math.random()),
-            name: row.name.trim(),
-            role: row.role?.trim() ?? "",
-            company: row.company?.trim() ?? "",
-            message: row.message.trim(),
-            rating: Math.min(5, Math.max(1, parseInt(row.rating ?? "5", 10) || 5)),
-            avatar: row.avatar?.trim() || undefined,
-          }));
-
         if (mapped.length > 0) {
+
           setTestimonials(mapped);
         } else {
           setTestimonials(FALLBACK);
