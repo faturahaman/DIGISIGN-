@@ -51,8 +51,6 @@ export function ServicesSection()   {
           />
 
           {/* Bento Grid */}
-          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
-            {SERVICES.map((service, i) => {
           <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {isLoading && services.length === 0
               ? Array.from({ length: 6 }).map((_, i) => (
