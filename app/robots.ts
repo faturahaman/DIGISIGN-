@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://digisign.vercel.app";
+const PRIMARY_DOMAIN = "https://arvion.riffatur.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -11,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/"],
       },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    sitemap: `${PRIMARY_DOMAIN}/sitemap.xml`,
+    host: PRIMARY_DOMAIN,
   };
 }

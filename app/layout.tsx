@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
   preload: false, // only used for code, not critical
 });
 
-const BASE_URL = "https://digisign.vercel.app";
+const BASE_URL = "https://arvion.riffatur.com";
 const SITE_NAME = "Arvion";
 const BRAND_DESCRIPTION =
   "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
@@ -164,7 +164,10 @@ const jsonLd = {
       image: `${BASE_URL}${OG_IMAGE}`,
       email: CONTACT_EMAIL,
       telephone: CONTACT_PHONE,
-      sameAs: [INSTAGRAM_URL],
+      sameAs: [
+        INSTAGRAM_URL,
+        "https://arvion-creative.vercel.app/"
+      ],
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer service",

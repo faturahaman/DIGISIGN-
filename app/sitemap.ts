@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://digisign.vercel.app";
+const DOMAINS = [
+  "https://arvion.riffatur.com",
+  "https://arvion-creative.vercel.app"
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-  ];
+  return DOMAINS.map(domain => ({
+    url: domain,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 1,
+  }));
 }
