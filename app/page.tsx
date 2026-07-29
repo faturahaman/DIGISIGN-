@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { Navbar } from "@/components/sections/Navbar";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { ScrollProgress } from "@/components/shared/ScrollProgress";
 
 // Lazy load below-the-fold sections to improve LCP & TTI
 const MarqueeSection = dynamic(() =>
@@ -43,6 +44,9 @@ const ChatWidget = dynamic(() =>
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-slate-50">
+      {/* Scroll progress indicator */}
+      <ScrollProgress />
+
       {/* Critical above-the-fold — loaded immediately */}
       <Navbar />
       <HeroSection />

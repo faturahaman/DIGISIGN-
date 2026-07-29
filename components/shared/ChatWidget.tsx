@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { ArrowUp, MessageCircle, X, Send } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -118,7 +119,7 @@ export function ChatWidget() {
           <div key={index} className="mb-4">
             <div className="flex items-start gap-3 min-w-0">
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0">
-                <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-6 h-6 object-contain" />
+                <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
               </div>
 
               <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
@@ -149,7 +150,7 @@ export function ChatWidget() {
         <div key={index} className="mb-4">
           <div className="flex items-start min-w-0">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
-              <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-6 h-6 object-contain" />
+              <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
             </div>
 
             <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
@@ -205,7 +206,7 @@ export function ChatWidget() {
               <div className="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl" />
               <div className="flex items-center gap-3 relative z-10">
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden">
-                  <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-10 h-10 object-contain" />
+                  <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={40} height={40} className="w-10 h-10 object-contain" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 leading-tight text-base tracking-wide">Arvion Assistant</h3>
@@ -226,7 +227,7 @@ export function ChatWidget() {
               {isLoading && (
                 <div className="flex mb-4 items-start">
                   <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
-                    <img src="/arvionmaskot.png" alt="Arvion Mascot" className="w-6 h-6 object-contain" />
+                    <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
                   </div>
                   <div className="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-sm shadow-sm">
                     <div className="flex gap-1.5">

@@ -17,6 +17,7 @@ export function ServicesSection()   {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
   const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
   const [isLoading, setIsLoading] = useState(true);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -68,8 +69,9 @@ export function ServicesSection()   {
               return (
                 <BlurFade key={service.id} delay={i * 0.06}>
                   <motion.article
-                    whileHover={{ scale: 1.015, y: -3 }}
-                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ scale: 1.02, y: -6 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
                     onClick={() => setActiveService(service)}
                     className={cn(
                       "group relative flex h-full flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-2.5 sm:p-4.5 lg:p-5 cursor-pointer shadow-xs",
@@ -92,13 +94,16 @@ export function ServicesSection()   {
                         "relative w-full overflow-hidden rounded-xl bg-slate-100 shrink-0 border border-slate-100/50 mb-3",
                         isLarge ? "h-36 sm:h-44 lg:h-52" : "h-28 sm:h-36 lg:h-40"
                       )}>
-                        {service.imageUrl ? (
+                        {service.imageUrl && !failedImages.has(service.id) ? (
                           <Image
                             src={service.imageUrl}
                             alt={service.title}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 400px"
+                            onError={() =>
+                              setFailedImages((prev) => new Set(prev).add(service.id))
+                            }
                           />
                         ) : (
                           <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-purple-100 flex items-center justify-center">

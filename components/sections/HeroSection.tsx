@@ -12,7 +12,6 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 export function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
   const { t } = useLanguage();
 
@@ -37,14 +36,14 @@ export function HeroSection() {
       <GridPattern className="opacity-10" />
       <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="rgba(245,158,11,0.15)" />
 
-      {/* Gradient orbs */}
-      <motion.div
-        style={{ y }}
-        className="pointer-events-none absolute -left-40 top-20 h-72 w-72 rounded-full bg-orange-500/10 blur-[100px] md:h-96 md:w-96 md:blur-[120px]"
+      {/* Gradient orbs — static (no scroll parallax) so the browser can cache
+          them as a single GPU layer instead of re-rasterising a 100px blur
+          every scroll frame. This is the single biggest scroll-jank fix. */}
+      <div
+        className="pointer-events-none absolute -left-40 top-20 h-72 w-72 rounded-full bg-orange-500/10 blur-[70px] md:h-96 md:w-96 md:blur-[90px]"
       />
-      <motion.div
-        style={{ y }}
-        className="pointer-events-none absolute -right-40 top-40 h-72 w-72 rounded-full bg-purple-500/10 blur-[100px] md:h-96 md:w-96 md:blur-[120px]"
+      <div
+        className="pointer-events-none absolute -right-40 top-40 h-72 w-72 rounded-full bg-purple-500/10 blur-[70px] md:h-96 md:w-96 md:blur-[90px]"
       />
 
       <motion.div

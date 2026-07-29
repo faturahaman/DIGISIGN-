@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const PRIMARY_DOMAIN = "https://arvion.riffatur.com";
+const PRIMARY_DOMAIN = "https://arviotiv.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {

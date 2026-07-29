@@ -75,7 +75,7 @@ export function Navbar() {
         className={cn(
           "fixed left-0 right-0 top-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-200 py-3"
+            ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-200 py-3"
             : "bg-transparent py-5"
         )}
       >
@@ -129,12 +129,12 @@ export function Navbar() {
               className="hidden md:flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900"
             >
               <div className="flex items-center gap-1.5">
-                <img src="https://flagcdn.com/id.svg" alt="ID" className={cn("w-4 h-3 rounded-xs object-cover transition-opacity", lang === "id" ? "opacity-100" : "opacity-40 grayscale")} />
+                <img src="https://flagcdn.com/id.svg" alt="ID" width={16} height={12} loading="lazy" decoding="async" className={cn("w-4 h-3 rounded-xs object-cover transition-opacity", lang === "id" ? "opacity-100" : "opacity-40 grayscale")} />
                 <span className={cn("transition-opacity", lang === "id" ? "text-slate-900" : "text-slate-400")}>ID</span>
               </div>
               <span className="text-slate-200">|</span>
               <div className="flex items-center gap-1.5">
-                <img src="https://flagcdn.com/gb.svg" alt="EN" className={cn("w-4 h-3 rounded-xs object-cover transition-opacity", lang === "en" ? "opacity-100" : "opacity-40 grayscale")} />
+                <img src="https://flagcdn.com/gb.svg" alt="EN" width={16} height={12} loading="lazy" decoding="async" className={cn("w-4 h-3 rounded-xs object-cover transition-opacity", lang === "en" ? "opacity-100" : "opacity-40 grayscale")} />
                 <span className={cn("transition-opacity", lang === "en" ? "text-slate-900" : "text-slate-400")}>EN</span>
               </div>
             </button>
@@ -226,12 +226,12 @@ export function Navbar() {
             className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <img src="https://flagcdn.com/id.svg" alt="ID" className={cn("w-5 h-3.5 rounded-xs object-cover transition-opacity", lang === "id" ? "opacity-100" : "opacity-40 grayscale")} />
+              <img src="https://flagcdn.com/id.svg" alt="ID" width={20} height={14} loading="lazy" decoding="async" className={cn("w-5 h-3.5 rounded-xs object-cover transition-opacity", lang === "id" ? "opacity-100" : "opacity-40 grayscale")} />
               <span className={cn(lang === "id" ? "text-orange-600" : "text-slate-400")}>ID</span>
             </div>
             <span className="text-slate-200">|</span>
             <div className="flex items-center gap-2">
-              <img src="https://flagcdn.com/gb.svg" alt="EN" className={cn("w-5 h-3.5 rounded-xs object-cover transition-opacity", lang === "en" ? "opacity-100" : "opacity-40 grayscale")} />
+              <img src="https://flagcdn.com/gb.svg" alt="EN" width={20} height={14} loading="lazy" decoding="async" className={cn("w-5 h-3.5 rounded-xs object-cover transition-opacity", lang === "en" ? "opacity-100" : "opacity-40 grayscale")} />
               <span className={cn(lang === "en" ? "text-orange-600" : "text-slate-400")}>EN</span>
             </div>
           </button>

@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   // Compress responses
   compress: true,
 
+  // Strip the framework fingerprint header
+  poweredByHeader: false,
+
+  // Catch subtle bugs in dev (no runtime cost in production)
+  reactStrictMode: true,
+
   // Image optimization
   images: {
     formats: ["image/avif", "image/webp"],
@@ -26,7 +32,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.imgur.com",
       },
-      // Example
+      // Country flags (language switcher)
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+      },
+      // Placeholder avatars/images from the Google Sheets CMS seed data
       {
         protocol: "https",
         hostname: "example.com",

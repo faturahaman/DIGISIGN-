@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { PROCESS_STEPS } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
@@ -11,6 +11,15 @@ export function ProcessSection() {
   const lineRef = useRef<HTMLDivElement>(null);
   const isLineInView = useInView(lineRef, { once: true, margin: "-100px" });
   const { t } = useLanguage();
+
+  // Scroll-linked timeline fill: the gradient line grows as the user scrolls
+  // through the section instead of a one-shot reveal.
+  const { scrollYProgress } = useScroll({
+    target: lineRef,
+    offset: ["start 65%", "end 60%"],
+  });
+  const lineScaleY = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  const lineOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
 
   return (
     <section className="relative bg-white py-16 sm:py-20 lg:py-28">
@@ -28,9 +37,7 @@ export function ProcessSection() {
           {/* Mobile vertical line (left side) */}
           <div className="absolute left-[19px] top-0 h-full w-px bg-slate-200 md:hidden">
             <motion.div
-              initial={{ scaleY: 0 }}
-              animate={isLineInView ? { scaleY: 1 } : { scaleY: 0 }}
-              transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ scaleY: lineScaleY, opacity: lineOpacity }}
               className="h-full w-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-transparent"
             />
           </div>
@@ -38,11 +45,8 @@ export function ProcessSection() {
           {/* Desktop vertical line (center) */}
           <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-slate-200 md:block">
             <motion.div
-              initial={{ scaleY: 0 }}
-              animate={isLineInView ? { scaleY: 1 } : { scaleY: 0 }}
-              transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{ scaleY: lineScaleY, opacity: lineOpacity, boxShadow: "0 0 10px rgba(245, 158, 11, 0.3)" }}
               className="h-full w-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-transparent"
-              style={{ boxShadow: "0 0 10px rgba(245, 158, 11, 0.3)" }}
             />
           </div>
 

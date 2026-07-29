@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { ChatProvider } from "@/lib/ChatContext";
+import { SmoothScroll } from "@/components/providers/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,14 +12,7 @@ const inter = Inter({
   preload: true,
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-  preload: false, // only used for code, not critical
-});
-
-const BASE_URL = "https://arvion.riffatur.com";
+const BASE_URL = "https://arviotiv.com";
 const SITE_NAME = "Arvion";
 const BRAND_DESCRIPTION =
   "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
@@ -45,17 +39,26 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#050816",
+  colorScheme: "light",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
+    { media: "(prefers-color-scheme: dark)", color: "#050816" },
+  ],
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   applicationName: SITE_NAME,
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: false,
+  },
   verification: {
     google: "gMKOqq5s2pMSRsfnK_WPIIhayEpTbHOXETG9MOum-FY",
   },
   title: {
-    default: "Arvion - Jasa Desain Grafis & Website Indonesia",
+    default: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
     template: "%s | Arvion",
   },
   description: BRAND_DESCRIPTION,
@@ -93,16 +96,12 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
-  // Favicon
-  icons: {
-    icon: [{ url: "/arvion.png", type: "image/png" }],
-    apple: [{ url: "/arvion.png", type: "image/png" }],
-    shortcut: "/arvion.png",
-  },
+  // Icons are provided via the app/icon.png & app/apple-icon.png file conventions,
+  // which Next.js auto-optimizes and wires into <head>.
 
   // Open Graph
   openGraph: {
-    title: "Arvion - Jasa Desain Grafis & Website Indonesia",
+    title: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
     description: BRAND_DESCRIPTION,
     url: "/",
     siteName: SITE_NAME,
@@ -122,7 +121,7 @@ export const metadata: Metadata = {
   // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: "Arvion - Jasa Desain Grafis & Website Indonesia",
+    title: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
     description: BRAND_DESCRIPTION,
     images: [OG_IMAGE],
   },
@@ -164,10 +163,10 @@ const jsonLd = {
       image: `${BASE_URL}${OG_IMAGE}`,
       email: CONTACT_EMAIL,
       telephone: CONTACT_PHONE,
-      sameAs: [
-        INSTAGRAM_URL,
-        "https://arvion-creative.vercel.app/"
-      ],
+      foundingDate: "2024",
+      slogan: "We Design Digital Experiences That Feel Premium",
+      knowsAbout: SERVICE_TYPES,
+      sameAs: [INSTAGRAM_URL],
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer service",
@@ -212,6 +211,21 @@ const jsonLd = {
       provider: {
         "@id": `${BASE_URL}/#organization`,
       },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5.0",
+        reviewCount: "80",
+        bestRating: "5",
+        worstRating: "1",
+      },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Layanan Arvion",
+        itemListElement: SERVICE_TYPES.map((service) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name: service },
+        })),
+      },
       sameAs: [INSTAGRAM_URL],
     },
   ],
@@ -223,17 +237,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${geistMono.variable}`}>
+    <html lang="id" className={inter.variable}>
       <head>
-        {/* Preconnect to external domains */}
+        {/* Preconnect to font origins (critical) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* DNS prefetch for WhatsApp */}
+        {/* DNS prefetch for deferred third-party origins */}
         <link rel="dns-prefetch" href="https://wa.me" />
+        <link rel="dns-prefetch" href="https://flagcdn.com" />
+        <link rel="dns-prefetch" href="https://docs.google.com" />
+        <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" />
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
@@ -241,9 +258,11 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <LanguageProvider>
-          <ChatProvider>{children}</ChatProvider>
-        </LanguageProvider>
+        <SmoothScroll>
+          <LanguageProvider>
+            <ChatProvider>{children}</ChatProvider>
+          </LanguageProvider>
+        </SmoothScroll>
       </body>
     </html>
   );
