@@ -566,7 +566,5 @@ export const WHATSAPP_MESSAGE =
   "Halo Arvion, saya ingin memulai proyek bersama kalian. Bisa ceritakan lebih lanjut tentang layanan kalian?";
 
 export const SOCIAL_LINKS = [
-  { platform: "Instagram", url: "https://instagram.com/arvion", handle: "@arvion" },
-  { platform: "LinkedIn", url: "https://linkedin.com/company/arvion", handle: "Arvion" },
-  { platform: "Behance", url: "https://behance.net/arvion", handle: "arvion" },
+  { platform: "Instagram", url: "https://www.instagram.com/arvioncreative_/", handle: "@arvioncreative_" },
 ];

@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Arvion — Creative Digital Agency Indonesia",
-    short_name: "Arvion",
-    description:
-      "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.",
+    name: `${SITE_NAME} — Creative Digital Agency Indonesia`,
+    short_name: SITE_NAME,
+    description: SITE_DESCRIPTION,
     start_url: "/",
     id: "/",
     scope: "/",

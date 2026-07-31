@@ -3,19 +3,34 @@
 > Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.
 
 ## Tentang Kami / About Us
-Arvion membantu bisnis untuk meningkatkan presensi digital mereka melalui desain dan pembuatan website berkualitas tinggi (high-quality design and development). Spesialisasi kami mencakup graphic design, UI/UX, dan modern web development.
+Arvion membantu bisnis untuk meningkatkan presensi digital mereka melalui desain dan pembuatan website berkualitas tinggi (high-quality design and development). Spesialisasi kami mencakup graphic design, UI/UX, dan modern web development. Kami melayani seluruh Indonesia (remote-first) untuk UMKM, startup, perusahaan, dan personal brand.
 
-## Layanan Utama (Services)
-- Branding & Logo Design
-- Graphic Design (Poster, Banner, Social Media)
-- UI/UX Design
-- Web Development (Landing Page, Company Profile, E-Commerce, Custom Web Apps)
+## Layanan & Harga (Services & Pricing)
+Harga di bawah adalah harga "mulai dari"; harga final tergantung scope. Tersedia paket khusus pelajar untuk hampir semua layanan (lampirkan KTM/kartu pelajar).
+
+- Branding & Logo Design — mulai Rp 800.000 (3–5 hari kerja). Logo, color palette, brand guidelines. Paket pelajar mulai Rp 249.000.
+- Poster Design — mulai Rp 105.000 (1–2 hari kerja). Paket pelajar mulai Rp 35.000.
+- Banner Design — mulai Rp 210.000 (1–2 hari kerja). Digital & cetak.
+- Landing Page — mulai Rp 1.500.000 (5–7 hari kerja). Responsif, optimasi konversi (CRO), integrasi form & WhatsApp, SEO dasar.
+- Company Profile Website — mulai Rp 1.800.000 (7–14 hari kerja). Multi-halaman, SEO dasar, hosting & domain gratis 1 tahun.
+- E-Commerce Website — mulai Rp 5.000.000 (14–21 hari kerja). Payment gateway (Midtrans/Xendit), manajemen produk, dashboard admin.
+- Portfolio Website — mulai Rp 1.600.000 (5–7 hari kerja).
+- Dynamic Website / Web App — mulai Rp 1.200.000 (14–21 hari kerja). CMS custom, database, panel admin.
+- UI/UX Design — desain antarmuka modern & responsif.
+
+Teknologi: Next.js, React, Tailwind CSS, Node.js.
+
+## Proses & Kebijakan (Process & Policy)
+- Pembayaran: DP 50% di awal, pelunasan 50% setelah project selesai & disetujui klien.
+- Revisi: 2–5x revisi gratis tergantung paket.
+- Garansi: gratis bug fix 30 hari setelah launch. Paket maintenance tersedia untuk support jangka panjang.
+- Semua website responsif di semua perangkat.
 
 ## Kontak (Contact Information)
-- Website Utama: https://arviotiv.com
+- Website Utama: https://www.arviotiv.com
 - Email: digitalidsign@gmail.com
-- WhatsApp: +6285924361892
-- Instagram: @arvion_id (https://www.instagram.com/arvion_id/)
+- WhatsApp: +6285924361892 (Senin–Jumat, 09.00–18.00 WIB)
+- Instagram: @arvioncreative_ (https://www.instagram.com/arvioncreative_/)
 
 ## Target Market
 Bisnis, perusahaan startup, UMKM, dan individu yang ingin membangun identitas merek (brand identity) yang kuat dan jejak digital yang profesional.

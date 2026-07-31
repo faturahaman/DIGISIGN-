@@ -208,19 +208,49 @@ export const translations = {
       badge: "FAQ",
       title: "Ada Pertanyaan?",
       titleHighlight: "Tanyakan Langsung",
-      description: "Klik pertanyaan di bawah dan DigiMin AI akan langsung menjawab untuk Anda.",
+      description: "Temukan jawaban cepat di bawah, atau klik pertanyaan untuk bertanya langsung ke DigiMin AI.",
       askBtn: "Tanya DigiMin",
-      questions: [
-        "Berapa lama waktu pengerjaan website?",
-        "Apakah ada garansi revisi?",
-        "Layanan apa saja yang tersedia?",
-        "Berapa estimasi biaya landing page?",
-        "Apakah ada harga khusus pelajar?",
-        "Bagaimana proses pembayarannya?",
-        "Apakah bisa request desain custom?",
-        "Apakah website yang dibuat responsif?",
-        "Apakah tersedia paket maintenance?",
-        "Berapa lama support setelah project selesai?",
+      items: [
+        {
+          q: "Berapa lama waktu pengerjaan website?",
+          a: "Tergantung jenis dan kompleksitasnya. Poster & banner biasanya 1–2 hari kerja, landing page 5–7 hari, company profile 7–14 hari, sedangkan e-commerce dan website dinamis custom 14–21 hari kerja.",
+        },
+        {
+          q: "Apakah ada garansi revisi?",
+          a: "Ya. Setiap paket sudah termasuk 2–5x revisi gratis tergantung layanannya, dan kami memberikan gratis perbaikan bug (bug fix) selama 30 hari setelah website diluncurkan.",
+        },
+        {
+          q: "Layanan apa saja yang tersedia?",
+          a: "Kami menyediakan branding & desain logo, desain poster & banner, UI/UX design, serta pembuatan website: landing page, company profile, e-commerce, portfolio, dan website dinamis custom.",
+        },
+        {
+          q: "Berapa estimasi biaya landing page?",
+          a: "Landing page mulai dari Rp 1.500.000. Kisarannya: paket freelancer Rp 375 rb–2 jt, semi-custom Rp 2–5 jt, dan agensi (full custom + copywriting) Rp 5–15 jt, tergantung fitur dan tingkat kustomisasi.",
+        },
+        {
+          q: "Apakah ada harga khusus pelajar?",
+          a: "Ada. Hampir semua layanan punya paket pelajar — misalnya logo mulai Rp 249 rb, poster Rp 35 rb, dan website portfolio Rp 199 rb. Cukup lampirkan KTM atau kartu pelajar yang masih aktif.",
+        },
+        {
+          q: "Bagaimana proses pembayarannya?",
+          a: "Sistemnya DP (uang muka) 50% di awal untuk memulai pengerjaan, dan pelunasan 50% sisanya setelah project selesai dan disetujui oleh Anda.",
+        },
+        {
+          q: "Apakah bisa request desain custom?",
+          a: "Tentu. Kami menerima kebutuhan custom sepenuhnya — mulai dari desain, fitur khusus, hingga integrasi sistem sesuai kebutuhan bisnis Anda.",
+        },
+        {
+          q: "Apakah website yang dibuat responsif?",
+          a: "Ya. Semua website yang kami bangun tampil sempurna dan responsif di semua perangkat, mulai dari smartphone, tablet, hingga desktop.",
+        },
+        {
+          q: "Apakah tersedia paket maintenance?",
+          a: "Ya. Kami menyediakan layanan maintenance & support rutin: update konten, perbaikan bug, serta pengelolaan hosting dan domain. Hubungi kami untuk detail paketnya.",
+        },
+        {
+          q: "Berapa lama support setelah project selesai?",
+          a: "Anda mendapat gratis bug fix selama 30 hari setelah launch. Untuk dukungan jangka panjang, tersedia paket maintenance berkelanjutan.",
+        },
       ],
     },
   },
@@ -432,19 +462,49 @@ export const translations = {
       badge: "FAQ",
       title: "Have Questions?",
       titleHighlight: "Ask Directly",
-      description: "Click a question below and DigiMin AI will answer it for you instantly.",
+      description: "Find quick answers below, or click a question to ask DigiMin AI directly.",
       askBtn: "Ask DigiMin",
-      questions: [
-        "How long does website development take?",
-        "Is there a revision guarantee?",
-        "What services are available?",
-        "What's the estimated cost for a landing page?",
-        "Is there a student discount?",
-        "How does the payment process work?",
-        "Can I request a custom design?",
-        "Are the websites mobile responsive?",
-        "Is there a maintenance package available?",
-        "How long is support after project completion?",
+      items: [
+        {
+          q: "How long does website development take?",
+          a: "It depends on the type and complexity. Posters & banners typically take 1–2 working days, landing pages 5–7 days, company profiles 7–14 days, while custom e-commerce and dynamic websites take 14–21 working days.",
+        },
+        {
+          q: "Is there a revision guarantee?",
+          a: "Yes. Every package includes 2–5 free revisions depending on the service, plus 30 days of free bug fixes after your website goes live.",
+        },
+        {
+          q: "What services are available?",
+          a: "We offer branding & logo design, poster & banner design, UI/UX design, and website development: landing pages, company profiles, e-commerce, portfolios, and custom dynamic websites.",
+        },
+        {
+          q: "What's the estimated cost for a landing page?",
+          a: "Landing pages start from Rp 1,500,000. Ranges: freelancer package Rp 375k–2M, semi-custom Rp 2–5M, and agency (full custom + copywriting) Rp 5–15M, depending on features and customization.",
+        },
+        {
+          q: "Is there a student discount?",
+          a: "Yes. Almost every service has a student package — for example logos from Rp 249k, posters from Rp 35k, and portfolio websites from Rp 199k. Just attach a valid student ID.",
+        },
+        {
+          q: "How does the payment process work?",
+          a: "We use a 50% down payment upfront to begin work, with the remaining 50% paid after the project is completed and approved by you.",
+        },
+        {
+          q: "Can I request a custom design?",
+          a: "Absolutely. We fully welcome custom requirements — from design and special features to system integrations tailored to your business needs.",
+        },
+        {
+          q: "Are the websites mobile responsive?",
+          a: "Yes. Every website we build looks perfect and responsive across all devices, from smartphones and tablets to desktops.",
+        },
+        {
+          q: "Is there a maintenance package available?",
+          a: "Yes. We offer ongoing maintenance & support: content updates, bug fixes, and hosting & domain management. Contact us for package details.",
+        },
+        {
+          q: "How long is support after project completion?",
+          a: "You get free bug fixes for 30 days after launch. For long-term support, ongoing maintenance packages are available.",
+        },
       ],
     },
   },

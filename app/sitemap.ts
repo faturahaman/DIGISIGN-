@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const PRIMARY_DOMAIN = "https://arviotiv.com";
+import { SITE_URL } from "@/lib/site";
 
 // Single-page site: expose the primary URL plus in-page section anchors so
 // search engines can surface deep links to key sections.
@@ -17,7 +16,7 @@ const SECTIONS: { path: string; priority: number; changeFrequency: MetadataRoute
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   return SECTIONS.map(({ path, priority, changeFrequency }) => ({
-    url: `${PRIMARY_DOMAIN}/${path}`,
+    url: `${SITE_URL}/${path}`,
     lastModified,
     changeFrequency,
     priority,

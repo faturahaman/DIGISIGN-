@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const PRIMARY_DOMAIN = "https://arviotiv.com";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -11,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/_next/"],
       },
     ],
-    sitemap: `${PRIMARY_DOMAIN}/sitemap.xml`,
-    host: PRIMARY_DOMAIN,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }
