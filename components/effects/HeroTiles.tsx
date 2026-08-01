@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { getHeroTiles, type Column } from "@/lib/heroTiles";
 
 /**
@@ -6,13 +9,14 @@ import { getHeroTiles, type Column } from "@/lib/heroTiles";
  *
  * Two tilted 3D columns of "workspaces" recede toward a vanishing point. Every
  * tile is a dim glowing outline; hover lights it up neon, and image tiles fade
- * + zoom a real project screenshot into view. All CSS-driven (see .hero-tile*
- * in globals.css) so it's a Server Component shipping ZERO JS.
+ * + zoom a real project screenshot into view (CSS-driven, see .hero-tile* in
+ * globals.css).
  *
- * PERF: tiles are only ~200px wide, so images go through next/image with
- * sizes="220px" + low quality — the optimizer serves ~10–20KB WebP/AVIF instead
- * of the original 1–2MB source, and lazy-loads them (they're hidden until hover).
- * Disabled visually on small screens via the parent's `hidden md:block`.
+ * PERF (mobile): the tile grid is ~800 DOM nodes + ~21 next/image tags (each
+ * with a long srcset). On phones it's `display:none` decoration, but the nodes
+ * still get parsed — wasteful on weak CPUs. So we render the grid ONLY after
+ * confirming a desktop-width viewport (matchMedia, post-mount). Mobile ships
+ * just the cheap gradient overlays. Desktop is unchanged.
  */
 
 function TileColumns({ columns, side }: { columns: Column[]; side: "left" | "right" }) {
@@ -61,35 +65,46 @@ function TileColumns({ columns, side }: { columns: Column[]; side: "left" | "rig
 }
 
 export function HeroTiles() {
-  const { left, right } = getHeroTiles();
+  const [showGrid, setShowGrid] = useState(false);
+
+  // Only build the heavy tile grid on desktop-width screens, after mount.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setShowGrid(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const tiles = showGrid ? getHeroTiles() : null;
 
   return (
     <div
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      {/* 3D perspective wall of tiles. pointer-events re-enabled per-tile so
-          hovering reveals imagery without blocking hero buttons. */}
-      <div
-        className="absolute inset-0 flex items-start justify-between"
-        style={{ perspective: "1000px" }}
-      >
+      {tiles && (
         <div
-          className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
-          style={{ transformStyle: "preserve-3d" }}
+          className="absolute inset-0 flex items-start justify-between"
+          style={{ perspective: "1000px" }}
         >
-          <TileColumns columns={left} side="left" />
+          <div
+            className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <TileColumns columns={tiles.left} side="left" />
+          </div>
+          <div
+            className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <TileColumns columns={tiles.right} side="right" />
+          </div>
         </div>
-        <div
-          className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          <TileColumns columns={right} side="right" />
-        </div>
-      </div>
+      )}
 
       {/* Fade the field toward the top (horizon) and darken the centre so the
-          headline stays legible over the mosaic. */}
+          headline stays legible over the mosaic. Cheap; always rendered. */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_45%,var(--background)_35%,transparent)]" />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />

@@ -28,7 +28,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden pt-24"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden pt-28 pb-28 sm:pb-32"
     >
       {/* Signature hover-reveal tiling background (desktop only for perf). */}
       <div className="absolute inset-0 hidden md:block">
@@ -105,10 +105,10 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — hidden on very short viewports to avoid crowding. */}
       <button
         onClick={() => handleScroll("services")}
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5 text-slate-500 transition-colors hover:text-amber-500 animate-in fade-in duration-700 fill-mode-backwards [animation-delay:900ms]"
+        className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-slate-500 transition-colors hover:text-amber-500 animate-in fade-in duration-700 fill-mode-backwards [animation-delay:900ms] min-[720px]:flex"
         aria-label="Scroll to services"
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.3em]">{t.hero.scroll}</span>

@@ -10,18 +10,18 @@ export const translations = {
       portfolio: "Portfolio",
       testimonials: "Testimoni",
       contact: "Kontak",
-      getStarted: "Mulai Sekarang",
+      getStarted: "yuk Kolaborasi",
     },
 
     // Hero
     hero: {
-      badge: "Creative Digital Agency",
+      badge: "Arvion Creative",
       heading1: "Kami Merancang",
       headingHighlight: "Pengalaman Digital",
       heading2: "yang Terasa Premium",
       subheading:
         "Dari branding yang berkesan hingga website yang memukau — kami menghadirkan solusi digital premium yang mendorong pertumbuhan bisnis Anda.",
-      services: ["Branding Design", "Landing Page", "E-Commerce", "UI/UX Design"],
+      services: ["Desain Brand", "Landing Page", "E-Commerce", "Desain UI/UX"],
       ctaPrimary: "Mulai Proyek",
       ctaSecondary: "Lihat Portfolio",
       stats: {
@@ -269,7 +269,7 @@ export const translations = {
 
     // Hero
     hero: {
-      badge: "Creative Digital Agency",
+      badge: "Arvion Creative",
       heading1: "We Design",
       headingHighlight: "Digital Experiences",
       heading2: "That Feel Premium",
