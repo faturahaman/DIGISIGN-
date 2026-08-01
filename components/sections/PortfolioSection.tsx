@@ -18,12 +18,12 @@ import {
 type FilterCategory = "all" | PortfolioCategory;
 
 const GRADIENTS = [
-  "from-orange-500/20 to-purple-500/20",
-  "from-purple-500/20 to-pink-500/20",
-  "from-pink-500/20 to-orange-500/20",
-  "from-yellow-500/20 to-orange-500/20",
-  "from-orange-500/20 to-red-500/20",
-  "from-red-500/20 to-purple-500/20",
+  "from-amber-500/20 to-violet-500/20",
+  "from-violet-500/20 to-fuchsia-500/20",
+  "from-fuchsia-500/20 to-amber-500/20",
+  "from-yellow-500/20 to-amber-500/20",
+  "from-amber-500/20 to-rose-500/20",
+  "from-rose-500/20 to-violet-500/20",
 ];
 
 function PortfolioImage({ item, gradient, enhance }: { item: PortfolioItem; gradient: string; enhance?: boolean }) {
@@ -103,7 +103,7 @@ export function PortfolioSection() {
   }, []);
 
   return (
-    <section id="portfolio" className="relative bg-slate-50 py-16 sm:py-20 lg:py-28">
+    <section id="portfolio" className="relative py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
           badge={t.portfolio.badge}
@@ -120,10 +120,10 @@ export function PortfolioSection() {
                 key={filter.value}
                 onClick={() => setActiveFilter(filter.value)}
                 className={cn(
-                  "rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 sm:px-5 shadow-sm",
+                  "rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 sm:px-5",
                   activeFilter === filter.value
-                    ? "bg-gradient-to-r from-orange-500 to-purple-500 text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:text-orange-600 hover:bg-orange-50"
+                    ? "bg-amber-500 text-white shadow-[0_8px_20px_-6px_rgba(245,158,11,0.5)]"
+                    : "border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-amber-50 hover:text-amber-600"
                 )}
               >
                 {filter.label}
@@ -142,7 +142,7 @@ export function PortfolioSection() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
                 >
                   <div className="h-44 animate-pulse bg-slate-100 sm:h-48" />
                   <div className="p-4">
@@ -167,7 +167,7 @@ export function PortfolioSection() {
                 data-testid="portfolio-item"
                 data-category={item.category}
                 className={cn(
-                  "group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-orange-200 hover:shadow-md",
+                  "group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-xl",
                   item.size === "large" && "sm:col-span-2"
                 )}
                 onClick={() => setSelectedItem(item)}
@@ -193,7 +193,7 @@ export function PortfolioSection() {
 
                 {/* Content */}
                 <div className="p-5">
-                  <span className="mb-2 inline-block rounded-full bg-orange-50 border border-orange-200 px-3 py-1 text-xs font-bold capitalize text-orange-600">
+                  <span className="mb-2 inline-block font-mono text-[11px] uppercase tracking-widest text-amber-500">
                     {item.category}
                   </span>
                   <h3 className="text-sm font-bold text-slate-900 sm:text-base">{item.title}</h3>
@@ -211,7 +211,7 @@ export function PortfolioSection() {
         </motion.div>
 
         {!isLoading && filtered.length === 0 && (
-          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               {hasError
                 ? "Portfolio belum bisa dimuat dari Google Sheets."
@@ -238,7 +238,7 @@ export function PortfolioSection() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-4 top-1/2 z-50 max-h-[90vh] w-auto max-w-2xl -translate-y-1/2 overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:left-1/2 sm:w-full sm:-translate-x-1/2"
+              className="fixed inset-x-4 top-1/2 z-50 max-h-[90vh] w-auto max-w-2xl -translate-y-1/2 overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:left-1/2 sm:w-full sm:-translate-x-1/2"
               role="dialog"
               aria-modal="true"
               aria-label={selectedItem.title}
@@ -260,7 +260,7 @@ export function PortfolioSection() {
                 <div className="absolute inset-0 bg-white/10 pointer-events-none" />
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-slate-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
                   aria-label="Close modal"
                 >
                   <X className="h-4 w-4" />
@@ -269,7 +269,7 @@ export function PortfolioSection() {
 
               {/* Content */}
               <div className="p-5 sm:p-6">
-                <span className="mb-3 inline-block rounded-full bg-orange-50 border border-orange-200 px-3 py-1 text-xs font-bold capitalize text-orange-600">
+                <span className="mb-3 inline-block rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold capitalize text-amber-600">
                   {selectedItem.category}
                 </span>
                 <h2 className="text-xl font-black text-slate-900 sm:text-2xl">{selectedItem.title}</h2>

@@ -135,7 +135,7 @@ export function ChatWidget() {
                   key={i}
                   onClick={() => handleSend(reply)}
                   disabled={isLoading}
-                  className="text-[13px] px-4 py-2 bg-white border border-orange-200 text-orange-600 rounded-full font-medium hover:bg-orange-50 hover:border-orange-300 transition-all shadow-sm disabled:opacity-50"
+                  className="text-[13px] px-4 py-2 bg-white border border-amber-200 text-amber-600 rounded-full font-medium hover:bg-amber-50 hover:border-amber-300 transition-all shadow-sm disabled:opacity-50"
                 >
                   {reply}
                 </button>
@@ -167,7 +167,7 @@ export function ChatWidget() {
                   key={i}
                   onClick={() => handleSend(reply)}
                   disabled={isLoading}
-                  className="text-[13px] px-4 py-2 bg-white border border-orange-200 text-orange-600 rounded-full font-medium hover:bg-orange-50 hover:border-orange-300 transition-all shadow-sm disabled:opacity-50 text-left"
+                  className="text-[13px] px-4 py-2 bg-white border border-amber-200 text-amber-600 rounded-full font-medium hover:bg-amber-50 hover:border-amber-300 transition-all shadow-sm disabled:opacity-50 text-left"
                 >
                   {reply}
                 </button>
@@ -181,7 +181,7 @@ export function ChatWidget() {
     return (
         <div key={index} className={`flex flex-col mb-4 items-end`}>
         <div
-          className={`max-w-[85%] p-3.5 rounded-2xl bg-linear-to-r from-orange-500 to-purple-500 text-white rounded-tr-sm shadow-sm`}
+          className={`max-w-[85%] p-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-violet-500 text-white rounded-tr-sm shadow-sm`}
         >
           <p className="text-[14px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
         </div>
@@ -202,19 +202,20 @@ export function ChatWidget() {
             className="fixed bottom-24 right-4 md:right-8 w-90 max-w-[calc(100vw-2rem)] h-130 max-h-[calc(100vh-8rem)] bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl flex flex-col overflow-hidden z-60 shadow-xl"
           >
             {/* Header */}
-            <div className="bg-linear-to-r from-orange-50 to-purple-50 p-4 border-b border-slate-200 flex justify-between items-center shrink-0 relative overflow-hidden">
-              <div className="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl" />
+            <div className="bg-gradient-to-r from-amber-50 to-violet-50 p-4 border-b border-slate-200 flex justify-between items-center shrink-0 relative overflow-hidden">
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl" />
               <div className="flex items-center gap-3 relative z-10">
                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden">
                   <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={40} height={40} className="w-10 h-10 object-contain" />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 leading-tight text-base tracking-wide">Arvion Assistant</h3>
-                  <p className="text-[11px] font-bold text-orange-600 uppercase tracking-widest">{t.chat.status}</p>
+                  <p className="text-[11px] font-bold text-amber-600 uppercase tracking-widest">{t.chat.status}</p>
                 </div>
               </div>
               <button
                 onClick={closeChat}
+                aria-label={t.modal?.closeModal ?? "Close"}
                 className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all relative z-10"
               >
                 <X className="w-4 h-4" />
@@ -231,9 +232,9 @@ export function ChatWidget() {
                   </div>
                   <div className="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-sm shadow-sm">
                     <div className="flex gap-1.5">
-                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                      <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" />
+                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" />
                     </div>
                   </div>
                 </div>
@@ -252,13 +253,13 @@ export function ChatWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={t.chat.placeholder}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-12 py-3 text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-orange-300 focus:ring-1 focus:ring-orange-300 transition-all"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-12 py-3 text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-300 transition-all"
                   disabled={isLoading}
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-1.5 top-1.5 bottom-1.5 aspect-square bg-linear-to-r from-orange-500 to-purple-500 text-white rounded-lg flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-all shadow-sm"
+                  className="absolute right-1.5 top-1.5 bottom-1.5 aspect-square bg-gradient-to-r from-amber-500 to-violet-500 text-white rounded-lg flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-all shadow-sm"
                 >
                   <Send className="w-4 h-4 ml-0.5" />
                 </button>
@@ -332,7 +333,8 @@ export function ChatWidget() {
             onClick={() => (isOpen ? closeChat() : openChat())}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-purple-500 text-white border border-orange-200 hover:scale-105 transition-all shadow-md group"
+            aria-label={isOpen ? "Tutup chat" : t.chat.desktopLabel}
+            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-violet-500 text-white border border-amber-200 hover:scale-105 transition-all shadow-md group"
           >
             <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
           </button>

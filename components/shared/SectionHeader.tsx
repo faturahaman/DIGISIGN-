@@ -10,6 +10,12 @@ interface SectionHeaderProps {
   align?: "left" | "center";
 }
 
+/**
+ * Shared section header in the Hyprland dark idiom:
+ *  - a monospace, letter-spaced eyebrow flanked by a hairline rule
+ *  - a big, extrabold, tight-tracking white heading (the graphic element)
+ *  - the highlight word carried in the amber→violet brand gradient
+ */
 export function SectionHeader({
   badge,
   title,
@@ -18,26 +24,53 @@ export function SectionHeader({
   className,
   align = "center",
 }: SectionHeaderProps) {
+  const isCenter = align === "center";
+
   return (
-    <div className={cn("mb-10 sm:mb-12 lg:mb-16", align === "center" ? "text-center" : "text-left", className)}>
+    <div
+      className={cn(
+        "mb-12 sm:mb-14 lg:mb-16",
+        isCenter ? "mx-auto max-w-2xl text-center" : "max-w-2xl text-left",
+        className
+      )}
+    >
       {badge && (
         <BlurFade delay={0}>
-          <span className="mb-3 inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-sm font-bold text-orange-600 sm:mb-4 shadow-sm">
+          <p
+            className={cn(
+              "flex items-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-slate-500",
+              isCenter && "justify-center"
+            )}
+          >
+            <span className="h-px w-8 bg-slate-300" />
             {badge}
-          </span>
+            {isCenter && <span className="h-px w-8 bg-slate-300" />}
+          </p>
         </BlurFade>
       )}
+
       <BlurFade delay={0.1}>
-        <h2 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl xl:text-5xl">
-          {title}{" "}
+        <h2 className="mt-5 text-3xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-4xl lg:text-[3rem]">
+          {title}
           {titleHighlight && (
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-purple-500">{titleHighlight}</span>
+            <>
+              {" "}
+              <span className="hyprgradient bg-clip-text text-transparent">
+                {titleHighlight}
+              </span>
+            </>
           )}
         </h2>
       </BlurFade>
+
       {description && (
         <BlurFade delay={0.2}>
-          <p className="mx-auto mt-3 max-w-2xl text-base font-medium text-slate-600 sm:mt-4 sm:text-lg">
+          <p
+            className={cn(
+              "mt-5 text-base leading-relaxed text-slate-600 sm:text-lg",
+              isCenter && "mx-auto max-w-xl"
+            )}
+          >
             {description}
           </p>
         </BlurFade>

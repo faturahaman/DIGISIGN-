@@ -52,10 +52,10 @@ export function WhatsAppButton() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -10, scale: 0.95 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-none rounded-xl border border-white/10 bg-[#0B1120]/95 px-4 py-2 backdrop-blur-md shadow-lg"
+            className="pointer-events-none rounded-xl border border-slate-200 bg-white/95 px-4 py-2 backdrop-blur-md shadow-lg"
           >
-            <p className="text-xs font-medium text-white">{t.whatsapp.label}</p>
-            <p className="text-xs text-[#94A3B8]">{t.whatsapp.tooltip}</p>
+            <p className="text-xs font-medium text-slate-900">{t.whatsapp.label}</p>
+            <p className="text-xs text-slate-500">{t.whatsapp.tooltip}</p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { cn } from "@/lib/utils";
 
 interface BlurFadeProps {
   children: React.ReactNode;
@@ -13,6 +13,18 @@ interface BlurFadeProps {
   inViewMargin?: string;
 }
 
+/**
+ * Scroll-reveal wrapper — pure CSS + IntersectionObserver, NO framer-motion.
+ *
+ * This component is used ~35× across the page; when it pulled in framer-motion's
+ * `motion` + `useInView` each instance added hydration/runtime cost that blocked
+ * the main thread (hurting TBT and LCP). Here we observe once, then toggle a
+ * class that transitions transform/opacity/filter — all GPU-compositable — so
+ * the reveal is essentially free and ships no animation-library JS.
+ *
+ * Honors prefers-reduced-motion (renders shown, no transition) and keeps the
+ * exact same props API so callers are unchanged.
+ */
 export function BlurFade({
   children,
   className,
@@ -23,28 +35,44 @@ export function BlurFade({
   inViewMargin = "-50px",
 }: BlurFadeProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isInView = useInView(ref, { once: true, margin: inViewMargin as any });
+  // Start shown when we're not gating on viewport; otherwise reveal on intersect.
+  const [shown, setShown] = useState(!inView);
 
-  const shouldAnimate = !inView || isInView;
+  useEffect(() => {
+    if (!inView) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: inViewMargin, threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [inView, inViewMargin]);
 
-  // Skip animation for users who prefer reduced motion
-  if (prefersReducedMotion) {
-    return <div ref={ref} className={className}>{children}</div>;
-  }
+  const style: CSSProperties = {
+    transitionProperty: "opacity, transform, filter",
+    transitionDuration: `${duration}s`,
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+    transitionDelay: `${delay}s`,
+    opacity: shown ? 1 : 0,
+    transform: shown ? "translateY(0)" : `translateY(${yOffset}px)`,
+    filter: shown ? "blur(0px)" : "blur(8px)",
+    willChange: "opacity, transform",
+  };
 
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      // Use whileInView instead of manual animate to avoid SSR mismatch
-      initial={{ opacity: 0, y: yOffset, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: inViewMargin }}
-      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div ref={ref} className={cn(className)} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }

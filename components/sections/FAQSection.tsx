@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MessageCircle, Sparkles } from "lucide-react";
+import { ChevronDown, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useChat } from "@/lib/ChatContext";
 import { BlurFade } from "@/components/effects/BlurFade";
@@ -29,24 +29,23 @@ export function FAQSection() {
   };
 
   return (
-    <section id="faq" className="relative bg-slate-50 py-14 sm:py-18 lg:py-24 overflow-hidden">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-[100px]" />
+    <section id="faq" className="relative py-14 sm:py-18 lg:py-24 overflow-hidden">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[100px]" />
 
       <div className="relative mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
         {/* ── Header ── */}
         <BlurFade delay={0}>
-          <div className="mb-8 text-center sm:mb-10">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-orange-600 shadow-sm">
-              <Sparkles className="h-3 w-3" />
+          <div className="mb-10 text-center sm:mb-12">
+            <p className="flex items-center justify-center gap-3 font-mono text-xs uppercase tracking-[0.3em] text-slate-500">
+              <span className="h-px w-8 bg-slate-300" />
               {t.faq.badge}
-            </span>
-            <h2 className="mt-3 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+              <span className="h-px w-8 bg-slate-300" />
+            </p>
+            <h2 className="mt-5 text-3xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-4xl lg:text-[3rem]">
               {t.faq.title}{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-purple-500">
-                {t.faq.titleHighlight}
-              </span>
+              <span className="hyprgradient bg-clip-text text-transparent">{t.faq.titleHighlight}</span>
             </h2>
-            <p className="mx-auto mt-2.5 max-w-md text-sm font-medium leading-relaxed text-slate-600">
+            <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-slate-600">
               {t.faq.description}
             </p>
           </div>
@@ -64,7 +63,7 @@ export function FAQSection() {
               return (
                 <li
                   key={item.q}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-colors hover:border-orange-200"
+                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-colors hover:border-amber-200"
                 >
                   <h3>
                     <button
@@ -106,7 +105,7 @@ export function FAQSection() {
                           <button
                             type="button"
                             onClick={() => askDigiMin(item.q)}
-                            className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1.5 text-xs font-bold text-orange-600 transition-colors hover:bg-orange-100"
+                            className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3.5 py-1.5 text-xs font-bold text-amber-600 transition-colors hover:bg-amber-100"
                           >
                             <MessageCircle className="h-3.5 w-3.5" />
                             {t.faq.askBtn}

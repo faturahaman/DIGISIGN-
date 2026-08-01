@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { SERVICES as FALLBACK_SERVICES } from "@/lib/constants";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { BlurFade } from "@/components/effects/BlurFade";
+import { AmbientGlow } from "@/components/effects/AmbientGlow";
+import { CardsContainer, MouseGlowCard } from "@/components/effects/MouseGlowCard";
 import { ServiceModal } from "@/components/shared/ServiceModal";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -13,7 +14,7 @@ import Image from "next/image";
 
 import { fetchServices, type ServiceItem } from "@/lib/services";
 
-export function ServicesSection()   {
+export function ServicesSection() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
   const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,9 +41,9 @@ export function ServicesSection()   {
   }, []);
 
   return (
-
     <>
-      <section id="services" className="relative bg-slate-50 py-16 sm:py-20 lg:py-28">
+      <section id="services" className="relative py-16 sm:py-20 lg:py-28">
+        <AmbientGlow size="65% 55% at 50% 12%" />
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
           <SectionHeader
             badge={t.services.badge}
@@ -51,109 +52,106 @@ export function ServicesSection()   {
             description={t.services.description}
           />
 
-          {/* Bento Grid */}
-          <div className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          {/* Bento Grid — one shared mouse broker lights the whole grid. */}
+          <CardsContainer className="grid auto-rows-[minmax(150px,auto)] grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
             {isLoading && services.length === 0
               ? Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={`service-skeleton-${i}`}
-                    className="h-full min-h-[140px] animate-pulse rounded-xl border border-slate-200 bg-white"
+                    className="h-full min-h-[150px] animate-pulse rounded-3xl border border-slate-200 bg-white"
                   />
                 ))
               : null}
             {services.map((service, i) => {
-
               const Icon = service.icon;
               const isLarge = service.size === "large";
 
               return (
-                <BlurFade key={service.id} delay={i * 0.06}>
-                  <motion.article
-                    whileHover={{ scale: 1.02, y: -6 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                <BlurFade key={service.id} delay={i * 0.06} className={cn(isLarge && "sm:col-span-2 lg:col-span-1")}>
+                  <MouseGlowCard
+                    as="button"
                     onClick={() => setActiveService(service)}
-                    className={cn(
-                      "group relative flex h-full flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-2.5 sm:p-4.5 lg:p-5 cursor-pointer shadow-xs",
-                      "transition-all duration-300 hover:border-orange-200 hover:shadow-md hover:bg-white",
-                      isLarge && "sm:col-span-2 lg:col-span-1"
-                    )}
+                    className="h-full w-full cursor-pointer text-left transition-transform duration-300 hover:-translate-y-1.5"
+                    innerClassName="flex flex-col p-2.5 sm:p-4"
                     data-testid="service-card"
                   >
-                    {/* Gradient background overlay on hover */}
+                    {/* Image section */}
                     <div
                       className={cn(
-                        "pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-[0.02]",
-                        `bg-gradient-to-br from-orange-500 to-purple-500`
-                      )}
-                    />
-
-                    <div className="flex flex-col h-full">
-                      {/* Image section */}
-                      <div className={cn(
-                        "relative w-full overflow-hidden rounded-xl bg-slate-100 shrink-0 border border-slate-100/50 mb-3",
+                        "relative mb-3 w-full shrink-0 overflow-hidden rounded-2xl border border-slate-100 bg-slate-100",
                         isLarge ? "h-36 sm:h-44 lg:h-52" : "h-28 sm:h-36 lg:h-40"
-                      )}>
-                        {service.imageUrl && !failedImages.has(service.id) ? (
-                          <Image
-                            src={service.imageUrl}
-                            alt={service.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, 400px"
-                            onError={() =>
-                              setFailedImages((prev) => new Set(prev).add(service.id))
-                            }
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-orange-100 to-purple-100 flex items-center justify-center">
-                            <Icon className="h-10 w-10 text-orange-400 opacity-60" />
-                          </div>
-                        )}
-                        
-                        {/* Floating Icon badge */}
-                        <div className="absolute top-2.5 left-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white/95 backdrop-blur-xs shadow-sm border border-slate-200/50">
-                          <Icon className="h-5 w-5 text-orange-500" />
+                      )}
+                    >
+                      {service.imageUrl && !failedImages.has(service.id) ? (
+                        <Image
+                          src={service.imageUrl}
+                          alt={service.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 400px"
+                          onError={() =>
+                            setFailedImages((prev) => new Set(prev).add(service.id))
+                          }
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-amber-100 to-violet-100">
+                          <Icon className="h-10 w-10 text-amber-400" />
                         </div>
-                        
-                        {/* Floating Arrow */}
-                        <span className="absolute top-2.5 right-2.5 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-white/95 text-slate-500 transition-all duration-300 opacity-0 group-hover:opacity-100 shadow-sm border border-slate-100 hover:text-orange-500">
-                          <ArrowUpRight className="h-4 w-4" />
-                        </span>
+                      )}
+
+                      {/* Floating Icon badge */}
+                      <div className="absolute left-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/60 bg-white/90 backdrop-blur-sm">
+                        <Icon className="h-5 w-5 text-amber-500" />
                       </div>
 
-                      {/* Content Section */}
-                      <div className="flex flex-col justify-between flex-1">
-                        <div>
-                          <h3 className={cn("font-bold text-slate-900 leading-tight tracking-tight mt-2", isLarge ? "text-base sm:text-lg" : "text-sm sm:text-base")}>
-                            {service.title}
-                          </h3>
-                          <p className={cn("mt-1 leading-relaxed text-slate-500 text-xs sm:text-sm", isLarge ? "line-clamp-2 sm:line-clamp-3" : "line-clamp-2")}>
-                            {service.description}
-                          </p>
-                        </div>
-                        
-                        <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 pt-2 gap-2 flex-wrap">
-                          <div className="inline-flex items-center gap-1 rounded-full border border-orange-100 bg-orange-50/50 px-2 py-0.5 shadow-2xs text-[9px] sm:text-[10px]">
-                            <span className="font-medium text-orange-600">Mulai</span>
-                            <span className="font-black text-orange-600">
-                              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(service.startingPrice)}
-                            </span>
-                          </div>
-                          <span className="text-[9px] sm:text-[10px] font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md whitespace-nowrap">
-                            {service.deliveryTime}
-                          </span>
-                        </div>
-                      </div>
+                      {/* Floating Arrow */}
+                      <span className="absolute right-2.5 top-2.5 flex h-7.5 w-7.5 items-center justify-center rounded-full border border-slate-200/60 bg-white/90 text-slate-500 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 hover:text-amber-500">
+                        <ArrowUpRight className="h-4 w-4" />
+                      </span>
                     </div>
 
-                    {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-orange-500 to-purple-500 transition-all duration-500 group-hover:w-full" />
-                  </motion.article>
+                    {/* Content Section */}
+                    <div className="flex flex-1 flex-col justify-between">
+                      <div>
+                        <h3
+                          className={cn(
+                            "mt-1 font-bold leading-tight tracking-tight text-slate-900",
+                            isLarge ? "text-base sm:text-lg" : "text-sm sm:text-base"
+                          )}
+                        >
+                          {service.title}
+                        </h3>
+                        <p
+                          className={cn(
+                            "mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm",
+                            isLarge ? "line-clamp-2 sm:line-clamp-3" : "line-clamp-2"
+                          )}
+                        >
+                          {service.description}
+                        </p>
+                      </div>
+
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2">
+                        <div className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] sm:text-[10px]">
+                          <span className="font-medium text-amber-600/80">Mulai</span>
+                          <span className="font-black text-amber-600">
+                            {new Intl.NumberFormat("id-ID", {
+                              style: "currency",
+                              currency: "IDR",
+                              minimumFractionDigits: 0,
+                            }).format(service.startingPrice)}
+                          </span>
+                        </div>
+                        <span className="whitespace-nowrap rounded-md bg-violet-50 px-2 py-0.5 text-[9px] font-semibold text-violet-600 sm:text-[10px]">
+                          {service.deliveryTime}
+                        </span>
+                      </div>
+                    </div>
+                  </MouseGlowCard>
                 </BlurFade>
               );
             })}
-          </div>
+          </CardsContainer>
         </div>
       </section>
 

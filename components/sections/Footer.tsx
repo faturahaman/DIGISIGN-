@@ -37,6 +37,19 @@ export function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-slate-200 bg-white">
+      {/* Big radial glow bleeding up from behind the footer. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-72"
+        style={{
+          WebkitMaskImage:
+            "radial-gradient(70% 100% at 50% 0%, white 40%, transparent)",
+          maskImage: "radial-gradient(70% 100% at 50% 0%, white 40%, transparent)",
+          backgroundImage:
+            "radial-gradient(70% 120% at 50% 0%, rgba(245,158,11,0.12), rgba(139,92,246,0.07) 45%, transparent 70%)",
+        }}
+      />
+
       {/* Faded logo background */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <Image
@@ -52,7 +65,6 @@ export function Footer() {
 
       <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4">
-
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-2">
             <a
@@ -77,7 +89,7 @@ export function Footer() {
             <div className="mt-6 space-y-3 sm:mt-8">
               <a
                 href="mailto:digitalidsign@gmail.com"
-                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-orange-600"
+                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-amber-600"
               >
                 <Mail className="h-4 w-4 shrink-0" />
                 digitalidsign@gmail.com
@@ -86,7 +98,7 @@ export function Footer() {
                 href="https://wa.me/6285924361892"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-orange-600"
+                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-amber-600"
               >
                 <MessageCircle className="h-4 w-4 shrink-0" />
                 +62 859-2436-1892
@@ -100,7 +112,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Arvion Instagram"
-                className="flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"
+                className="flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600"
               >
                 <ExternalLink className="h-4 w-4" />
                 Instagram
@@ -111,7 +123,7 @@ export function Footer() {
           {/* Nav groups */}
           {FOOTER_NAV.map((group) => (
             <div key={group.title}>
-               <h3 className="mb-5 text-sm font-bold uppercase tracking-wider text-slate-900">
+              <h3 className="mb-5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
                 {group.title}
               </h3>
               <ul className="space-y-3">
@@ -120,7 +132,7 @@ export function Footer() {
                     <a
                       href={link.href}
                       onClick={(e) => handleAnchorClick(e, link.href)}
-                      className="text-sm font-medium text-slate-500 transition-colors hover:text-orange-600"
+                      className="text-sm font-medium text-slate-500 transition-colors hover:text-amber-600"
                     >
                       {link.label}
                     </a>
@@ -132,13 +144,11 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-100 pt-8 text-center sm:flex-row sm:text-left">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-center sm:flex-row sm:text-left">
           <p className="text-sm font-medium text-slate-500">
             © {year} Arvion. {t.footer.rights}
           </p>
-          <p className="text-sm font-medium text-slate-500">
-            {t.footer.crafted}
-          </p>
+          <p className="text-sm font-medium text-slate-500">{t.footer.crafted}</p>
         </div>
       </div>
     </footer>

@@ -11,6 +11,7 @@ import {
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 import Image from "next/image";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { GridPattern } from "@/components/effects/GridPattern";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { TESTIMONIALS as FALLBACK_TESTIMONIALS } from "@/lib/constants";
@@ -73,7 +74,7 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
 
   if (avatarUrl && !imgError) {
     return (
-      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-orange-200 shadow-sm">
+      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-amber-200 shadow-sm">
         <Image
           src={avatarUrl}
           alt={name}
@@ -87,7 +88,7 @@ function Avatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   }
 
   return (
-    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-purple-500 text-lg font-bold text-white ring-2 ring-orange-200 shadow-sm">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-violet-500 text-lg font-bold text-white ring-2 ring-amber-200 shadow-sm">
       {initial}
     </div>
   );
@@ -140,7 +141,7 @@ function NavButton({
       aria-label={label}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.94 }}
-      className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"
+      className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600"
     >
       {/* Glow ring on hover */}
       <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 shadow-[0_0_16px_2px_rgba(245,158,11,0.2)] transition-opacity duration-300 group-hover:opacity-100" />
@@ -253,19 +254,12 @@ export function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-slate-50 py-20 sm:py-24 lg:py-32"
+      className="relative overflow-hidden py-20 sm:py-24 lg:py-32"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* ── Ambient background glows ── */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/5 blur-[120px]" />
-        <div className="absolute right-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/5 blur-[120px]" />
-        <div className="absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-orange-500/10 to-transparent" />
-      </div>
-
-      {/* ── Floating particles ── */}
-      <Particles />
+      {/* One concentrated glow behind the card */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.1),rgba(139,92,246,0.06)_50%,transparent_72%)] blur-[90px]" />
 
       <div className="relative mx-auto max-w-4xl px-5 sm:px-6 lg:px-8">
         {/* Section header */}
@@ -292,38 +286,36 @@ export function TestimonialsSection() {
                   exit="exit"
                   transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <TiltCard className="group relative rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
-                    {/* Card inner glow on hover */}
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 shadow-[inset_0_0_60px_rgba(245,158,11,0.03)] transition-opacity duration-500 group-hover:opacity-100" />
-
-                    {/* Border glow */}
-                    <div className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 ring-1 ring-orange-200 transition-opacity duration-500 group-hover:opacity-100" />
+                  <TiltCard className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition-shadow duration-300 hover:shadow-xl sm:p-10">
+                    {/* Grid texture + concentrated corner glow */}
+                    <GridPattern className="stroke-slate-900/[0.02]" width={44} height={44} />
+                    <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.16),transparent_70%)] blur-2xl" />
 
                     {/* Quote icon */}
-                    <Quote className="mb-5 h-9 w-9 text-orange-200" />
+                    <Quote className="relative mb-5 h-9 w-9 text-amber-300" />
 
                     {/* Stars */}
-                    <div className="mb-5 flex gap-1">
+                    <div className="relative mb-5 flex gap-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
                           className={cn(
                             "h-4 w-4 transition-colors",
                             i < current.rating
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "fill-slate-100 text-slate-100"
+                              ? "fill-amber-400 text-amber-400"
+                              : "fill-slate-200 text-slate-200"
                           )}
                         />
                       ))}
                     </div>
 
                     {/* Testimonial text */}
-                    <p className="text-lg leading-relaxed text-slate-700 sm:text-xl font-medium">
+                    <p className="relative text-lg leading-relaxed text-slate-700 sm:text-xl font-medium">
                       &ldquo;{current.message}&rdquo;
                     </p>
 
                     {/* Author */}
-                    <div className="mt-8 flex items-center gap-4">
+                    <div className="relative mt-8 flex items-center gap-4">
                       <Avatar name={current.name} avatarUrl={current.avatar} />
                       <div>
                         <div className="text-sm font-bold text-slate-900 sm:text-base">
@@ -361,7 +353,7 @@ export function TestimonialsSection() {
                     className={cn(
                       "h-2 rounded-full transition-all duration-400",
                       i === activeIndex
-                        ? "w-7 bg-gradient-to-r from-orange-400 to-purple-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]"
+                        ? "w-7 bg-gradient-to-r from-amber-400 to-violet-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]"
                         : "w-2 bg-slate-200 hover:bg-slate-300"
                     )}
                   />
@@ -376,7 +368,7 @@ export function TestimonialsSection() {
 
           {/* Error notice (non-blocking) */}
           {error && (
-            <p className="mt-4 text-center text-xs text-slate-400">
+            <p className="mt-4 text-center text-xs text-slate-500">
               Showing cached testimonials
             </p>
           )}
@@ -386,42 +378,3 @@ export function TestimonialsSection() {
   );
 }
 
-// ─── Floating Particles ───────────────────────────────────────────────────────
-
-const PARTICLE_CONFIG = [
-  { top: "15%", left: "8%", size: 2, delay: 0, duration: 6 },
-  { top: "25%", left: "92%", size: 1.5, delay: 1.2, duration: 8 },
-  { top: "70%", left: "5%", size: 1, delay: 2.4, duration: 7 },
-  { top: "80%", left: "88%", size: 2, delay: 0.8, duration: 9 },
-  { top: "45%", left: "96%", size: 1.5, delay: 3, duration: 6.5 },
-  { top: "55%", left: "2%", size: 1, delay: 1.8, duration: 7.5 },
-];
-
-function Particles() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {PARTICLE_CONFIG.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full bg-orange-400/20"
-          style={{
-            top: p.top,
-            left: p.left,
-            width: p.size,
-            height: p.size,
-          }}
-          animate={{
-            y: [0, -18, 0],
-            opacity: [0.3, 0.7, 0.3],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
-  );
-}

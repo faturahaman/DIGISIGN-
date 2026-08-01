@@ -22,7 +22,7 @@ export function ProcessSection() {
   const lineOpacity = useTransform(scrollYProgress, [0, 0.05], [0, 1]);
 
   return (
-    <section className="relative bg-white py-16 sm:py-20 lg:py-28">
+    <section className="relative py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-4xl px-5 sm:px-6 lg:px-8">
         <SectionHeader
           badge={t.process.badge}
@@ -38,15 +38,15 @@ export function ProcessSection() {
           <div className="absolute left-[19px] top-0 h-full w-px bg-slate-200 md:hidden">
             <motion.div
               style={{ scaleY: lineScaleY, opacity: lineOpacity }}
-              className="h-full w-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-transparent"
+              className="h-full w-full origin-top bg-gradient-to-b from-amber-500 via-violet-500 to-transparent"
             />
           </div>
 
           {/* Desktop vertical line (center) */}
           <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-slate-200 md:block">
             <motion.div
-              style={{ scaleY: lineScaleY, opacity: lineOpacity, boxShadow: "0 0 10px rgba(245, 158, 11, 0.3)" }}
-              className="h-full w-full origin-top bg-gradient-to-b from-orange-500 via-purple-500 to-transparent"
+              style={{ scaleY: lineScaleY, opacity: lineOpacity, boxShadow: "0 0 12px rgba(245, 158, 11, 0.4)" }}
+              className="h-full w-full origin-top bg-gradient-to-b from-amber-500 via-violet-500 to-transparent"
             />
           </div>
 
@@ -64,13 +64,13 @@ export function ProcessSection() {
                         initial={{ scale: 0 }}
                         animate={isLineInView ? { scale: 1 } : { scale: 0 }}
                         transition={{ delay: i * 0.15 + 0.3, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="h-4 w-4 rounded-full border-2 border-orange-500 bg-white shadow-[0_0_12px_rgba(245,158,11,0.4)]"
+                        className="h-4 w-4 rounded-full border-2 border-amber-500 bg-white shadow-[0_0_10px_rgba(245,158,11,0.4)]"
                       />
                     </div>
                     {/* Card */}
-                    <div className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm transition-all duration-300 hover:border-orange-200 hover:bg-white hover:shadow-md">
-                      <div className="mb-2 flex items-center gap-2">
-                        <span className="text-3xl font-black text-slate-200" data-testid="step-number">
+                    <div className="flex-1 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-lg">
+                      <div className="mb-2 flex items-center gap-2.5">
+                        <span className="font-mono text-xs tabular-nums text-amber-500" data-testid="step-number">
                           {step.number}
                         </span>
                         <h3 className="text-base font-bold text-slate-900">{step.title}</h3>
@@ -87,10 +87,10 @@ export function ProcessSection() {
                     {/* Content side */}
                     <div className={`flex flex-1 ${isEven ? "justify-end pr-12" : "justify-start pl-12"}`}>
                       <div
-                        className={`w-full max-w-[340px] rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm transition-all duration-300 hover:border-orange-200 hover:bg-white hover:shadow-md ${isEven ? "text-right" : "text-left"}`}
+                        className={`w-full max-w-[340px] rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-lg ${isEven ? "text-right" : "text-left"}`}
                       >
                         <div className={`mb-3 flex items-center gap-3 ${isEven ? "flex-row-reverse" : ""}`}>
-                          <span className="text-4xl font-black text-slate-200" data-testid="step-number">
+                          <span className="font-mono text-xs tabular-nums text-amber-500" data-testid="step-number">
                             {step.number}
                           </span>
                           <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
@@ -105,7 +105,7 @@ export function ProcessSection() {
                         initial={{ scale: 0 }}
                         animate={isLineInView ? { scale: 1 } : { scale: 0 }}
                         transition={{ delay: i * 0.15 + 0.3, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        className="h-5 w-5 rounded-full border-4 border-white bg-orange-500 shadow-[0_0_15px_rgba(245,158,11,0.5)] ring-1 ring-slate-200"
+                        className="h-5 w-5 rounded-full border-4 border-white bg-amber-500 shadow-[0_0_14px_rgba(245,158,11,0.5)] ring-1 ring-slate-200"
                       />
                     </div>
 

@@ -3,10 +3,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+  ────────────────────────────────────────────────────────────────────────────
+  ARVION × HYPRLAND — LIGHT theme
+  Hyprland structure/interactions (hover-reveal hero tiles, mouse-glow cards,
+  ambient glows) on a clean white canvas. Brand colours: amber (#F59E0B) +
+  violet (#8B5CF6). Flip the whole theme from the tokens below.
+  ────────────────────────────────────────────────────────────────────────────
+*/
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --font-heading: var(--font-heading);
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -29,34 +39,35 @@
 }
 
 :root {
-  --background: #FAFAFA;
+  /* Canvas — soft white */
+  --background: #F8FAFC;
   --foreground: #0F172A;
   --card: #FFFFFF;
   --card-foreground: #0F172A;
-  --primary: #F59E0B; /* Orange from logo */
+
+  /* Brand accents */
+  --primary: #F59E0B;          /* amber */
   --primary-foreground: #FFFFFF;
   --secondary: #F1F5F9;
   --secondary-foreground: #0F172A;
   --muted: #F1F5F9;
-  --muted-foreground: #64748B;
-  --accent: #8B5CF6; /* Purple from logo */
+  --muted-foreground: #64748B; /* slate-500/600 */
+  --accent: #8B5CF6;           /* violet */
   --accent-foreground: #FFFFFF;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: rgba(0, 0, 0, 0.1);
-  --input: rgba(0, 0, 0, 0.1);
+  --border: rgba(15, 23, 42, 0.1);
+  --input: rgba(15, 23, 42, 0.12);
   --ring: #F59E0B;
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 
   /* Arvion custom tokens */
-  --arvion-bg: #FAFAFA;
-  --arvion-card: #FFFFFF;
   --arvion-primary: #F59E0B;
   --arvion-accent: #8B5CF6;
-  --arvion-text: #0F172A;
-  --arvion-muted: #64748B;
-  --arvion-border: rgba(0, 0, 0, 0.1);
-  --arvion-glow-orange: rgba(245, 158, 11, 0.3);
-  --arvion-glow-purple: rgba(139, 92, 246, 0.3);
+
+  /* Grain is disabled in light mode — keeps glows clean on white. `none` is a
+     valid background-image layer, so `background: var(--grain), radial(...)`
+     safely collapses to just the gradient. */
+  --grain: none;
 }
 
 @layer base {
@@ -67,14 +78,20 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
-    background-color: #FAFAFA;
+    background-color: var(--background);
+    color-scheme: light;
   }
   body {
-    background-color: #FAFAFA;
-    color: #0F172A;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+  ::selection {
+    background: var(--primary);
+    color: #FFFFFF;
   }
 }
 
@@ -97,47 +114,188 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Scrollbar styling */
+/* Thin light scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+}
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.4);
-  border-radius: 3px;
+  background: #CBD5E1;
+  border-radius: 24px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.7);
+  background: #94A3B8;
 }
 
-/* Gradient text utility */
+/* ── Signature gradients ──────────────────────────────────────────────────── */
+
+/* The brand diagonal — amber → orange → violet. Used on headings/CTAs via
+   background-clip:text. */
+.hyprgradient {
+  background-image: linear-gradient(to bottom right, #F59E0B, #F97316, #8B5CF6);
+}
 .gradient-text {
   background: linear-gradient(135deg, #F59E0B, #8B5CF6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
+}
+/* Dark → amber for hero headlines (fades the tail of a heading). */
+.text-fade-gradient {
+  background: linear-gradient(180deg, #0F172A 35%, #B45309);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
-/* Glassmorphism utility */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+/* Grain helper — no-op in light mode (var(--grain) is none). */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.4;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
-/* Glow utilities */
-.glow-blue {
-  box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
-}
-.glow-violet {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+/* Top-of-page ambient glow — soft amber pool bleeding from the top, over white. */
+.fancy-top-gradient {
+  --sizethis: 70% 820px at 50% 0%;
+  position: absolute;
+  inset: 0;
+  z-index: -1000;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(var(--sizethis), white 70%, transparent);
+  mask-image: radial-gradient(var(--sizethis), white 70%, transparent);
+  background:
+    var(--grain),
+    radial-gradient(var(--sizethis), rgba(245, 158, 11, 0.18), transparent);
 }
 
-/* Marquee animation */
+/* ── Card mouse-tracking gradient (§8.2), light variant ───────────────────────
+   A container tracks the cursor and sets --mx/--my (px, relative to the card)
+   plus --hover (0/1). White card, slate border ring lit by the cursor, and a
+   soft amber fill blob (multiply blend so it reads as colour over white). */
+.glow-card {
+  position: relative;
+  border-radius: 1.5rem;
+  background: #FFFFFF;
+  isolation: isolate;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -16px rgba(15, 23, 42, 0.15);
+  transition: transform 300ms cubic-bezier(0.1, 0, 0.42, 1.4),
+    box-shadow 300ms ease;
+}
+.glow-card:hover {
+  box-shadow: 0 8px 30px -12px rgba(245, 158, 11, 0.28);
+}
+.glow-card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: rgba(15, 23, 42, 0.1);
+  pointer-events: none;
+  z-index: 0;
+  /* show only the border ring */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+/* Cursor-following border glow — lit across the whole container while hovering
+   any card (the container sets --cx/--cy in px relative to itself). */
+.glow-card-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: var(--card-active, 0);
+  transition: opacity 500ms ease;
+  background: radial-gradient(
+    620px circle at var(--cx, 50%) var(--cy, 50%),
+    rgba(245, 158, 11, 0.9),
+    rgba(139, 92, 246, 0.5) 30%,
+    transparent 60%
+  );
+}
+/* Fill blob following the cursor inside the hovered card. multiply keeps the
+   amber reading as colour (not a wash-out) over the white surface. */
+.glow-card-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: var(--hover, 0);
+  transition: opacity 700ms ease;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  background: radial-gradient(
+    360px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(245, 158, 11, 0.16),
+    rgba(139, 92, 246, 0.1) 40%,
+    transparent 62%
+  );
+}
+.glow-card-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: calc(1.5rem - 1px);
+  height: 100%;
+}
+@media (max-width: 640px) {
+  /* Perf: no mouse-gradient work on mobile. */
+  .glow-card-fill,
+  .glow-card-border::after {
+    display: none;
+  }
+}
+
+/* ── Hero tiling background (§8.1) — reveal-on-hover grid, on white ────────── */
+.hero-tile {
+  position: relative;
+  border: 2px solid var(--tile-color, #F59E0B);
+  border-radius: 12px;
+  opacity: 0.5;
+  overflow: hidden;
+  transition: opacity 700ms ease-in-out, transform 700ms ease-in-out,
+    box-shadow 700ms ease-in-out, background-color 700ms ease-in-out;
+  pointer-events: all;
+}
+.hero-tile:hover {
+  opacity: 1;
+  transform: scale(1.03);
+  background-color: color-mix(in hsl, var(--tile-color), transparent 82%);
+  box-shadow: 0 0 12px color-mix(in hsl, var(--tile-color), transparent 30%),
+    0 0 44px color-mix(in hsl, var(--tile-color), transparent 55%);
+}
+.hero-tile-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 800ms cubic-bezier(1, -0.4, 0.165, 1);
+}
+.hero-tile:hover .hero-tile-img {
+  opacity: 1;
+}
+.hero-tile.has-image:hover {
+  transform: scale(1.18);
+  filter: brightness(1.05);
+}
+
+/* ── Marquee ──────────────────────────────────────────────────────────────── */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -157,7 +315,7 @@ html.lenis body {
   animation-play-state: paused;
 }
 
-/* Meteor animation */
+/* ── Misc keyframes carried over ──────────────────────────────────────────── */
 @keyframes meteor {
   0% { transform: rotate(215deg) translateX(0); opacity: 1; }
   70% { opacity: 1; }
@@ -166,8 +324,6 @@ html.lenis body {
 .animate-meteor {
   animation: meteor linear infinite;
 }
-
-/* Float animation */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-12px); }
@@ -175,8 +331,6 @@ html.lenis body {
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
-
-/* Shine animation */
 @keyframes shine {
   from { background-position: 200% center; }
   to { background-position: -200% center; }
@@ -185,7 +339,16 @@ html.lenis body {
   animation: shine 4s linear infinite;
 }
 
-/* Border beam animation */
-@keyframes border-beam {
-  100% { offset-distance: 100%; }
+/* Springy pop used on buttons/cards mount. */
+@keyframes pop {
+  0% { scale: 0.98; }
+  40% { scale: 1.02; }
+  100% { scale: 1; }
+}
+
+/* Mobile perf: kill entrance animations on small screens (battery/CPU). */
+@media (max-width: 640px) {
+  .animate-float {
+    animation: none;
+  }
 }

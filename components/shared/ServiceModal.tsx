@@ -136,7 +136,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
             transition={{ duration: isMobile ? 0.16 : 0.2 }}
             style={{ willChange: "opacity" }}
             onClick={handleOverlayClick}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/50 backdrop-blur-sm"
             aria-modal="true"
             role="dialog"
             aria-label={`${service.title}`}
@@ -148,7 +148,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
               animate="animate"
               exit="exit"
               style={{ willChange: "transform, opacity" }}
-              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[85vh] flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-2xl transform-gpu"
+              className="relative w-full max-w-[88vw] sm:max-w-lg max-h-[85vh] flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl transform-gpu"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image Banner */}
@@ -180,8 +180,8 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                 </button>
 
                 {/* Floating Service Icon */}
-                <div className="absolute bottom-3 left-4 z-30 flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-lg border border-slate-100">
-                  <service.icon className="h-5.5 w-5.5 text-orange-500" />
+                <div className="absolute bottom-3 left-4 z-30 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-lg">
+                  <service.icon className="h-5.5 w-5.5 text-amber-500" />
                 </div>
               </div>
 
@@ -190,25 +190,25 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                 {/* Title & Price */}
                 <div className="mb-5">
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight tracking-tight">{service.title}</h2>
-                  
+
                   <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                         {service.priceLabel}
                       </span>
-                      <p className="mt-1 text-2xl font-black text-orange-600 tracking-tight leading-none">
+                      <p className="mt-1 text-2xl font-black text-amber-600 tracking-tight leading-none">
                         {formatRupiah(service.startingPrice)}
                       </p>
                     </div>
                     <div className="flex items-center gap-1.5 rounded-full border border-slate-100 bg-slate-50 px-3 py-1 shadow-2xs">
-                      <Clock className="h-3.5 w-3.5 text-orange-500" />
+                      <Clock className="h-3.5 w-3.5 text-amber-500" />
                       <span className="text-xs font-semibold text-slate-600">{service.deliveryTime}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Highlight */}
-                <p className="mb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-l-3 border-orange-500 bg-orange-50/20 p-3 rounded-r-lg italic">
+                <p className="mb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-l-3 border-amber-500 bg-amber-50/40 p-3 rounded-r-lg italic">
                   {service.highlight}
                 </p>
 
@@ -220,10 +220,10 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                     </h3>
                     <div className="flex flex-col gap-3">
                       {service.packages.map((pkg, i) => (
-                        <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-orange-200 transition-all duration-300">
+                        <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-amber-200 transition-all duration-300">
                           <div className="flex-1 pr-2">
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
-                              <span className="px-2.5 py-0.5 rounded bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-wider border border-orange-100">
+                              <span className="px-2.5 py-0.5 rounded bg-amber-50 text-amber-600 text-[10px] font-black uppercase tracking-wider border border-amber-100">
                                 {pkg.name}
                               </span>
                               <span className="text-slate-900 font-extrabold text-sm sm:text-base">{pkg.price}</span>
@@ -232,9 +232,9 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                               {pkg.target}
                             </p>
                           </div>
-                          <button 
+                          <button
                             onClick={() => handlePackageOrder(pkg.name, pkg.price)}
-                            className="shrink-0 flex items-center justify-center gap-1 bg-linear-to-r from-orange-500 to-purple-500 hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
+                            className="shrink-0 flex items-center justify-center gap-1 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs active:scale-95"
                           >
                             <span>{t.modal.order}</span>
                             <ArrowRight className="h-3 w-3" />
@@ -247,7 +247,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
 
                 {/* Student Pricing */}
                 {service.studentPricing && (
-                  <div className="mb-6 p-4 rounded-xl border border-violet-100 bg-linear-to-br from-violet-50/50 to-purple-50/30 relative overflow-hidden group shadow-2xs">
+                  <div className="mb-6 p-4 rounded-xl border border-violet-100 bg-gradient-to-br from-violet-50/60 to-purple-50/40 relative overflow-hidden group shadow-2xs">
                     <div className="absolute -right-2 -bottom-2 opacity-10 group-hover:opacity-15 transition-all duration-500 rotate-12 group-hover:rotate-0">
                       <GraduationCap className="w-16 h-16 text-violet-400" />
                     </div>
@@ -269,7 +269,7 @@ export function ServiceModal({ service, onClose }: ServiceModalProps) {
                             {t.modal.studentNote}
                           </p>
                         </div>
-                        <button 
+                        <button
                           onClick={() => handlePackageOrder("Pelajar (" + service.studentPricing!.name + ")", service.studentPricing!.price)}
                           className="flex items-center gap-2 bg-white text-violet-900 hover:bg-violet-50 text-xs px-3.5 py-2.5 rounded-xl font-bold shadow-xs border border-violet-100 transition-all active:scale-95"
                         >

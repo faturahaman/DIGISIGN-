@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { ChatProvider } from "@/lib/ChatContext";
@@ -27,6 +27,14 @@ const inter = Inter({
   variable: "--font-sans",
   display: "swap",
   preload: true,
+});
+
+// Mono used for eyebrows, code/terminal-style bits, and tabular numerals.
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 // Build a priced OfferCatalog from the real service data so search engines and
@@ -59,10 +67,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   colorScheme: "light",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAFAFA" },
-    { media: "(prefers-color-scheme: dark)", color: "#050816" },
-  ],
+  themeColor: "#F8FAFC",
 };
 
 export const metadata: Metadata = {
@@ -253,16 +258,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={inter.variable}>
+    <html lang="id" className={`${inter.variable} ${ibmPlexMono.variable}`}>
       <head>
-        {/* Preconnect to font origins (critical) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        {/* DNS prefetch for deferred third-party origins */}
+        {/* Fonts are self-hosted by next/font (Inter + IBM Plex Mono), so no
+            preconnect to Google Fonts is needed — those were flagged as unused.
+            DNS prefetch for genuinely deferred third-party origins only. */}
         <link rel="dns-prefetch" href="https://wa.me" />
         <link rel="dns-prefetch" href="https://flagcdn.com" />
         <link rel="dns-prefetch" href="https://docs.google.com" />

@@ -43,7 +43,7 @@ const ChatWidget = dynamic(() =>
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-slate-50">
+    <main className="relative min-h-screen overflow-hidden bg-background">
       {/* Scroll progress indicator */}
       <ScrollProgress />
 
