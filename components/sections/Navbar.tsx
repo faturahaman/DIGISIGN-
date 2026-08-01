@@ -82,10 +82,10 @@ export function Navbar() {
               : "border border-transparent bg-white/40 backdrop-blur-md"
           )}
         >
-          {/* Logo — in its own pill */}
+          {/* Logo — bare, no pill */}
           <button
             onClick={() => handleNavClick("#home")}
-            className="flex shrink-0 items-center gap-2 rounded-full bg-slate-900/[0.03] px-3 py-1.5 ring-1 ring-slate-200 transition-colors hover:bg-slate-900/[0.06]"
+            className="flex shrink-0 items-center gap-2 rounded-full px-1 transition-opacity hover:opacity-80"
             aria-label="Arvion home"
           >
             <Image

@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ExternalLink, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { SERVICES } from "@/lib/constants";
+import { fetchServices } from "@/lib/services";
 
 function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
@@ -14,15 +17,35 @@ export function Footer() {
   const year = new Date().getFullYear();
   const { t } = useLanguage();
 
+  // Service links are live from the Google Sheets CMS (same source as the
+  // Services section), so editing the sheet updates the footer without a deploy.
+  // Falls back to the static SERVICES catalog until/unless the fetch resolves.
+  const [serviceLinks, setServiceLinks] = useState(() =>
+    SERVICES.slice(0, 6).map((s) => ({ label: s.title, href: "#services" }))
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchServices()
+      .then((data) => {
+        if (!cancelled && data.length > 0) {
+          setServiceLinks(
+            data.slice(0, 6).map((s) => ({ label: s.title, href: "#services" }))
+          );
+        }
+      })
+      .catch(() => {
+        // keep the static fallback on error
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const FOOTER_NAV = [
     {
       title: t.footer.nav.services,
-      links: [
-        { label: t.footer.nav.links.branding, href: "#services" },
-        { label: t.footer.nav.links.landing, href: "#services" },
-        { label: t.footer.nav.links.ecommerce, href: "#services" },
-        { label: t.footer.nav.links.dynamic, href: "#services" },
-      ],
+      links: serviceLinks,
     },
     {
       title: t.footer.nav.navigate,

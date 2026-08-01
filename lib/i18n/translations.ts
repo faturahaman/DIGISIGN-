@@ -20,7 +20,7 @@ export const translations = {
       headingHighlight: "Pengalaman Digital",
       heading2: "yang Terasa Premium",
       subheading:
-        "Dari branding yang berkesan hingga website yang memukau — kami menghadirkan solusi digital premium yang mendorong pertumbuhan bisnis Anda.",
+        "Dari branding yang berkesan hingga website yang memukau, kami menghadirkan solusi digital premium yang mendorong pertumbuhan bisnis Anda.",
       services: ["Desain Brand", "Landing Page", "E-Commerce", "Desain UI/UX"],
       ctaPrimary: "Mulai Proyek",
       ctaSecondary: "Lihat Portfolio",
@@ -210,6 +210,8 @@ export const translations = {
       titleHighlight: "Tanyakan Langsung",
       description: "Temukan jawaban cepat di bawah, atau klik pertanyaan untuk bertanya langsung ke DigiMin AI.",
       askBtn: "Tanya DigiMin",
+      showMore: "Lihat {n} pertanyaan lainnya",
+      showLess: "Tampilkan lebih sedikit",
       items: [
         {
           q: "Berapa lama waktu pengerjaan website?",
@@ -464,6 +466,8 @@ export const translations = {
       titleHighlight: "Ask Directly",
       description: "Find quick answers below, or click a question to ask DigiMin AI directly.",
       askBtn: "Ask DigiMin",
+      showMore: "Show {n} more questions",
+      showLess: "Show less",
       items: [
         {
           q: "How long does website development take?",

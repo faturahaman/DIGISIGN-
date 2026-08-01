@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MessageCircle } from "lucide-react";
+import { ChevronDown, MessageCircle, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useChat } from "@/lib/ChatContext";
 import { BlurFade } from "@/components/effects/BlurFade";
@@ -12,6 +13,9 @@ interface FaqItem {
   a: string;
 }
 
+/** How many FAQ items to show on mobile before the "show more" toggle. */
+const MOBILE_VISIBLE = 5;
+
 export function FAQSection() {
   const { t } = useLanguage();
   const { sendMessage } = useChat();
@@ -19,6 +23,10 @@ export function FAQSection() {
 
   // First item open by default so an answer is always visible on load.
   const [openIndex, setOpenIndex] = useState<number>(0);
+  // Mobile-only: collapse the long list to the first few until expanded. All
+  // items stay in the DOM (just visually hidden) so crawlers still index them.
+  const [showAll, setShowAll] = useState(false);
+  const hiddenCount = items.length - MOBILE_VISIBLE;
 
   const toggle = (index: number) => {
     setOpenIndex((prev) => (prev === index ? -1 : index));
@@ -56,14 +64,20 @@ export function FAQSection() {
             unmounted when collapsed) so search engines index every Q&A and the
             FAQPage schema matches the visible content. */}
         <BlurFade delay={0.15}>
-          <ul className="space-y-3">
+          <ul className="space-y-2.5 sm:space-y-3">
             {items.map((item, i) => {
               const isOpen = openIndex === i;
               const answerId = `faq-answer-${i}`;
+              // Beyond the first few: hidden on mobile until "show all", always
+              // visible from sm up.
+              const mobileHidden = i >= MOBILE_VISIBLE && !showAll;
               return (
                 <li
                   key={item.q}
-                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-colors hover:border-amber-200"
+                  className={cn(
+                    "overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-white shadow-sm transition-colors hover:border-amber-200",
+                    mobileHidden && "hidden sm:block"
+                  )}
                 >
                   <h3>
                     <button
@@ -71,7 +85,7 @@ export function FAQSection() {
                       onClick={() => toggle(i)}
                       aria-expanded={isOpen}
                       aria-controls={answerId}
-                      className="flex w-full items-center gap-3 px-5 py-4 text-left"
+                      className="flex w-full items-center gap-3 px-4 py-3.5 text-left sm:px-5 sm:py-4"
                     >
                       <span className="flex-1 text-sm font-bold text-slate-900 sm:text-base">
                         {item.q}
@@ -118,6 +132,31 @@ export function FAQSection() {
               );
             })}
           </ul>
+
+          {/* Mobile-only "show more / less" toggle. Hidden on sm+ where the full
+              list already fits comfortably. */}
+          {hiddenCount > 0 && (
+            <div className="mt-4 flex justify-center sm:hidden">
+              <button
+                type="button"
+                onClick={() => setShowAll((v) => !v)}
+                aria-expanded={showAll}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-colors hover:border-amber-200 hover:text-amber-600"
+              >
+                {showAll ? (
+                  t.faq.showLess ?? "Tampilkan lebih sedikit"
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" />
+                    {(t.faq.showMore ?? "Lihat {n} pertanyaan lainnya").replace(
+                      "{n}",
+                      String(hiddenCount)
+                    )}
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </BlurFade>
       </div>
     </section>
