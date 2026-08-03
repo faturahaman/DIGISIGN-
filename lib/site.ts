@@ -9,7 +9,7 @@
  */
 
 /** Canonical origin — includes the `www` host the site is actually served from. */
-export const SITE_URL = "https://www.arviotiv.com";
+export const SITE_URL = "https://arviotiv.com";
 
 export const SITE_NAME = "Arvion";
 

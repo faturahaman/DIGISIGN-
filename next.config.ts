@@ -80,6 +80,23 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Redirects
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.arviotiv.com",
+          },
+        ],
+        destination: "https://arviotiv.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   // Experimental: faster builds
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
