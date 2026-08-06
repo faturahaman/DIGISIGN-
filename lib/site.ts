@@ -8,13 +8,38 @@
  * business entity.
  */
 
-/** Canonical origin — includes the `www` host the site is actually served from. */
-export const SITE_URL = "https://arviotiv.com";
+/**
+ * Canonical origin — includes the `www` host the site is actually served from.
+ *
+ * This MUST match the domain marked "Production" in the Vercel dashboard. Vercel
+ * 308s the apex to `www` at the edge, so pointing this at the apex would make
+ * every canonical tag, sitemap entry, and JSON-LD `@id` advertise a URL that
+ * immediately redirects elsewhere. Flip both together or neither.
+ */
+export const SITE_URL = "https://www.arviotiv.com";
 
 export const SITE_NAME = "Arvion";
 
-/** Alternate names the brand is known by (used in Organization schema). */
-export const SITE_ALTERNATE_NAMES = ["DigiSign ID", "digitalidsign"] as const;
+/**
+ * The page title, shared by `<title>`, Open Graph, Twitter, and the WebPage
+ * node. These four have to agree — a search engine that sees a different title
+ * in the tag than in the structured data trusts neither.
+ */
+export const SITE_TITLE =
+  "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia";
+
+/**
+ * Alternate names the brand is known by (used in Organization schema).
+ *
+ * `Arviotiv` is here because the domain reads differently from the brand name —
+ * without it, a search for "arviotiv" has no text on the site to match against.
+ */
+export const SITE_ALTERNATE_NAMES = [
+  "Arviotiv",
+  "arviotiv.com",
+  "DigiSign ID",
+  "digitalidsign",
+] as const;
 
 export const SITE_DESCRIPTION =
   "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { SITE_URL } from '@/lib/site';
 
 const SYSTEM_PROMPT = `Kamu adalah AI assistant untuk Arvion — digital agency yang spesialis web development, UI/UX design, dan digital marketing.
 Namamu adalah Arvion Assistant — asisten konsultasi yang membantu calon klien menemukan solusi digital yang tepat untuk bisnis mereka.
@@ -20,7 +21,7 @@ Namamu adalah Arvion Assistant — asisten konsultasi yang membantu calon klien 
 
 Nama Agency: Arvion
 Tagline: Creative Digital Agency - We Design Digital Experiences That Feel Premium
-Website: https://www.arviotiv.com
+Website: ${SITE_URL}
 
 Kontak:
 - WhatsApp: 6285924361892

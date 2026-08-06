@@ -7,7 +7,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/"],
+        // `/_next/` is deliberately NOT disallowed. It holds the CSS bundles, JS
+        // chunks, and the `/_next/image` optimizer output — Googlebot renders the
+        // page before indexing it, so blocking those makes it see an unstyled,
+        // image-less shell and judge the page on that. Only the API surface,
+        // which has nothing to index, is blocked.
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

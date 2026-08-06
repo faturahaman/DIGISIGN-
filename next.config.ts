@@ -60,14 +60,23 @@ const nextConfig: NextConfig = {
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-          // Performance
+          // Performance.
+          //
+          // `max-age=0` keeps the *browser* revalidating on every visit while
+          // `s-maxage` lets Vercel's CDN keep serving from the edge — the split
+          // that the previous `max-age=3600, stale-while-revalidate=86400` was
+          // missing. With that value a returning visitor (or a crawler) could be
+          // handed HTML up to a day stale with no chance to check for a newer
+          // copy; production was observed serving a 21-hour-old page this way.
+          // Revalidation against an unchanged deploy is a 304, so the cost of
+          // dropping the browser cache is a header exchange, not a re-download.
           {
             key: "Cache-Control",
-            value: "public, max-age=3600, stale-while-revalidate=86400",
+            value: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
           },
         ],
       },
-      // Long-term cache for static assets
+      // Long-term cache for static assets. Content-addressed and safe to pin.
       {
         source: "/(.*)\\.(png|jpg|jpeg|webp|avif|svg|ico|woff|woff2)",
         headers: [
@@ -77,25 +86,27 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-    ];
-  },
-
-  // Redirects
-  async redirects() {
-    return [
+      // API responses are per-request and must never be cached. The catch-all
+      // rule above would otherwise hand them the HTML caching policy; a later
+      // matching rule wins for the same header key, so this overrides it.
       {
-        source: "/:path*",
-        has: [
+        source: "/api/:path*",
+        headers: [
           {
-            type: "host",
-            value: "www.arviotiv.com",
+            key: "Cache-Control",
+            value: "no-store, must-revalidate",
           },
         ],
-        destination: "https://arviotiv.com/:path*",
-        permanent: true,
       },
     ];
   },
+
+  // NOTE: no host canonicalization here on purpose. Vercel already 308s the
+  // apex to the `www` production domain at the edge, before a request ever
+  // reaches this app. Adding an app-level `www -> apex` redirect on top of that
+  // makes the two layers bounce requests at each other forever
+  // (ERR_TOO_MANY_REDIRECTS). Change the canonical host in the Vercel dashboard,
+  // not here — and keep `SITE_URL` in `lib/site.ts` pointed at whatever it says.
 
   // Experimental: faster builds
   experimental: {

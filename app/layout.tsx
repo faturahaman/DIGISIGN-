@@ -9,6 +9,7 @@ import { faqJsonLd } from "@/lib/faqSchema";
 import {
   SITE_URL as BASE_URL,
   SITE_NAME,
+  SITE_TITLE,
   SITE_ALTERNATE_NAMES,
   SITE_DESCRIPTION as BRAND_DESCRIPTION,
   SITE_SLOGAN,
@@ -82,13 +83,15 @@ export const metadata: Metadata = {
     google: "gMKOqq5s2pMSRsfnK_WPIIhayEpTbHOXETG9MOum-FY",
   },
   title: {
-    default: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
+    default: SITE_TITLE,
     template: "%s | Arvion",
   },
   description: BRAND_DESCRIPTION,
   keywords: [
     "Arvion",
     "Arvion Indonesia",
+    "Arviotiv",
+    "arviotiv.com",
     "DigiSign ID",
     "digitalidsign",
     "creative digital agency Indonesia",
@@ -125,27 +128,34 @@ export const metadata: Metadata = {
 
   // Open Graph
   openGraph: {
-    title: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
+    title: SITE_TITLE,
     description: BRAND_DESCRIPTION,
     url: "/",
     siteName: SITE_NAME,
     images: [
       {
         url: OG_IMAGE,
-        width: 1200,
-        height: 630,
+        // These must be the real pixel dimensions of `public/og-image.png`.
+        // Scrapers reserve the card's layout from these numbers before the file
+        // finishes downloading, so the previous 1200x630 (a 1.91:1 claim about a
+        // 3:2 file) produced a mis-cropped preview. Regenerating the asset at a
+        // true 1200x630 would fill social cards edge-to-edge; until then this
+        // describes what actually ships.
+        width: 1346,
+        height: 897,
         alt: "Arvion - Creative Digital Agency Indonesia",
         type: "image/png",
       },
     ],
     locale: "id_ID",
+    alternateLocale: ["en_US"],
     type: "website",
   },
 
   // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia",
+    title: SITE_TITLE,
     description: BRAND_DESCRIPTION,
     images: [OG_IMAGE],
   },
@@ -212,6 +222,21 @@ const jsonLd = {
       },
     },
     {
+      // The graph described an organization and a website but never said what
+      // *this URL* is about, leaving Google to infer the page/entity link from
+      // body copy alone. This node states it outright and gives the other nodes
+      // something to hang off.
+      "@type": "WebPage",
+      "@id": `${BASE_URL}/#webpage`,
+      url: `${BASE_URL}/`,
+      name: SITE_TITLE,
+      description: BRAND_DESCRIPTION,
+      inLanguage: "id-ID",
+      isPartOf: { "@id": `${BASE_URL}/#website` },
+      about: { "@id": `${BASE_URL}/#organization` },
+      primaryImageOfPage: absoluteUrl(OG_IMAGE),
+    },
+    {
       "@type": "ProfessionalService",
       "@id": `${BASE_URL}/#professional-service`,
       name: SITE_NAME,
@@ -221,7 +246,9 @@ const jsonLd = {
       logo: absoluteUrl(LOGO_IMAGE),
       telephone: CONTACT_PHONE,
       email: CONTACT_EMAIL,
-      priceRange: "Rp",
+      // The real span of `startingPrice` across SERVICES. A bare currency symbol
+      // is not a parseable priceRange, so the field was being dropped entirely.
+      priceRange: "Rp105.000 - Rp5.000.000",
       currenciesAccepted: "IDR",
       openingHours: "Mo-Fr 09:00-18:00",
       areaServed: {
