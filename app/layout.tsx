@@ -15,6 +15,9 @@ import {
   SITE_SLOGAN,
   OG_IMAGE,
   LOGO_IMAGE,
+  BUSINESS_LOCALITY,
+  BUSINESS_REGION,
+  BUSINESS_COUNTRY,
   CONTACT_EMAIL,
   CONTACT_PHONE,
   WHATSAPP_URL,
@@ -94,6 +97,13 @@ export const metadata: Metadata = {
     "arviotiv.com",
     "DigiSign ID",
     "digitalidsign",
+    // Local intent. These carry far less competition than their national
+    // counterparts and are the realistic first page to win.
+    "jasa pembuatan website Bogor",
+    "jasa desain grafis Bogor",
+    "jasa website Bogor",
+    "web design Bogor",
+    "digital agency Bogor",
     "creative digital agency Indonesia",
     "jasa desain grafis",
     "jasa pembuatan website",
@@ -198,6 +208,12 @@ const jsonLd = {
       email: CONTACT_EMAIL,
       telephone: CONTACT_PHONE,
       foundingDate: "2024",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: BUSINESS_LOCALITY,
+        addressRegion: BUSINESS_REGION,
+        addressCountry: BUSINESS_COUNTRY,
+      },
       slogan: SITE_SLOGAN,
       knowsAbout: [...SERVICE_TYPES],
       sameAs: [...SOCIAL_PROFILES],
@@ -251,13 +267,18 @@ const jsonLd = {
       priceRange: "Rp105.000 - Rp5.000.000",
       currenciesAccepted: "IDR",
       openingHours: "Mo-Fr 09:00-18:00",
-      areaServed: {
-        "@type": "Country",
-        name: "Indonesia",
-      },
+      // Both, in order of specificity: the city anchors local intent ("jasa
+      // website Bogor"), the country keeps national queries in scope. A bare
+      // country gave Google nothing to rank locally on.
+      areaServed: [
+        { "@type": "City", name: BUSINESS_LOCALITY },
+        { "@type": "Country", name: "Indonesia" },
+      ],
       address: {
         "@type": "PostalAddress",
-        addressCountry: "ID",
+        addressLocality: BUSINESS_LOCALITY,
+        addressRegion: BUSINESS_REGION,
+        addressCountry: BUSINESS_COUNTRY,
       },
       serviceType: [...SERVICE_TYPES],
       provider: {

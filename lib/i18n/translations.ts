@@ -16,11 +16,17 @@ export const translations = {
     // Hero
     hero: {
       badge: "Arvion Creative",
-      heading1: "Kami Merancang",
-      headingHighlight: "Pengalaman Digital",
-      heading2: "yang Terasa Premium",
+      // Renders as "Jasa Desain & Pembuatan Website Bogor yang Terasa Premium".
+      // This is the <h1> — after <title>, the strongest on-page signal there is,
+      // and it previously named no service and no place. The gradient span lands
+      // on "Pembuatan Website", so the phrase being emphasised visually is also
+      // the one being ranked for. "yang Terasa Premium" is kept from the original
+      // so the brand line survives the rewrite.
+      heading1: "Jasa Desain &",
+      headingHighlight: "Pembuatan Website",
+      heading2: "Bogor yang Terasa Premium",
       subheading:
-        "Dari branding yang berkesan hingga website yang memukau, kami menghadirkan solusi digital premium yang mendorong pertumbuhan bisnis Anda.",
+        "Dari branding yang berkesan hingga website yang memukau, kami menghadirkan solusi digital premium untuk bisnis di Bogor dan seluruh Indonesia.",
       services: ["Desain Brand", "Landing Page", "E-Commerce", "Desain UI/UX"],
       ctaPrimary: "Mulai Proyek",
       ctaSecondary: "Lihat Portfolio",
@@ -276,7 +282,7 @@ export const translations = {
       headingHighlight: "Digital Experiences",
       heading2: "That Feel Premium",
       subheading:
-        "From memorable branding to stunning websites — we deliver premium digital solutions that drive your business growth.",
+        "From memorable branding to stunning websites — we deliver premium digital solutions for businesses in Bogor and across Indonesia.",
       services: ["Branding Design", "Landing Page", "E-Commerce", "UI/UX Design"],
       ctaPrimary: "Start Project",
       ctaSecondary: "View Portfolio",

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { SERVICES } from "@/lib/constants";
 import { fetchServices } from "@/lib/services";
+import { BUSINESS_LOCALITY } from "@/lib/site";
 
 function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
@@ -169,7 +170,8 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-center sm:flex-row sm:text-left">
           <p className="text-sm font-medium text-slate-500">
-            © {year} Arvion (arviotiv.com). {t.footer.rights}
+            © {year} Arvion (arviotiv.com) · {BUSINESS_LOCALITY}, Indonesia.{" "}
+            {t.footer.rights}
           </p>
           <p className="text-sm font-medium text-slate-500">{t.footer.crafted}</p>
         </div>

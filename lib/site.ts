@@ -26,7 +26,7 @@ export const SITE_NAME = "Arvion";
  * in the tag than in the structured data trusts neither.
  */
 export const SITE_TITLE =
-  "Arvion — Jasa Desain Grafis & Pembuatan Website Indonesia";
+  "Jasa Pembuatan Website & Desain Grafis Bogor | Arvion";
 
 /**
  * Alternate names the brand is known by (used in Organization schema).
@@ -41,10 +41,22 @@ export const SITE_ALTERNATE_NAMES = [
   "digitalidsign",
 ] as const;
 
+/** Kept at ~160 characters so search engines show it without truncating. */
 export const SITE_DESCRIPTION =
-  "Arvion adalah creative digital agency Indonesia untuk jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom berkualitas tinggi.";
+  "Arvion — creative digital agency Bogor. Jasa desain grafis, branding, landing page, company profile, e-commerce, dan website custom. Melayani seluruh Indonesia.";
 
 export const SITE_SLOGAN = "We Design Digital Experiences That Feel Premium";
+
+// Location
+//
+// City-level only, which is what's actually known. `streetAddress`, `postalCode`,
+// and `geo` are deliberately absent rather than approximated — a made-up street or
+// a city-centre coordinate pinned to a business that isn't there is worse than an
+// incomplete address, and Google cross-checks these against a Business Profile.
+// Fill them in for real if a public office address gets published.
+export const BUSINESS_LOCALITY = "Bogor";
+export const BUSINESS_REGION = "Jawa Barat";
+export const BUSINESS_COUNTRY = "ID";
 
 // Contact
 export const CONTACT_EMAIL = "digitalidsign@gmail.com";
