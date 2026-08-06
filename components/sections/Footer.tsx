@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { SERVICES } from "@/lib/constants";
 import { fetchServices } from "@/lib/services";
-import { BUSINESS_LOCALITY } from "@/lib/site";
+import { BUSINESS_LOCALITY, BUSINESS_REGION } from "@/lib/site";
 
 function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
   e.preventDefault();
@@ -170,8 +170,12 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-center sm:flex-row sm:text-left">
           <p className="text-sm font-medium text-slate-500">
-            © {year} Arvion (arviotiv.com) · {BUSINESS_LOCALITY}, Indonesia.{" "}
-            {t.footer.rights}
+            {/* Spelled out in full to match the PostalAddress in the JSON-LD.
+                Google reads the visible address and the markup as one claim, so
+                the two agreeing is the point — a footer that says less than the
+                schema weakens both. */}
+            © {year} Arvion (arviotiv.com) · {BUSINESS_LOCALITY},{" "}
+            {BUSINESS_REGION}, Indonesia. {t.footer.rights}
           </p>
           <p className="text-sm font-medium text-slate-500">{t.footer.crafted}</p>
         </div>

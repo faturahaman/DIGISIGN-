@@ -54,7 +54,14 @@ export const SITE_SLOGAN = "We Design Digital Experiences That Feel Premium";
 // a city-centre coordinate pinned to a business that isn't there is worse than an
 // incomplete address, and Google cross-checks these against a Business Profile.
 // Fill them in for real if a public office address gets published.
-export const BUSINESS_LOCALITY = "Bogor";
+//
+// "Kota Bogor" is the official administrative name, and the form a Google
+// Business Profile will use — worth matching exactly, since Google reconciles
+// the listing against this markup. It is a distinct entity from Kabupaten
+// Bogor, the surrounding regency. The bare token "Bogor" that search queries
+// actually use is still present here, and again in the title, h1, and
+// subheading, so nothing is lost by being precise.
+export const BUSINESS_LOCALITY = "Kota Bogor";
 export const BUSINESS_REGION = "Jawa Barat";
 export const BUSINESS_COUNTRY = "ID";
 
