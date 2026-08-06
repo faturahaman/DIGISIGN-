@@ -14,33 +14,77 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const { lang, t, toggleLanguage } = useLanguage();
 
+  // Scrolled state only.
+  //
+  // This handler used to resolve the active section too, which meant a
+  // getElementById plus an offsetTop read for all six nav targets on every
+  // animation frame of every scroll. offsetTop forces a synchronous layout, so
+  // that was up to six reflows per frame, plus two throwaway arrays per frame
+  // from the map/reverse. That work moved to the observer below. What's left is
+  // one scrollY read, a value the compositor already has.
   useEffect(() => {
     let frameId: number | null = null;
 
     const handleScroll = () => {
       if (frameId !== null) return;
       frameId = window.requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        setScrolled(scrollY > 20);
-
-        const sections = NAV_LINKS.map((l) => l.href.replace("#", ""));
-        for (const id of [...sections].reverse()) {
-          const el = document.getElementById(id);
-          if (el && scrollY >= el.offsetTop - 120) {
-            setActiveSection(id);
-            break;
-          }
-        }
-
+        setScrolled(window.scrollY > 20);
         frameId = null;
       });
     };
 
+    // Seed it, so a reload partway down the page doesn't start untinted.
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       if (frameId !== null) window.cancelAnimationFrame(frameId);
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  // Active section, observed rather than measured. The browser reports boundary
+  // crossings on its own schedule, so scrolling costs nothing until a section
+  // edge is actually reached.
+  //
+  // The band sits just below the navbar. Whichever observed section is lowest in
+  // the document while overlapping it wins, which is the same answer the old
+  // reverse() scan produced. Every target is in the server-rendered HTML — the
+  // sections are code-split via next/dynamic but not ssr:false — so they all
+  // resolve on the first run and there's nothing to re-query later.
+  useEffect(() => {
+    const ids = NAV_LINKS.map((l) => l.href.replace("#", ""));
+    const targets = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (targets.length === 0) return;
+
+    const inBand = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) inBand.add(entry.target.id);
+          else inBand.delete(entry.target.id);
+        }
+        for (let i = ids.length - 1; i >= 0; i--) {
+          if (inBand.has(ids[i])) {
+            setActiveSection(ids[i]);
+            return;
+          }
+        }
+        // Nothing overlaps the band right now — it can land between two short
+        // sections. Hold the last match instead of blanking the highlight.
+      },
+      // Top inset clears the fixed navbar, matching the old `- 120` offset. The
+      // bottom inset leaves a band roughly 120px deep, which is thick enough that
+      // a full-height section always overlaps it, so the gap case above stays
+      // theoretical. The highlight does now switch a little earlier than the old
+      // scan did — it fired when a section's top reached 120px, this fires as the
+      // top enters the band below that.
+      { rootMargin: "-120px 0px -70% 0px" }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -68,18 +112,24 @@ export function Navbar() {
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4"
-      >
+      {/* Entrance is a CSS animation now, the same way HeroSection does it. It
+          runs once and needs no JavaScript, so it no longer competes with
+          hydration for the main thread on a slow phone. */}
+      <nav className="fixed inset-x-0 top-0 z-50 animate-in fade-in slide-in-from-top-4 px-3 pt-3 duration-500 fill-mode-backwards sm:px-4 sm:pt-4">
         <div
           className={cn(
-            "mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full px-3 py-2 transition-all duration-300",
+            // Blur and border sit out here, unconditionally, on purpose. While
+            // they lived in the branches below, `transition-all` animated
+            // backdrop-filter from 12px to 24px across 300ms, and the browser
+            // re-blurs everything behind a fixed bar on every frame of that —
+            // triggered at the exact moment the user starts scrolling. The
+            // transition is now restricted to properties that are cheap to
+            // paint, and the blur is lighter on phones, where the difference is
+            // invisible at that size but expensive for the GPU.
+            "mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border px-3 py-2 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 md:backdrop-blur-xl",
             scrolled
-              ? "border border-slate-200 bg-white/80 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] backdrop-blur-xl"
-              : "border border-transparent bg-white/40 backdrop-blur-md"
+              ? "border-slate-200 bg-white/80 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)]"
+              : "border-transparent bg-white/40 shadow-none"
           )}
         >
           {/* Logo — bare, no pill */}
@@ -216,7 +266,7 @@ export function Navbar() {
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile menu — full-screen glass overlay */}
       <AnimatePresence>
@@ -226,7 +276,12 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-white/80 backdrop-blur-xl md:hidden"
+            // A 24px blur across the entire viewport is one of the most
+            // expensive things a phone GPU can be asked for, and this overlay is
+            // mobile-only — the one place it was guaranteed to hurt. Dropping to
+            // 12px and making the white slightly more opaque reads the same while
+            // costing a fraction to composite.
+            className="fixed inset-0 z-40 bg-white/90 backdrop-blur-md md:hidden"
             onClick={() => setIsOpen(false)}
           >
             <div className="flex h-full flex-col px-6 pb-8 pt-24" onClick={(e) => e.stopPropagation()}>
