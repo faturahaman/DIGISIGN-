@@ -9,31 +9,45 @@ import { getHeroTiles, type Column } from "@/lib/heroTiles";
  *
  * Two tilted 3D columns of "workspaces" recede toward a vanishing point. Every
  * tile is a dim glowing outline; hover lights it up neon, and image tiles fade
- * + zoom a real project screenshot into view (CSS-driven, see .hero-tile* in
- * globals.css).
+ * + zoom a brand mark or project screenshot into view (CSS-driven, see
+ * .hero-tile* in globals.css).
  *
- * PERF (mobile): the tile grid is ~800 DOM nodes + ~21 next/image tags (each
- * with a long srcset). On phones it's `display:none` decoration, but the nodes
- * still get parsed — wasteful on weak CPUs. So we render the grid ONLY after
+ * PERF (mobile): the tile grid is a few hundred DOM nodes plus a next/image tag
+ * per image tile. On phones it's `display:none` decoration, but the nodes still
+ * get parsed — wasteful on weak CPUs. So we render the grid ONLY after
  * confirming a desktop-width viewport (matchMedia, post-mount). Mobile ships
  * just the cheap gradient overlays. Desktop is unchanged.
  */
 
+/**
+ * Distance from the viewer to the z=0 plane. This single number is the depth of
+ * the whole effect, and it was the reason the wall looked flat: at the previous
+ * 1000px, a rotateY(10deg) across a ~660px-wide run of columns pushes the far
+ * edge only ~115px away, which scales it to 1000/1115 — a 10% shrink nobody can
+ * see. The reference uses 100px. At 200px the same far edge lands at 200/315,
+ * a ~37% shrink, so the columns visibly converge.
+ *
+ * Lower it for more depth, raise it for less. Nothing else needs to change.
+ */
+const PERSPECTIVE_PX = 200;
+
 function TileColumns({ columns, side }: { columns: Column[]; side: "left" | "right" }) {
   return (
     <div
-      className="flex gap-3"
+      className="flex gap-4"
       style={{
+        // Pivot from the screen edge so the columns swing inward, toward the
+        // headline, rather than around their own middle.
         transform: side === "left" ? "rotateY(10deg)" : "rotateY(-10deg)",
         transformOrigin: side === "left" ? "left center" : "right center",
       }}
     >
       {columns.map((column, ci) => (
-        <div key={ci} className="flex w-40 shrink-0 flex-col gap-3 lg:w-52">
+        <div key={ci} className="flex w-64 shrink-0 flex-col gap-4 lg:w-80">
           {column.map((workspace, wi) => (
-            <div key={wi} className="flex h-40 gap-2 lg:h-52">
+            <div key={wi} className="flex h-64 gap-3 lg:h-80">
               {workspace.map((group, gi) => (
-                <div key={gi} className="flex flex-1 flex-col gap-2">
+                <div key={gi} className="flex flex-1 flex-col gap-3">
                   {group.map((tile, ti) => (
                     <div
                       key={ti}
@@ -48,8 +62,14 @@ function TileColumns({ columns, side }: { columns: Column[]; side: "left" | "rig
                           fill
                           loading="lazy"
                           quality={45}
-                          sizes="220px"
-                          className="hero-tile-img !h-full !w-full object-cover"
+                          sizes="320px"
+                          className={
+                            tile.fit === "contain"
+                              ? // Square brand mark: keep it whole and give it
+                                // room to breathe inside the tile border.
+                                "hero-tile-img !h-full !w-full object-contain p-7"
+                              : "hero-tile-img !h-full !w-full object-cover"
+                          }
                         />
                       )}
                     </div>
@@ -86,16 +106,16 @@ export function HeroTiles() {
       {tiles && (
         <div
           className="absolute inset-0 flex items-start justify-between"
-          style={{ perspective: "1000px" }}
+          style={{ perspective: `${PERSPECTIVE_PX}px` }}
         >
           <div
-            className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
+            className="pointer-events-none flex -translate-y-12 gap-4 opacity-90"
             style={{ transformStyle: "preserve-3d" }}
           >
             <TileColumns columns={tiles.left} side="left" />
           </div>
           <div
-            className="pointer-events-none flex -translate-y-12 gap-3 opacity-90"
+            className="pointer-events-none flex -translate-y-12 gap-4 opacity-90"
             style={{ transformStyle: "preserve-3d" }}
           >
             <TileColumns columns={tiles.right} side="right" />
