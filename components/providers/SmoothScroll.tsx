@@ -43,21 +43,41 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     };
   }, [reduceMotion]);
 
-  if (reduceMotion || !enabled) return <>{children}</>;
-
+  // Lenis is a SIBLING of the children, never a wrapper.
+  //
+  // This used to return `<>{children}</>` until idle and then switch to
+  // `<ReactLenis>{children}</ReactLenis>`. Those are different element types in
+  // the same tree position, so the moment `enabled` flipped React threw the
+  // entire subtree away and mounted a fresh one — and since this provider sits
+  // above LanguageProvider, ChatProvider and the whole page, "the entire
+  // subtree" meant the site. Every section unmounted and remounted a few
+  // hundred milliseconds after first paint: entry animations replayed, scroll
+  // observers reset, chat state was lost, and the Google Sheets fetches in
+  // Services, Testimonials, Portfolio and Footer all ran a second time. That is
+  // the double flash on load, and it happened in production too — not just
+  // under Strict Mode.
+  //
+  // Keeping `children` in a fixed slot means it is never reconciled away. With
+  // `root`, ReactLenis renders no wrapper element of its own and drives
+  // document.documentElement, so it does not need to enclose anything; it also
+  // publishes its context to a module-level store, so a future `useLenis()`
+  // anywhere in the tree still resolves.
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.1,
-        duration: 1.2,
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 1.5,
-        syncTouch: false,
-      }}
-    >
+    <>
+      {enabled && !reduceMotion && (
+        <ReactLenis
+          root
+          options={{
+            lerp: 0.1,
+            duration: 1.2,
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 1.5,
+            syncTouch: false,
+          }}
+        />
+      )}
       {children}
-    </ReactLenis>
+    </>
   );
 }
