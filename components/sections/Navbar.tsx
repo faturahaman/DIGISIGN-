@@ -30,7 +30,7 @@ function LanguageSwitch({
         }`}
         aria-pressed={lang === "id"}
       >
-        <span aria-hidden="true">🇮🇩</span>
+        <span aria-hidden="true">ID</span>
       </button>
       <button
         type="button"
@@ -42,7 +42,7 @@ function LanguageSwitch({
         }`}
         aria-pressed={lang === "en"}
       >
-        <span aria-hidden="true">🇬🇧</span>
+        <span aria-hidden="true">EN</span>
       </button>
     </div>
   );
