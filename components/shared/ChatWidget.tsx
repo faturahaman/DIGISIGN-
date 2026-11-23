@@ -1,345 +1,376 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import { ArrowUp, MessageCircle, X, Send } from 'lucide-react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { useChat } from '@/lib/ChatContext';
+import { useState, useRef, useEffect } from "react";
+import { MessageSquare, X, Send, Sparkles, Bot, User, ArrowUp, PhoneCall } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useChat } from "@/lib/ChatContext";
+import { SITE_BRAND } from "@/data/siteContent";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type Message = {
-  role: 'user' | 'model';
+  role: "user" | "model";
   content: string;
+  quickReplies?: string[];
 };
 
+const DEFAULT_SUGGESTIONS_ID = [
+  "Layanan apa saja yang ada di Arvion?",
+  "Berapa estimasi waktu pengerjaan?",
+  "Bagaimana alur kerja 4 langkah Arvion?",
+  "Lihat portofolio unggulan",
+];
+
+const DEFAULT_SUGGESTIONS_EN = [
+  "What services does Arvion offer?",
+  "Estimated timeline and cost?",
+  "How does Arvion's 4-step process work?",
+  "View featured portfolio",
+];
+
+// Helper to extract QUICK_REPLIES:[...] from AI content
+function parseMessageContent(raw: string): { cleanContent: string; quickReplies: string[] } {
+  const match = raw.match(/QUICK_REPLIES:\s*(\[[\s\S]*?\])/);
+  if (match) {
+    try {
+      const parsed = JSON.parse(match[1]);
+      if (Array.isArray(parsed)) {
+        const cleanContent = raw.replace(/QUICK_REPLIES:\s*\[[\s\S]*?\]/, "").trim();
+        return { cleanContent, quickReplies: parsed };
+      }
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+  return { cleanContent: raw.trim(), quickReplies: [] };
+}
+
 export function ChatWidget() {
-  const [isHovered, setIsHovered] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
+  const defaultSuggestions =
+    lang === "id" ? DEFAULT_SUGGESTIONS_ID : DEFAULT_SUGGESTIONS_EN;
   const { isOpen, openChat, closeChat, pendingMessage, clearPending } = useChat();
 
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', content: t.chat.initialMessage }
+    {
+      role: "model",
+      content:
+        lang === "id"
+          ? "Halo! Selamat datang di Arvion Creative. Saya Arvion Assistant, siap membantu Anda mendiskusikan kebutuhan UI/UX design, web development, atau branding proyek Anda."
+          : "Hello! Welcome to Arvion Creative. I'm Arvion Assistant, ready to help you discuss UI/UX design, web development, or branding for your project.",
+      quickReplies:
+        lang === "id"
+          ? ["Layanan apa saja yang ada?", "Estimasi waktu & biaya", "Bagaimana cara mulai proyek?"]
+          : ["What services are available?", "Time & cost estimate", "How do I start a project?"],
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleScroll = () => {
-    const scrollTop = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = maxScroll > 0 ? Math.min(1, scrollTop / maxScroll) : 0;
-    setScrollProgress(progress);
-    setShowScrollTop(scrollTop > 180);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
+    if (isOpen) {
+      scrollToBottom();
+    }
+  }, [messages, isLoading, isOpen]);
 
   useEffect(() => {
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle pending message from FAQ section
-  useEffect(() => {
-    if (pendingMessage && isOpen) {
-      clearPending();
-      handleSend(pendingMessage);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pendingMessage, isOpen]);
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleSend = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || isLoading) return;
 
-    const newMessages = [...messages, { role: 'user' as const, content: text }];
+    const userMsg: Message = { role: "user", content: text };
+    const newMessages = [...messages, userMsg];
     setMessages(newMessages);
-    setInput('');
+    setInput("");
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        setMessages([...newMessages, { role: 'model', content: data.reply }]);
+      if (data && data.reply) {
+        const { cleanContent, quickReplies } = parseMessageContent(data.reply);
+        setMessages([
+          ...newMessages,
+          {
+            role: "model",
+            content: cleanContent,
+            quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+          },
+        ]);
       } else {
-        let errorMsg: string = t.chat.errorGeneral;
-        if (data.error?.toLowerCase().includes('quota') || data.error?.toLowerCase().includes('limit')) {
-          errorMsg = t.chat.errorBusy;
-        } else if (data.error) {
-          errorMsg = data.error;
-        }
-        setMessages([...newMessages, { role: 'model', content: errorMsg }]);
+        setMessages([
+          ...newMessages,
+          {
+            role: "model",
+            content:
+                lang === "id"
+                  ? "Terima kasih atas pertanyaannya. Untuk respon langsung dan konsultasi cepat, Anda juga bisa langsung chat kami via WhatsApp."
+                  : "Thank you for your question. For a direct response and quick consultation, you can also chat with us via WhatsApp.",
+              quickReplies:
+                lang === "id"
+                  ? ["Chat WhatsApp Sekarang", "Lihat Layanan Arvion"]
+                  : ["Chat on WhatsApp", "View Arvion Services"],
+          },
+        ]);
       }
     } catch {
-      setMessages([...newMessages, { role: 'model', content: t.chat.errorConnection as string }]);
+      setMessages([
+        ...newMessages,
+        {
+          role: "model",
+          content:
+            lang === "id"
+              ? "Koneksi terputus. Silakan coba kirim ulang atau hubungi kami langsung via WhatsApp untuk respon instan."
+              : "Connection lost. Please try again or contact us directly via WhatsApp for an instant response.",
+          quickReplies:
+            lang === "id" ? ["Chat WhatsApp Sekarang"] : ["Chat on WhatsApp"],
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderMessage = (msg: Message, index: number) => {
-    const parts = msg.content.split('QUICK_REPLIES:');
-    const textContent = parts[0].trim();
-    let quickReplies: string[] = [];
-
-    if (parts.length > 1) {
-      try {
-        quickReplies = JSON.parse(parts[1].trim());
-      } catch {
-        // ignore parse error
-      }
+  useEffect(() => {
+    if (pendingMessage && isOpen) {
+      clearPending();
+      const timeoutId = window.setTimeout(() => {
+        void handleSend(pendingMessage);
+      }, 0);
+      return () => window.clearTimeout(timeoutId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingMessage, isOpen]);
 
-    if (msg.role === 'model') {
-      const isInitial = index === 0;
-
-      // Special layout for the very first AI message: avatar + bubble on the left, vertical quick replies on the right
-      if (isInitial && quickReplies.length > 0) {
-        return (
-          <div key={index} className="mb-4">
-            <div className="flex items-start gap-3 min-w-0">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0">
-                <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
-              </div>
-
-              <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
-                <div className="relative">
-                  <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-3 ml-11 flex flex-col gap-3">
-              {quickReplies.map((reply, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(reply)}
-                  disabled={isLoading}
-                  className="text-[13px] px-4 py-2 bg-white border border-amber-200 text-amber-600 rounded-full font-medium hover:bg-amber-50 hover:border-amber-300 transition-all shadow-sm disabled:opacity-50"
-                >
-                  {reply}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-      }
-
-      // Regular AI message: avatar + bubble, quick replies below (not beside) the bubble
-      return (
-        <div key={index} className="mb-4">
-          <div className="flex items-start min-w-0">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
-              <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
-            </div>
-
-            <div className="relative flex-1 min-w-0 p-4 rounded-2xl bg-white border border-slate-200 text-slate-700 rounded-tl-sm shadow-sm overflow-hidden">
-              <div className="relative">
-                <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
-              </div>
-            </div>
-          </div>
-
-          {quickReplies.length > 0 && index === messages.length - 1 && (
-            <div className="mt-3 ml-11 flex flex-col gap-2">
-              {quickReplies.map((reply, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(reply)}
-                  disabled={isLoading}
-                  className="text-[13px] px-4 py-2 bg-white border border-amber-200 text-amber-600 rounded-full font-medium hover:bg-amber-50 hover:border-amber-300 transition-all shadow-sm disabled:opacity-50 text-left"
-                >
-                  {reply}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    return (
-        <div key={index} className={`flex flex-col mb-4 items-end`}>
-        <div
-          className={`max-w-[85%] p-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-violet-500 text-white rounded-tr-sm shadow-sm`}
-        >
-          <p className="text-[14px] leading-relaxed whitespace-pre-wrap">{textContent}</p>
-        </div>
-      </div>
+  const handleWhatsAppAction = () => {
+    const text = encodeURIComponent(
+      lang === "id"
+        ? "Halo Arvion Creative, saya sedang berkunjung ke website dan ingin konsultasi mengenai proyek digital saya."
+        : "Hello Arvion Creative, I visited your website and would like to consult about my digital project."
     );
+    window.open(`https://wa.me/${SITE_BRAND.phoneRaw}?text=${text}`, "_blank");
   };
+
+  // Get active suggestions: latest message's quick replies or default suggestions
+  const latestModelMessage = [...messages].reverse().find((m) => m.role === "model");
+  const currentQuickReplies = latestModelMessage?.quickReplies && latestModelMessage.quickReplies.length > 0
+    ? latestModelMessage.quickReplies
+    : defaultSuggestions;
 
   return (
     <>
+      {/* Scroll to Top floating button */}
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
-            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 18 }}
-            transition={{ duration: 0.14, ease: 'easeOut' }}
-            style={{ willChange: 'transform, opacity' }}
-            className="fixed bottom-24 right-4 md:right-8 w-90 max-w-[calc(100vw-2rem)] h-130 max-h-[calc(100vh-8rem)] bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl flex flex-col overflow-hidden z-60 shadow-xl"
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={scrollToTop}
+            aria-label="Scroll to top"
+            className="fixed bottom-24 right-6 z-30 p-2.5 rounded-full bg-white border border-[#ECEEF1] text-[#171A22] shadow-md hover:border-[#F47721] hover:text-[#F47721] transition-all"
           >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-amber-50 to-violet-50 p-4 border-b border-slate-200 flex justify-between items-center shrink-0 relative overflow-hidden">
-              <div className="absolute -top-10 -left-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl" />
-              <div className="flex items-center gap-3 relative z-10">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden">
-                  <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={40} height={40} className="w-10 h-10 object-contain" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900 leading-tight text-base tracking-wide">Arvion Assistant</h3>
-                  <p className="text-[11px] font-bold text-amber-600 uppercase tracking-widest">{t.chat.status}</p>
-                </div>
-              </div>
-              <button
-                onClick={closeChat}
-                aria-label={t.modal?.closeModal ?? "Close"}
-                className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all relative z-10"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
-              {messages.map((msg, index) => renderMessage(msg, index))}
-              {isLoading && (
-                <div className="flex mb-4 items-start">
-                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 overflow-hidden shrink-0 mr-3">
-                    <Image src="/arvionmaskot.png" alt="Arvion Mascot" width={24} height={24} className="w-6 h-6 object-contain" />
-                  </div>
-                  <div className="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-sm shadow-sm">
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                      <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" />
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 bg-white border-t border-slate-200 shrink-0">
-              <form
-                onSubmit={(e) => { e.preventDefault(); handleSend(input); }}
-                className="flex gap-2 relative"
-              >
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={t.chat.placeholder}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-12 py-3 text-[14px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-amber-300 focus:ring-1 focus:ring-amber-300 transition-all"
-                  disabled={isLoading}
-                />
-                <button
-                  type="submit"
-                  disabled={!input.trim() || isLoading}
-                  className="absolute right-1.5 top-1.5 bottom-1.5 aspect-square bg-gradient-to-r from-amber-500 to-violet-500 text-white rounded-lg flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-all shadow-sm"
-                >
-                  <Send className="w-4 h-4 ml-0.5" />
-                </button>
-              </form>
-            </div>
-          </motion.div>
+            <ArrowUp className="w-4 h-4" />
+          </motion.button>
         )}
       </AnimatePresence>
 
-      <div className="fixed bottom-6 right-6 md:right-8 md:bottom-8 z-60 flex flex-col gap-2 items-end">
-        {/* Mobile Label */}
-        {!isOpen && (
+      {/* Floating Chat Trigger Button */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <motion.button
+          onClick={isOpen ? closeChat : openChat}
+          aria-label={isOpen ? (lang === "id" ? "Tutup chat AI" : "Close AI chat") : (lang === "id" ? "Buka chat Asisten Arvion" : "Open Arvion Assistant chat")}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative flex h-13 w-13 items-center justify-center rounded-full bg-[#171A22] text-white shadow-[0_6px_24px_rgba(23,26,34,0.35)] hover:bg-[#F47721] transition-all border border-slate-700 group"
+        >
+          {isOpen ? (
+            <X className="w-5 h-5 text-white" />
+          ) : (
+            <div className="relative">
+              <MessageSquare className="w-5 h-5 text-white" />
+              <span className="absolute -top-1.5 -right-1.5 w-2 h-2 rounded-full bg-[#F47721] ring-2 ring-[#171A22] animate-pulse" />
+            </div>
+          )}
+        </motion.button>
+      </div>
+
+      {/* Chat Window Panel */}
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-white text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full border border-slate-200 shadow-sm"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-22 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[390px] h-[540px] max-h-[82vh] bg-white rounded-2xl shadow-2xl border border-[#ECEEF1] flex flex-col overflow-hidden"
           >
-            {t.chat.label}
+            {/* Header: Charcoal with Orange accent */}
+            <div className="bg-[#171A22] text-white p-4 flex items-center justify-between border-b border-slate-800 relative">
+              {/* Top Accent Orange Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#F47721] via-[#FF9B4A] to-[#F47721]" />
+
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-[#F47721] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                  <Bot className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold flex items-center gap-1.5 text-white">
+                    <span>Arvion Assistant</span>
+                    <Sparkles className="w-3.5 h-3.5 text-[#FF9B4A]" />
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>{lang === "id" ? "Creative Studio AI • Online" : "Creative Studio AI • Online"}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                {/* Direct WhatsApp button in header */}
+                <button
+                  onClick={handleWhatsAppAction}
+                  title={lang === "id" ? "Hubungi via WhatsApp" : "Contact via WhatsApp"}
+                  className="p-1.5 rounded-lg text-emerald-400 hover:text-white hover:bg-emerald-600/30 transition-colors"
+                  aria-label="Direct WhatsApp"
+                >
+                  <PhoneCall className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={closeChat}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  aria-label="Close chat window"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Messages Content */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-[#FFFAF6]/60">
+              {messages.map((msg, index) => {
+                const isUser = msg.role === "user";
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-start gap-2.5 ${
+                      isUser ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
+                        isUser
+                          ? "bg-[#171A22] text-[#F47721] border border-slate-700"
+                          : "bg-[#F47721] text-white shadow-xs"
+                      }`}
+                    >
+                      {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+                    </div>
+
+                    <div
+                      className={`max-w-[80%] p-3.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                        isUser
+                          ? "bg-[#F47721] text-white rounded-tr-xs shadow-xs font-medium"
+                          : "bg-white text-[#171A22] border border-[#ECEEF1] rounded-tl-xs shadow-xs"
+                      }`}
+                    >
+                      <div className="whitespace-pre-line">{msg.content}</div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {isLoading && (
+                <div className="flex items-center gap-2 text-xs text-[#707581] p-2.5 bg-white rounded-xl border border-[#ECEEF1] w-fit shadow-xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F47721] animate-bounce" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F47721] animate-bounce [animation-delay:0.2s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F47721] animate-bounce [animation-delay:0.4s]" />
+                  <span className="ml-1 text-[11px] font-medium text-[#707581]">
+                    {lang === "id" ? "Arvion sedang merespon..." : "Arvion is responding..."}
+                  </span>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Dynamic Quick Replies Pills */}
+            <div className="px-3 py-2 bg-white border-t border-[#ECEEF1] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              <span className="text-[10px] font-bold text-[#707581] uppercase tracking-wider shrink-0 pl-1">
+                {lang === "id" ? "Tanya:" : "Ask:"}
+              </span>
+              {currentQuickReplies.map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    if (q.toLowerCase().includes("whatsapp")) {
+                      handleWhatsAppAction();
+                    } else {
+                      handleSend(q);
+                    }
+                  }}
+                  disabled={isLoading}
+                  className="whitespace-nowrap text-[11px] font-medium px-2.5 py-1 rounded-full bg-[#FFF3E9] text-[#F47721] hover:bg-[#F47721] hover:text-white border border-[#FFE2CC] transition-all shrink-0 disabled:opacity-50"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+
+            {/* Input Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend(input);
+              }}
+              className="p-3 bg-white border-t border-[#ECEEF1] flex items-center gap-2"
+            >
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={lang === "id" ? "Tanyakan layanan atau proyek..." : "Ask about services or a project..."}
+                disabled={isLoading}
+                className="flex-1 px-3.5 py-2 text-xs sm:text-sm bg-[#FFFAF6] border border-[#ECEEF1] rounded-xl text-[#171A22] placeholder-slate-400 focus:outline-hidden focus:border-[#F47721] focus:bg-white transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                aria-label="Send message"
+                className="p-2.5 rounded-xl bg-[#F47721] text-white hover:bg-[#e06512] transition-colors disabled:opacity-50 shrink-0 shadow-xs"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
           </motion.div>
         )}
-
-        {/* Desktop hover label */}
-        <AnimatePresence>
-          {isHovered && !isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="hidden md:block bg-white text-slate-900 text-xs font-bold px-4 py-2 rounded-full border border-slate-200 shadow-sm backdrop-blur-md whitespace-nowrap"
-            >
-              {t.chat.desktopLabel}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="flex items-center gap-2">
-          {showScrollTop && (
-            <button
-              onClick={scrollToTop}
-              aria-label="Scroll to top"
-              className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-slate-900 shadow-lg ring-1 ring-slate-200 transition-transform hover:scale-105"
-            >
-              <svg className="absolute inset-1 h-12 w-12" viewBox="0 0 32 32" aria-hidden="true">
-                <defs>
-                  <linearGradient id="scrollProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#F97316" />
-                    <stop offset="100%" stopColor="#7C3AED" />
-                  </linearGradient>
-                </defs>
-                <circle cx="16" cy="16" r="13" className="stroke-slate-200 fill-transparent" strokeWidth="2" />
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="13"
-                  stroke="url(#scrollProgressGradient)"
-                  fill="transparent"
-                  strokeWidth="2.5"
-                  strokeDasharray={81.681}
-                  strokeDashoffset={81.681 - scrollProgress * 81.681}
-                  strokeLinecap="round"
-                  style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
-                />
-              </svg>
-              <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm">
-                <ArrowUp className="h-5 w-5" />
-              </span>
-            </button>
-          )}
-          <button
-            onClick={() => (isOpen ? closeChat() : openChat())}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            aria-label={isOpen ? "Tutup chat" : t.chat.desktopLabel}
-            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-violet-500 text-white border border-amber-200 hover:scale-105 transition-all shadow-md group"
-          >
-            <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
-          </button>
-        </div>
-      </div>
+      </AnimatePresence>
     </>
   );
 }

@@ -1,290 +1,240 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink } from "lucide-react";
-import Image from "next/image";
-import { SectionHeader } from "@/components/shared/SectionHeader";
-import { BlurFade } from "@/components/effects/BlurFade";
-import { cn } from "@/lib/utils";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import {
-  fetchPortfolioItems,
-  type PortfolioCategory,
-  type PortfolioItem,
-} from "@/lib/portfolio";
-
-
-type FilterCategory = "all" | PortfolioCategory;
-
-const GRADIENTS = [
-  "from-amber-500/20 to-violet-500/20",
-  "from-violet-500/20 to-fuchsia-500/20",
-  "from-fuchsia-500/20 to-amber-500/20",
-  "from-yellow-500/20 to-amber-500/20",
-  "from-amber-500/20 to-rose-500/20",
-  "from-rose-500/20 to-violet-500/20",
-];
-
-function PortfolioImage({ item, gradient, enhance }: { item: PortfolioItem; gradient: string; enhance?: boolean }) {
-  const [hasImageError, setHasImageError] = useState(false);
-
-  if (item.imageUrl && !hasImageError) {
-    return (
-      <Image
-        src={item.imageUrl}
-        alt={item.title}
-        fill
-        className={`object-cover transition-transform duration-500 group-hover:scale-105 ${enhance ? 'brightness-110' : ''}`}
-        loader={({ src }) => src}
-        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-        unoptimized
-        onError={() => setHasImageError(true)}
-      />
-    );
-  }
-
-  return (
-    <div
-      className={cn(
-        "h-full w-full bg-gradient-to-br transition-transform duration-500 group-hover:scale-105",
-        gradient
-      )}
-    />
-  );
-}
 
 export function PortfolioSection() {
-  const [activeFilter, setActiveFilter] = useState<FilterCategory>("all");
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const { t } = useLanguage();
-
-  const FILTERS: { label: string; value: FilterCategory }[] = [
-    { label: t.portfolio.filters.all, value: "all" },
-    { label: t.portfolio.filters.design, value: "design" },
-    { label: t.portfolio.filters.website, value: "website" },
-  ];
-
-  const filtered =
-    activeFilter === "all"
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.category === activeFilter);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadPortfolioItems() {
-      try {
-        const mapped = await fetchPortfolioItems();
-
-        if (!cancelled) {
-          setPortfolioItems(mapped);
-          setHasError(false);
+  const { lang } = useLanguage();
+  const copy =
+    lang === "id"
+      ? {
+          title: "Proyek Unggulan",
+          description: "Pilihan pengalaman digital yang dibuat dengan tujuan dan perhatian pada detail.",
+          contact: "Punya ide proyek?",
+          study: "Lihat Studi Kasus",
         }
-      } catch {
-
-        if (!cancelled) {
-          setPortfolioItems([]);
-          setHasError(true);
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
+      : {
+          title: "Featured Projects",
+          description: "A selection of digital experiences crafted with purpose and attention to detail.",
+          contact: "Have a project in mind?",
+          study: "View Case Study",
+        };
+  const handleScrollToContact = () => {
+    const el = document.getElementById("contact");
+    if (el) {
+      const topOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - topOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
-
-    loadPortfolioItems();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  };
 
   return (
-    <section id="portfolio" className="relative py-16 sm:py-20 lg:py-28">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-        <SectionHeader
-          badge={t.portfolio.badge}
-          title={t.portfolio.title}
-          titleHighlight={t.portfolio.titleHighlight}
-          description={t.portfolio.description}
-        />
-
-        {/* Filter buttons */}
-        <BlurFade delay={0.1}>
-          <div className="mb-8 flex justify-center gap-2 sm:mb-10">
-            {FILTERS.map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => setActiveFilter(filter.value)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-bold transition-all duration-200 sm:px-5",
-                  activeFilter === filter.value
-                    ? "bg-amber-500 text-white shadow-[0_8px_20px_-6px_rgba(245,158,11,0.5)]"
-                    : "border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-amber-50 hover:text-amber-600"
-                )}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </BlurFade>
-
-        {/* Grid */}
-        <motion.div layout className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {isLoading &&
-              Array.from({ length: 6 }).map((_, i) => (
-                <motion.div
-                  key={`portfolio-skeleton-${i}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
-                >
-                  <div className="h-44 animate-pulse bg-slate-100 sm:h-48" />
-                  <div className="p-4">
-                    <div className="mb-3 h-4 w-20 animate-pulse rounded-full bg-slate-100" />
-                    <div className="h-5 w-3/4 animate-pulse rounded-md bg-slate-100" />
-                    <div className="mt-3 flex gap-1">
-                      <div className="h-5 w-16 animate-pulse rounded-full bg-slate-100" />
-                      <div className="h-5 w-20 animate-pulse rounded-full bg-slate-100" />
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-
-            {!isLoading && filtered.map((item, i) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: i * 0.05 }}
-                data-testid="portfolio-item"
-                data-category={item.category}
-                className={cn(
-                  "group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:border-amber-200 hover:shadow-xl",
-                  item.size === "large" && "sm:col-span-2"
-                )}
-                onClick={() => setSelectedItem(item)}
-              >
-                {/* Image area */}
-                <div
-                  className={cn(
-                    "relative overflow-hidden border-b border-slate-100",
-                    item.size === "large" ? "h-52 sm:h-64" : "h-44 sm:h-48"
-                  )}
-                >
-                  <PortfolioImage item={item} gradient={GRADIENTS[i % GRADIENTS.length]} />
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 flex items-end bg-gradient-to-t from-slate-900/80 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        {t.portfolio.viewProject}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-5">
-                  <span className="mb-2 inline-block font-mono text-[11px] uppercase tracking-widest text-amber-500">
-                    {item.category}
-                  </span>
-                  <h3 className="text-sm font-bold text-slate-900 sm:text-base">{item.title}</h3>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {item.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {!isLoading && filtered.length === 0 && (
-          <div className="rounded-3xl border border-slate-200 bg-white px-5 py-10 text-center shadow-sm">
-            <p className="text-sm font-medium text-slate-500">
-              {hasError
-                ? "Portfolio belum bisa dimuat dari Google Sheets."
-                : "Belum ada portfolio untuk filter ini."}
-
+    <section id="projects" className="py-20 sm:py-24 bg-white border-t border-[#ECEEF1]">
+      <div className="container-arvion">
+        {/* Section Header matching Reference Photo 2 */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#171A22] tracking-tight">
+              {copy.title}
+            </h2>
+            <p className="text-sm sm:text-base text-[#707581] mt-3 max-w-xl">
+              {copy.description}
             </p>
           </div>
-        )}
-      </div>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedItem && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm"
-              onClick={() => setSelectedItem(null)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-4 top-1/2 z-50 max-h-[90vh] w-auto max-w-2xl -translate-y-1/2 overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:left-1/2 sm:w-full sm:-translate-x-1/2"
-              role="dialog"
-              aria-modal="true"
-              aria-label={selectedItem.title}
-            >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden sm:h-64 border-b border-slate-100">
-                <PortfolioImage
-                  item={selectedItem}
-                  gradient={
-                    GRADIENTS[
-                      Math.max(
-                        0,
-                        portfolioItems.findIndex((p) => p.id === selectedItem.id)
-                      ) % GRADIENTS.length
-                    ]
-                  }
-                    enhance
-                />
-                <div className="absolute inset-0 bg-white/10 pointer-events-none" />
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white/80 text-slate-900 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
-                  aria-label="Close modal"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+          <button
+            onClick={handleScrollToContact}
+            className="mt-4 md:mt-0 text-sm font-bold text-[#F47721] hover:text-[#e06512] inline-flex items-center gap-1.5 transition-colors self-start md:self-auto"
+          >
+            <span>{copy.contact}</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* 4-Card Horizontal Grid matching Reference Photo 2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1: FinTrack Dashboard */}
+          <div className="bg-white rounded-2xl border border-[#ECEEF1] p-4 flex flex-col justify-between hover:border-[#F47721]/40 hover:shadow-lg transition-all duration-300 group">
+            {/* Visual Thumbnail: Dark Dashboard Browser Bar */}
+            <div className="relative aspect-[16/11] w-full rounded-xl bg-[#F0F2F5] p-3 flex flex-col justify-between overflow-hidden">
+              <div className="w-full h-full rounded-lg bg-[#1E232D] p-3 flex flex-col justify-between shadow-inner">
+                {/* 3 browser dots */}
+                <div className="flex items-center gap-1.5 pb-2">
+                  <span className="w-2 h-2 rounded-full bg-[#F47721]" />
+                  <span className="w-2 h-2 rounded-full bg-[#FF9B4A]" />
+                  <span className="w-2 h-2 rounded-full bg-slate-600" />
+                </div>
+                {/* Dashboard wireframe boxes */}
+                <div className="grid grid-cols-2 gap-2 my-auto">
+                  <div className="h-9 rounded bg-[#2A313E] border border-slate-700/50" />
+                  <div className="h-9 rounded bg-[#2A313E] border border-slate-700/50" />
+                </div>
+                {/* Bottom gradient area */}
+                <div className="h-10 rounded bg-gradient-to-r from-[#F47721]/40 via-[#8A3D14] to-[#1E232D] border border-orange-500/20" />
               </div>
+            </div>
 
-              {/* Content */}
-              <div className="p-5 sm:p-6">
-                <span className="mb-3 inline-block rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold capitalize text-amber-600">
-                  {selectedItem.category}
-                </span>
-                <h2 className="text-xl font-black text-slate-900 sm:text-2xl">{selectedItem.title}</h2>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {selectedItem.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 sm:text-sm">
-                      {tag}
-                    </span>
-                  ))}
+            {/* Info & Link */}
+            <div className="pt-4 flex flex-col flex-1 justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[#171A22] mb-1 group-hover:text-[#F47721] transition-colors">
+                  FinTrack Dashboard
+                </h3>
+                <p className="text-xs text-[#707581] mb-4">
+                  Dashboard Design · 2025
+                </p>
+              </div>
+              <button
+                onClick={handleScrollToContact}
+                className="text-xs font-bold text-[#F47721] hover:text-[#e06512] inline-flex items-center gap-1 mt-auto"
+              >
+                <span>{copy.study}</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Luxora Interiors (Active orange outline in photo) */}
+          <div className="bg-white rounded-2xl border-2 border-[#FFE2CC] shadow-md shadow-orange-500/5 p-4 flex flex-col justify-between hover:border-[#F47721] hover:shadow-lg transition-all duration-300 group">
+            {/* Visual Thumbnail: Luxora Editorial Mockup */}
+            <div className="relative aspect-[16/11] w-full rounded-xl bg-[#FFF9F4] p-3 flex flex-col justify-between overflow-hidden border border-[#FFE2CC]">
+              <div className="w-full h-full rounded-lg bg-white p-3 flex flex-col justify-between shadow-xs">
+                {/* 3 browser dots */}
+                <div className="flex items-center justify-between pb-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#F47721]" />
+                    <span className="w-2 h-2 rounded-full bg-[#FF9B4A]" />
+                    <span className="w-2 h-2 rounded-full bg-slate-300" />
+                  </div>
+                </div>
+                {/* Luxora Brand text */}
+                <div className="text-[11px] font-extrabold tracking-widest text-[#171A22] uppercase">
+                  LUXORA
+                </div>
+                {/* Wireframe editorial boxes */}
+                <div className="grid grid-cols-2 gap-2 my-auto">
+                  <div className="h-9 rounded bg-[#F7EFE8]" />
+                  <div className="h-9 rounded bg-[#F7EFE8]" />
+                </div>
+                {/* Bottom soft gradient bar */}
+                <div className="h-7 rounded bg-gradient-to-r from-[#F47721]/70 to-[#FF9B4A]/60" />
+              </div>
+            </div>
+
+            {/* Info & Link */}
+            <div className="pt-4 flex flex-col flex-1 justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[#171A22] mb-1 group-hover:text-[#F47721] transition-colors">
+                  Luxora Interiors
+                </h3>
+                <p className="text-xs text-[#707581] mb-4">
+                  Website Design · 2025
+                </p>
+              </div>
+              <button
+                onClick={handleScrollToContact}
+                className="text-xs font-bold text-[#F47721] hover:text-[#e06512] inline-flex items-center gap-1 mt-auto"
+              >
+                <span>{copy.study}</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* Card 3: MoveFit App (Duo smartphone mockup in photo) */}
+          <div className="bg-white rounded-2xl border border-[#ECEEF1] p-4 flex flex-col justify-between hover:border-[#F47721]/40 hover:shadow-lg transition-all duration-300 group">
+            {/* Visual Thumbnail: Phone Duo */}
+            <div className="relative aspect-[16/11] w-full rounded-xl bg-[#F0F2F5] p-3 flex items-center justify-center gap-3 overflow-hidden">
+              {/* Phone 1 */}
+              <div className="w-16 h-28 rounded-xl bg-white border-2 border-[#171A22] p-1.5 flex flex-col justify-between shadow-md">
+                <div className="w-6 h-1 bg-[#171A22] rounded-full mx-auto mb-1" />
+                <div className="space-y-1 my-auto">
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
                 </div>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              {/* Phone 2 */}
+              <div className="w-16 h-28 rounded-xl bg-white border-2 border-[#171A22] p-1.5 flex flex-col justify-between shadow-md">
+                <div className="w-6 h-1 bg-[#171A22] rounded-full mx-auto mb-1" />
+                <div className="space-y-1 my-auto">
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
+                  <div className="h-4 rounded bg-[#FFF0E4]" />
+                </div>
+              </div>
+            </div>
+
+            {/* Info & Link */}
+            <div className="pt-4 flex flex-col flex-1 justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[#171A22] mb-1 group-hover:text-[#F47721] transition-colors">
+                  MoveFit App
+                </h3>
+                <p className="text-xs text-[#707581] mb-4">
+                  Mobile App Design · 2024
+                </p>
+              </div>
+              <button
+                onClick={handleScrollToContact}
+                className="text-xs font-bold text-[#F47721] hover:text-[#e06512] inline-flex items-center gap-1 mt-auto"
+              >
+                <span>{copy.study}</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* Card 4: Nova E-Commerce */}
+          <div className="bg-white rounded-2xl border border-[#ECEEF1] p-4 flex flex-col justify-between hover:border-[#F47721]/40 hover:shadow-lg transition-all duration-300 group">
+            {/* Visual Thumbnail: E-Commerce Layout */}
+            <div className="relative aspect-[16/11] w-full rounded-xl bg-[#F0F2F5] p-3 flex flex-col justify-between overflow-hidden">
+              <div className="w-full h-full rounded-lg bg-white p-3 flex flex-col justify-between shadow-xs">
+                {/* 3 browser dots */}
+                <div className="flex items-center gap-1.5 pb-1">
+                  <span className="w-2 h-2 rounded-full bg-[#F47721]" />
+                  <span className="w-2 h-2 rounded-full bg-[#FF9B4A]" />
+                  <span className="w-2 h-2 rounded-full bg-slate-300" />
+                </div>
+                {/* Brand title */}
+                <div className="text-[10px] font-extrabold tracking-wider text-[#171A22] uppercase">
+                  NOVA E-COMMERCE
+                </div>
+                {/* Product boxes */}
+                <div className="grid grid-cols-2 gap-2 my-auto">
+                  <div className="h-9 rounded bg-[#F7EFE8]" />
+                  <div className="h-9 rounded bg-[#F7EFE8]" />
+                </div>
+                {/* Bottom accent strip */}
+                <div className="h-6 rounded bg-[#F47721]/80" />
+              </div>
+            </div>
+
+            {/* Info & Link */}
+            <div className="pt-4 flex flex-col flex-1 justify-between">
+              <div>
+                <h3 className="text-base font-bold text-[#171A22] mb-1 group-hover:text-[#F47721] transition-colors">
+                  Nova E-Commerce
+                </h3>
+                <p className="text-xs text-[#707581] mb-4">
+                  Website Design · 2024
+                </p>
+              </div>
+              <button
+                onClick={handleScrollToContact}
+                className="text-xs font-bold text-[#F47721] hover:text-[#e06512] inline-flex items-center gap-1 mt-auto"
+              >
+                <span>{copy.study}</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

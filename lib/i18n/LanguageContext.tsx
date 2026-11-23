@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { translations, type Language } from "./translations";
 
 // Derive a mutable (non-readonly, non-literal) version of the translations shape
@@ -24,7 +24,16 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>("id");
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window === "undefined") return "id";
+    const savedLang = window.localStorage.getItem("arvion-language");
+    return savedLang === "en" ? "en" : "id";
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("arvion-language", lang);
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const toggleLanguage = useCallback(() => {
     setLang((prev) => (prev === "id" ? "en" : "id"));

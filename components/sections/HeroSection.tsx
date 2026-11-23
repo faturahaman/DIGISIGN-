@@ -1,119 +1,125 @@
 "use client";
 
-import { ArrowRight, ChevronDown, TrendingUp, Users, Star, CheckCircle } from "lucide-react";
-import { HeroTiles } from "@/components/effects/HeroTiles";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { HERO_STATS } from "@/data/siteContent";
+import { HeroAnimation } from "@/components/shared/HeroAnimation";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-/**
- * Hero. Kept a Client Component so the language toggle still updates it, but the
- * headline (the LCP element) and all copy render VISIBLE in the HTML — no
- * `opacity:0`-until-hydration. Entry animation is pure CSS (tw-animate-css
- * `animate-in`), which runs on load without waiting for JS, so the browser
- * paints the LCP immediately instead of after framer-motion hydrates.
- * Scroll-driven fade was removed from the critical path for the same reason.
- */
 export function HeroSection() {
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
+  const copy =
+    lang === "id"
+      ? {
+          badge: "STUDIO DIGITAL KREATIF",
+          subtitle: "KAMI MERANCANG. KAMI MEMBANGUN. KAMI BERKREASI.",
+          description:
+            "Arvion Creative membantu brand tumbuh melalui pengalaman digital strategis, visual yang kuat, dan solusi kreatif yang dirancang untuk menghasilkan dampak nyata.",
+          primary: "Lihat Karya Kami",
+          secondary: "Mulai Proyek",
+        }
+      : {
+          badge: "CREATIVE DIGITAL STUDIO",
+          subtitle: "WE DESIGN. WE BUILD. WE CREATE.",
+          description:
+            "Arvion Creative helps brands grow through strategic digital experiences, strong visuals, and creative solutions designed to deliver meaningful results.",
+          primary: "Explore Our Work",
+          secondary: "Start a Project",
+        };
+  const stats =
+    lang === "id"
+      ? ["Tahun Pengalaman", "Proyek Selesai", "Klien Puas"]
+      : ["Years Experience", "Projects Completed", "Happy Clients"];
 
-  const stats = [
-    { title: t.hero.stats.projects, value: "150+", icon: TrendingUp },
-    { title: t.hero.stats.clients, value: "80+", icon: Users },
-    { title: t.hero.stats.rating, value: "5.0 ★", icon: Star },
-  ];
+  const title =
+    lang === "id" ? (
+      <>Ide Jadi <br /><span className="text-[#F47721]">Dampak Nyata.</span></>
+    ) : (
+      <>Ideas into <br /><span className="text-[#F47721]">Impact.</span></>
+    );
 
-  const handleScroll = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const handleScrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const topOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - topOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden pt-28 pb-28 sm:pb-32"
+      className="relative pt-32 pb-16 sm:pt-40 sm:pb-24 overflow-hidden bg-white"
     >
-      {/* Signature hover-reveal tiling background (desktop only for perf). */}
-      <div className="absolute inset-0 hidden md:block">
-        <HeroTiles />
-      </div>
-      <div aria-hidden className="fancy-top-gradient md:hidden" />
-
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-5 py-16 text-center sm:px-6">
-        {/* Mono eyebrow */}
-        <div className="mb-6 flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-backwards">
-          <span className="flex items-center gap-3 rounded-full border border-slate-200 bg-white/80 px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-slate-600 shadow-sm backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.7)]" />
-            {t.hero.badge}
-          </span>
-        </div>
-
-        {/* Heading — the LCP element. Rendered visible in HTML; CSS-animated. */}
-        <h1 className="text-4xl font-bold leading-[1] tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-700 fill-mode-backwards [animation-delay:100ms] sm:text-6xl md:text-7xl lg:text-[5rem]">
-          <span className="text-fade-gradient">{t.hero.heading1}</span>{" "}
-          <span className="hyprgradient bg-clip-text text-transparent">
-            {t.hero.headingHighlight}
-          </span>{" "}
-          <span className="text-fade-gradient">{t.hero.heading2}</span>
-        </h1>
-
-        {/* Subheading */}
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-600 animate-in fade-in slide-in-from-bottom-6 duration-700 fill-mode-backwards [animation-delay:250ms] sm:text-lg">
-          {t.hero.subheading}
-        </p>
-
-        {/* Service pills */}
-        <div className="mt-7 flex flex-wrap justify-center gap-x-5 gap-y-2 animate-in fade-in slide-in-from-bottom-6 duration-700 fill-mode-backwards [animation-delay:350ms]">
-          {t.hero.services.map((s) => (
-            <span
-              key={s}
-              className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-slate-500"
-            >
-              <CheckCircle className="h-3 w-3 text-amber-500" />
-              {s}
-            </span>
-          ))}
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="mt-9 flex flex-col items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom-6 duration-700 fill-mode-backwards [animation-delay:450ms] sm:flex-row">
-          <button
-            onClick={() => handleScroll("contact")}
-            className="group flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 px-8 py-3.5 font-bold text-white shadow-[0_10px_28px_-8px_rgba(245,158,11,0.6)] transition-all duration-300 hover:scale-[1.02] hover:bg-amber-600 hover:shadow-[0_14px_36px_-8px_rgba(245,158,11,0.75)] sm:w-auto"
-          >
-            {t.hero.ctaPrimary}
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </button>
-          <button
-            onClick={() => handleScroll("portfolio")}
-            className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-slate-200 bg-white px-8 py-3.5 font-bold text-slate-800 shadow-sm transition-all duration-300 hover:border-amber-300 hover:bg-amber-50/50 sm:w-auto"
-          >
-            {t.hero.ctaSecondary}
-          </button>
-        </div>
-
-        {/* Stats */}
-        <div className="mx-auto mt-12 flex max-w-lg flex-wrap justify-center gap-x-10 gap-y-5 border-t border-slate-200 pt-8 animate-in fade-in duration-700 fill-mode-backwards [animation-delay:600ms]">
-          {stats.map((card) => (
-            <div key={card.title} className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
-                <card.icon className="h-5 w-5 text-amber-500" />
-              </div>
-              <div className="text-left">
-                <div className="text-lg font-bold text-slate-900">{card.value}</div>
-                <div className="text-xs font-medium text-slate-500">{card.title}</div>
-              </div>
+      <div className="container-arvion">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Left Column: Hero Content & CTAs (as in Reference Photo 1) */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            {/* Small Pill Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFF3E9] border border-[#FFE2CC] text-[#F47721] text-xs font-bold tracking-widest uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#F47721]" />
+              <span>{copy.badge}</span>
             </div>
-          ))}
+
+            {/* Main Headline */}
+            <h1 className="text-5xl sm:text-6xl lg:text-[4.25rem] font-extrabold text-[#171A22] tracking-tight leading-[1.06] mb-5">
+              {title}
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-sm font-bold tracking-[0.16em] text-[#171A22] uppercase mb-4">
+              {copy.subtitle}
+            </p>
+
+            {/* Description */}
+            <p className="text-base sm:text-lg text-[#707581] leading-relaxed max-w-xl mb-9">
+              {copy.description}
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-12">
+              <button
+                onClick={() => handleScrollTo("projects")}
+                className="inline-flex items-center justify-center gap-2 bg-[#F47721] hover:bg-[#e06512] text-white font-bold text-sm sm:text-base py-3 px-6 rounded-xl transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
+              >
+                <span>{copy.primary}</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => handleScrollTo("contact")}
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#FFFAF6] border border-[#ECEEF1] hover:border-[#F47721] text-[#171A22] hover:text-[#F47721] font-bold text-sm sm:text-base py-3 px-6 rounded-xl transition-all"
+              >
+                <span>{copy.secondary}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Statistics Row */}
+            <div className="w-full pt-8 border-t border-[#ECEEF1] grid grid-cols-3 gap-6 max-w-lg">
+              {HERO_STATS.map((stat, idx) => (
+                <div key={idx} className="flex flex-col">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-[#171A22] tracking-tight">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs sm:text-sm text-[#707581] font-medium mt-1">
+                    {stats[idx] ?? stat.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Visual Mockup matching Reference Photo 1 */}
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <HeroAnimation />
+          </div>
         </div>
       </div>
-
-      {/* Scroll indicator — hidden on very short viewports to avoid crowding. */}
-      <button
-        onClick={() => handleScroll("services")}
-        className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1.5 text-slate-500 transition-colors hover:text-amber-500 animate-in fade-in duration-700 fill-mode-backwards [animation-delay:900ms] min-[720px]:flex"
-        aria-label="Scroll to services"
-      >
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em]">{t.hero.scroll}</span>
-        <ChevronDown className="h-5 w-5 animate-bounce" />
-      </button>
     </section>
   );
 }

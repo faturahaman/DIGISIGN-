@@ -1,162 +1,101 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { SERVICES as FALLBACK_SERVICES } from "@/lib/constants";
-import { SectionHeader } from "@/components/shared/SectionHeader";
-import { BlurFade } from "@/components/effects/BlurFade";
-import { AmbientGlow } from "@/components/effects/AmbientGlow";
-import { CardsContainer, MouseGlowCard } from "@/components/effects/MouseGlowCard";
-import { ServiceModal } from "@/components/shared/ServiceModal";
-import { cn } from "@/lib/utils";
+import { LayoutGrid, Command, Smartphone, Pen, Sparkles } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import Image from "next/image";
 
-import { fetchServices, type ServiceItem } from "@/lib/services";
+const SERVICES_DATA = [
+  {
+    icon: LayoutGrid,
+    title: "UI/UX Design",
+    description: "Intuitive interfaces and meaningful user experiences.",
+  },
+  {
+    icon: Command,
+    title: "Web Development",
+    description: "Responsive websites built for performance and growth.",
+  },
+  {
+    icon: Smartphone,
+    title: "Mobile App Design",
+    description: "Beautiful, functional mobile experiences.",
+  },
+  {
+    icon: Pen,
+    title: "Branding & Identity",
+    description: "Distinctive visual identities that tell your story.",
+  },
+  {
+    icon: Sparkles,
+    title: "Creative Strategy",
+    description: "Ideas and direction that move brands forward.",
+  },
+];
 
 export function ServicesSection() {
-  const [activeService, setActiveService] = useState<ServiceItem | null>(null);
-  const [services, setServices] = useState<ServiceItem[]>(FALLBACK_SERVICES);
-  const [isLoading, setIsLoading] = useState(true);
-  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
-  const { t } = useLanguage();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetchServices()
-      .then((data) => {
-        if (!cancelled && data.length > 0) setServices(data);
-      })
-      .catch(() => {
-        // Keep fallback services on error
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  const { lang } = useLanguage();
+  const titles =
+    lang === "id"
+      ? ["Desain UI/UX", "Pengembangan Website", "Desain Aplikasi Mobile", "Branding & Identitas", "Strategi Kreatif"]
+      : ["UI/UX Design", "Web Development", "Mobile App Design", "Branding & Identity", "Creative Strategy"];
+  const descriptions =
+    lang === "id"
+      ? [
+          "Antarmuka intuitif dan pengalaman pengguna yang bermakna.",
+          "Website responsif yang dibangun untuk performa dan pertumbuhan.",
+          "Pengalaman aplikasi mobile yang indah dan fungsional.",
+          "Identitas visual khas yang menceritakan kisah brand Anda.",
+          "Ide dan arahan yang membawa brand Anda melangkah maju.",
+        ]
+      : [
+          "Intuitive interfaces and meaningful user experiences.",
+          "Responsive websites built for performance and growth.",
+          "Beautiful, functional mobile experiences.",
+          "Distinctive visual identities that tell your story.",
+          "Ideas and direction that move brands forward.",
+        ];
   return (
-    <>
-      <section id="services" className="relative py-16 sm:py-20 lg:py-28">
-        <AmbientGlow size="65% 55% at 50% 12%" />
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <SectionHeader
-            badge={t.services.badge}
-            title={t.services.title}
-            titleHighlight={t.services.titleHighlight}
-            description={t.services.description}
-          />
-
-          {/* Bento Grid — one shared mouse broker lights the whole grid. */}
-          <CardsContainer className="grid auto-rows-[minmax(150px,auto)] grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-            {isLoading && services.length === 0
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={`service-skeleton-${i}`}
-                    className="h-full min-h-[150px] animate-pulse rounded-3xl border border-slate-200 bg-white"
-                  />
-                ))
-              : null}
-            {services.map((service, i) => {
-              const Icon = service.icon;
-              const isLarge = service.size === "large";
-
-              return (
-                <BlurFade key={service.id} delay={i * 0.06} className={cn(isLarge && "sm:col-span-2 lg:col-span-1")}>
-                  <MouseGlowCard
-                    as="button"
-                    onClick={() => setActiveService(service)}
-                    className="h-full w-full cursor-pointer text-left transition-transform duration-300 hover:-translate-y-1.5"
-                    innerClassName="flex flex-col p-2.5 sm:p-4"
-                    data-testid="service-card"
-                  >
-                    {/* Image section */}
-                    <div
-                      className={cn(
-                        "relative mb-3 w-full shrink-0 overflow-hidden rounded-2xl border border-slate-100 bg-slate-100",
-                        isLarge ? "h-36 sm:h-44 lg:h-52" : "h-28 sm:h-36 lg:h-40"
-                      )}
-                    >
-                      {service.imageUrl && !failedImages.has(service.id) ? (
-                        <Image
-                          src={service.imageUrl}
-                          alt={service.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 400px"
-                          onError={() =>
-                            setFailedImages((prev) => new Set(prev).add(service.id))
-                          }
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-amber-100 to-violet-100">
-                          <Icon className="h-10 w-10 text-amber-400" />
-                        </div>
-                      )}
-
-                      {/* Floating Icon badge */}
-                      <div className="absolute left-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/60 bg-white/90 backdrop-blur-sm">
-                        <Icon className="h-5 w-5 text-amber-500" />
-                      </div>
-
-                      {/* Floating Arrow */}
-                      <span className="absolute right-2.5 top-2.5 flex h-7.5 w-7.5 items-center justify-center rounded-full border border-slate-200/60 bg-white/90 text-slate-500 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100 hover:text-amber-500">
-                        <ArrowUpRight className="h-4 w-4" />
-                      </span>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="flex flex-1 flex-col justify-between">
-                      <div>
-                        <h3
-                          className={cn(
-                            "mt-1 font-bold leading-tight tracking-tight text-slate-900",
-                            isLarge ? "text-base sm:text-lg" : "text-sm sm:text-base"
-                          )}
-                        >
-                          {service.title}
-                        </h3>
-                        <p
-                          className={cn(
-                            "mt-1 text-xs leading-relaxed text-slate-500 sm:text-sm",
-                            isLarge ? "line-clamp-2 sm:line-clamp-3" : "line-clamp-2"
-                          )}
-                        >
-                          {service.description}
-                        </p>
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2">
-                        <div className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] sm:text-[10px]">
-                          <span className="font-medium text-amber-600/80">Mulai</span>
-                          <span className="font-black text-amber-600">
-                            {new Intl.NumberFormat("id-ID", {
-                              style: "currency",
-                              currency: "IDR",
-                              minimumFractionDigits: 0,
-                            }).format(service.startingPrice)}
-                          </span>
-                        </div>
-                        <span className="whitespace-nowrap rounded-md bg-violet-50 px-2 py-0.5 text-[9px] font-semibold text-violet-600 sm:text-[10px]">
-                          {service.deliveryTime}
-                        </span>
-                      </div>
-                    </div>
-                  </MouseGlowCard>
-                </BlurFade>
-              );
-            })}
-          </CardsContainer>
+    <section id="services" className="py-20 sm:py-24 bg-white border-t border-[#ECEEF1]">
+      <div className="container-arvion">
+        {/* Section Header matching Reference Photo 3 */}
+        <div className="mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#171A22] tracking-tight mb-3">
+            {lang === "id" ? "Layanan Kreatif" : "Creative Services"}
+          </h2>
+          <p className="text-sm sm:text-base text-[#707581] max-w-xl">
+            {lang === "id"
+              ? "Dari ide awal hingga produk digital yang matang."
+              : "From the first spark of an idea to a polished digital product."}
+          </p>
         </div>
-      </section>
 
-      {/* Service Modal */}
-      <ServiceModal service={activeService} onClose={() => setActiveService(null)} />
-    </>
+        {/* 5-Column Horizontal Cards matching Reference Photo 3 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          {SERVICES_DATA.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-[#ECEEF1] p-6 flex flex-col justify-between hover:border-[#F47721]/40 hover:shadow-md transition-all duration-300 group"
+              >
+                <div>
+                  {/* Soft Orange Rounded Square with Orange Icon */}
+                  <div className="w-12 h-12 rounded-xl bg-[#FFF3E9] text-[#F47721] flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-200">
+                    <Icon className="w-5 h-5" />
+                  </div>
+
+                  <h3 className="text-base font-bold text-[#171A22] mb-2 group-hover:text-[#F47721] transition-colors">
+                    {titles[index] ?? service.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-[#707581] leading-relaxed">
+                    {descriptions[index] ?? service.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

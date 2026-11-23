@@ -1,183 +1,160 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ExternalLink, Mail, MessageCircle } from "lucide-react";
+import { useState } from "react";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { SITE_BRAND } from "@/data/siteContent";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { SERVICES } from "@/lib/constants";
-import { fetchServices } from "@/lib/services";
-import { BUSINESS_LOCALITY, BUSINESS_REGION } from "@/lib/site";
-
-function handleAnchorClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
-  e.preventDefault();
-  const id = href.replace("#", "");
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-}
 
 export function Footer() {
-  const year = new Date().getFullYear();
-  const { t } = useLanguage();
+  const { lang } = useLanguage();
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  // Service links are live from the Google Sheets CMS (same source as the
-  // Services section), so editing the sheet updates the footer without a deploy.
-  // Falls back to the static SERVICES catalog until/unless the fetch resolves.
-  const [serviceLinks, setServiceLinks] = useState(() =>
-    SERVICES.slice(0, 6).map((s) => ({ label: s.title, href: "#services" }))
-  );
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !email.includes("@")) return;
+    setSubmitted(true);
+    setEmail("");
+  };
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchServices()
-      .then((data) => {
-        if (!cancelled && data.length > 0) {
-          setServiceLinks(
-            data.slice(0, 6).map((s) => ({ label: s.title, href: "#services" }))
-          );
-        }
-      })
-      .catch(() => {
-        // keep the static fallback on error
+  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      const topOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - topOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
       });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const FOOTER_NAV = [
-    {
-      title: t.footer.nav.services,
-      links: serviceLinks,
-    },
-    {
-      title: t.footer.nav.navigate,
-      links: [
-        { label: t.footer.nav.links.home, href: "#home" },
-        { label: t.footer.nav.links.portfolio, href: "#portfolio" },
-        { label: t.footer.nav.links.process, href: "#services" },
-        { label: t.footer.nav.links.contact, href: "#contact" },
-      ],
-    },
-  ];
+    }
+  };
 
   return (
-    <footer className="relative overflow-hidden border-t border-slate-200 bg-white">
-      {/* Big radial glow bleeding up from behind the footer. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-72"
-        style={{
-          WebkitMaskImage:
-            "radial-gradient(70% 100% at 50% 0%, white 40%, transparent)",
-          maskImage: "radial-gradient(70% 100% at 50% 0%, white 40%, transparent)",
-          backgroundImage:
-            "radial-gradient(70% 120% at 50% 0%, rgba(245,158,11,0.12), rgba(139,92,246,0.07) 45%, transparent 70%)",
-        }}
-      />
-
-      {/* Faded logo background */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
-        <Image
-          src="/arvion.png"
-          alt=""
-          width={900}
-          height={600}
-          className="h-[40vw] w-auto max-h-80 object-contain"
-          style={{ opacity: 0.03 }}
-          aria-hidden="true"
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-12 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-2">
+    <footer className="bg-[#171A22] text-white pt-20 pb-12 border-t border-slate-800">
+      <div className="container-arvion">
+        {/* 4-Column Layout matching Reference Photo 7 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-16 border-b border-slate-800/80">
+          {/* Column 1: Brand Logo & Description */}
+          <div className="lg:col-span-4">
             <a
               href="#home"
-              onClick={(e) => handleAnchorClick(e, "#home")}
-              className="mb-4 inline-flex items-center gap-2"
+              onClick={(e) => handleScrollTo(e, "home")}
+              className="inline-block mb-5"
             >
-              <Image
-                src="/arvion.png"
-                alt="Arvion logo"
-                width={135}
-                height={90}
-                className="h-9 w-auto object-contain"
-              />
-              <span className="text-xl font-bold tracking-tight text-slate-900">Arvion</span>
+              <div className="h-12 sm:h-14 w-auto flex items-center">
+                <Image
+                  src={SITE_BRAND.logoUrl}
+                  alt="Arvion Creative"
+                  width={210}
+                  height={52}
+                  className="h-12 sm:h-14 w-auto object-contain brightness-0 invert"
+                />
+              </div>
             </a>
-            <p className="max-w-sm text-sm leading-relaxed text-slate-600">
-              {t.footer.description}
+            <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+              {lang === "id"
+                ? "Mengubah ide menjadi pengalaman digital yang bermakna. Pemikiran kreatif, desain matang, dan teknologi yang bertujuan."
+                : "Turning ideas into meaningful digital experiences. Creative thinking, thoughtful design, and purposeful technology."}
             </p>
-
-            {/* Contact */}
-            <div className="mt-6 space-y-3 sm:mt-8">
-              <a
-                href="mailto:digitalidsign@gmail.com"
-                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-amber-600"
-              >
-                <Mail className="h-4 w-4 shrink-0" />
-                digitalidsign@gmail.com
-              </a>
-              <a
-                href="https://wa.me/6285924361892"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-sm font-medium text-slate-600 transition-colors hover:text-amber-600"
-              >
-                <MessageCircle className="h-4 w-4 shrink-0" />
-                +62 859-2436-1892
-              </a>
-            </div>
-
-            {/* Social links */}
-            <div className="mt-6 flex flex-wrap gap-2 sm:mt-8">
-              <a
-                href="https://www.instagram.com/arvioncreative_/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Arvion Instagram"
-                className="flex h-10 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Instagram
-              </a>
-            </div>
           </div>
 
-          {/* Nav groups */}
-          {FOOTER_NAV.map((group) => (
-            <div key={group.title}>
-              <h3 className="mb-5 font-mono text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
-                {group.title}
-              </h3>
-              <ul className="space-y-3">
-                {group.links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => handleAnchorClick(e, link.href)}
-                      className="text-sm font-medium text-slate-500 transition-colors hover:text-amber-600"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Column 2: Quick Links */}
+          <div className="lg:col-span-2">
+            <h4 className="text-sm font-bold text-white mb-5 tracking-tight">
+              {lang === "id" ? "Tautan Cepat" : "Quick Links"}
+            </h4>
+            <ul className="space-y-3">
+              {[
+                { label: lang === "id" ? "Beranda" : "Home", id: "home" },
+                { label: lang === "id" ? "Layanan" : "Services", id: "services" },
+                { label: lang === "id" ? "Proyek" : "Projects", id: "projects" },
+                { label: lang === "id" ? "Proses Kami" : "Our Process", id: "process" },
+                { label: lang === "id" ? "Kontak" : "Contact", id: "contact" },
+              ].map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(e) => handleScrollTo(e, item.id)}
+                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: What We Do */}
+          <div className="lg:col-span-3">
+            <h4 className="text-sm font-bold text-white mb-5 tracking-tight">
+              {lang === "id" ? "Yang Kami Kerjakan" : "What We Do"}
+            </h4>
+            <ul className="space-y-3">
+              {[
+                lang === "id" ? "Desain UI/UX" : "UI/UX Design",
+                lang === "id" ? "Pengembangan Website" : "Web Development",
+                lang === "id" ? "Identitas Brand" : "Brand Identity",
+                lang === "id" ? "Desain Aplikasi Mobile" : "Mobile App Design",
+                lang === "id" ? "Strategi Kreatif" : "Creative Strategy",
+              ].map((service) => (
+                <li key={service}>
+                  <a
+                    href="#services"
+                    onClick={(e) => handleScrollTo(e, "services")}
+                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                  >
+                    {service}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Stay Connected / Newsletter Capsule Form */}
+          <div className="lg:col-span-3">
+            <h4 className="text-sm font-bold text-white mb-5 tracking-tight">
+              {lang === "id" ? "Tetap Terhubung" : "Stay Connected"}
+            </h4>
+            <p className="text-sm text-slate-400 mb-5 leading-relaxed">
+              {lang === "id"
+                ? "Dapatkan wawasan kreatif dan kabar terbaru langsung ke email Anda."
+                : "Get creative insights and updates straight to your inbox."}
+            </p>
+
+            {/* Newsletter Pill Input matching Reference Photo 7 */}
+            {submitted ? (
+              <p className="text-xs text-emerald-400 font-medium">
+                {lang === "id" ? "Terima kasih telah berlangganan!" : "Thank you for subscribing!"}
+              </p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="relative flex items-center">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={lang === "id" ? "Alamat email Anda" : "Your email address"}
+                  className="w-full bg-white text-[#171A22] placeholder-slate-400 text-xs sm:text-sm pl-4 pr-12 py-3 rounded-xl focus:outline-hidden"
+                  required
+                />
+                <button
+                  type="submit"
+                  aria-label={lang === "id" ? "Berlangganan" : "Subscribe"}
+                  className="absolute right-1 top-1 bottom-1 px-3.5 bg-[#F47721] hover:bg-[#e06512] text-white rounded-lg flex items-center justify-center transition-colors"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
+            )}
+          </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-center sm:flex-row sm:text-left">
-          <p className="text-sm font-medium text-slate-500">
-            {/* Spelled out in full to match the PostalAddress in the JSON-LD.
-                Google reads the visible address and the markup as one claim, so
-                the two agreeing is the point — a footer that says less than the
-                schema weakens both. */}
-            © {year} Arvion (arviotiv.com) · {BUSINESS_LOCALITY},{" "}
-            {BUSINESS_REGION}, Indonesia. {t.footer.rights}
-          </p>
-          <p className="text-sm font-medium text-slate-500">{t.footer.crafted}</p>
+        {/* Bottom Bar: Copyright & Tagline matching Reference Photo 7 */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+          <p>© 2026 Arvion Creative. {lang === "id" ? "Hak cipta dilindungi." : "All rights reserved."}</p>
+          <p>{lang === "id" ? "Dibuat dengan niat & kreativitas." : "Made with intention & creativity."}</p>
         </div>
       </div>
     </footer>
